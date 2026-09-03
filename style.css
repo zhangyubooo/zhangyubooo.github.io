@@ -150,10 +150,37 @@ a { color: inherit; }
 }
  
 .nav__links a {
+  position: relative;          /* 给下面的 ::after 一个定位参照 */
   text-decoration: none;
   color: var(--c-muted);
   transition: color .2s ease;
 }
+
+/* hover 横线。
+   用伪元素画线，而不是 text-decoration: underline ——
+   伪元素能做动画（从左往右展开），下划线属性只能瞬间出现。
+
+   content: "" 是伪元素的必需品，没有它元素根本不会生成。
+   background: currentColor 让线条自动取用链接当前的文字颜色，
+   所以 hover 时字变黑、线也跟着变黑，颜色不用写两遍。 */
+.nav__links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+
+  /* 默认横向缩到 0（看不见），origin 设在左边，
+     所以展开时是"从左往右画出来"，而不是从中间往两边长。 */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s ease;
+}
+
+.nav__links a:hover::after,
+.nav__links a:focus-visible::after { transform: scaleX(1); }
  
 .nav__links a:hover,
 .nav__links a[aria-current="page"] { color: var(--c-text); }
