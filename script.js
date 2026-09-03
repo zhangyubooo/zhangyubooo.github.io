@@ -47,6 +47,40 @@ if (nav && intro) {
 
   navObserver.observe(intro);
 }
+
+/* ①b 首屏 ↔ Projects 的硬切换 -------------------------------
+   设计意图：不允许"半首屏半项目"的中间状态。
+   只接管这一次跳转，Projects 区内部滚动完全不干预 ——
+   这是纯 CSS 的 scroll-snap: mandatory 做不到的精度。
+   ------------------------------------------------------------ */
+const projectsSection = document.querySelector('#projects');
+
+if (intro && projectsSection && !reduceMotion) {
+  let lastY = window.scrollY;
+  let locked = false;   // 程序自己滚动时，别让它触发自己
+
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const goingDown = y > lastY;
+    lastY = y;
+
+    if (locked) return;
+
+    const introHeight = intro.offsetHeight;
+    const inBetween = y > 8 && y < introHeight * 0.9;   // 处在"中间状态"
+
+    if (!inBetween) return;
+
+    locked = true;
+    if (goingDown) {
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // 平滑滚动大约 600ms，留点余量再解锁
+    setTimeout(() => { locked = false; lastY = window.scrollY; }, 900);
+  }, { passive: true });
+}
 // 注意：info.html 和详情页没有 #intro，上面的 if 会直接跳过，
 // 那些页面的导航靠 HTML 里写死的 class="nav is-visible" 常驻显示。
 
