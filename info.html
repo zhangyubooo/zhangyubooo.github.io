@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Info — Yubo Zhang</title>
+  <meta name="description" content="About Yubo Zhang — a designer working across interfaces, products, and environments, studying Design &amp; PM at Carnegie Mellon University.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -12,65 +13,168 @@
 
 <body class="page-info">
 
-<!-- 导航和 index.html 一样，只是名字指回首页。这一页导航一直可见。 -->
+<!-- 这一页导航常驻显示，所以直接写上 is-visible，不等 JS -->
 <header class="nav is-visible">
   <nav aria-label="Main navigation">
     <a class="nav__name" href="index.html#intro">Yubo Zhang</a>
     <ul class="nav__links">
       <li><a href="info.html" aria-current="page">Info</a></li>
-      <li><a href="mailto:TODO@andrew.cmu.edu">Contact me</a></li>
+      <li><a href="mailto:yubozhang1224@outlook.com">Contact me</a></li>
     </ul>
   </nav>
 </header>
 
 <main class="info">
 
-  <section class="info__portrait">
-    <img src="images/TODO-portrait.jpg"
-         alt="TODO: 描述这张照片，给看不见图的人读">
+  <!-- 大标题单独一行，和下面的照片左对齐 -->
+  <h1 class="info__heading">Info</h1>
+
+  <!-- 照片 + 自我介绍：桌面照片在左、正文分两栏在右；手机上下堆叠 -->
+  <section class="info__top">
+    <figure class="info__portrait">
+      <img src="images/portrait.jpg" alt="Yubo Zhang in a suit">
+    </figure>
+
+    <div class="info__bio">
+      <div class="info__bio-col">
+      <p>
+        I've always found it hard to define my interests through a single design
+        discipline. Rather than focusing only on interfaces, products, or spaces,
+        I'm drawn to how those experiences connect. For me, the object of design
+        isn't necessarily a screen or an artifact — it can be the whole arc a
+        person moves through across different touchpoints. That's what led me
+        toward technology as a way of dissolving the boundaries between media, so
+        that digital, physical, and spatial experiences behave as one continuous
+        system.
+      </p>
+      </div>
+
+      <div class="info__bio-col">
+      <p>
+        I'm especially drawn to the new kinds of interaction that emerging
+        technology makes possible. Rather than using technology for its own sake,
+        what interests me is a sharper question: what experience does this new
+        capability make possible that wasn't before? Does it actually make the
+        relationship between people and a product, a space, or a system feel more
+        natural? Studying Design and Product Management at CMU has pushed me to
+        think about this from a fuller product perspective — not only whether an
+        experience is compelling, but whether it meets a real user need, is
+        technically feasible, and can become something genuinely valuable.
+      </p>
+      </div>
+
+      <div class="info__bio-col">
+      <p>
+        Next, I want to work on problems that still hold a lot of unknowns —
+        especially ones sitting at the intersection of design, technology, and
+        product. I enjoy working alongside engineers, designers, researchers, and
+        product teams to take a vague idea and turn it into something real and
+        experienceable. Whether it ends up as a digital product, a smart object,
+        or an interactive space, I want to keep exploring how technology creates
+        new behaviors, new experiences, and new product possibilities.
+      </p>
+      </div>
+    </div>
   </section>
 
-  <section class="info__bio">
-    <h1>Info</h1>
-    <p>TODO: 比首屏更详细一点的介绍。兴趣、背景、在找什么机会。</p>
-  </section>
-
+  <!-- 技能：五组。分组本身就是一种自我定位 —— 别人一眼看出你的能力覆盖面 -->
   <section class="info__skills">
     <h2>Skills</h2>
 
-    <h3>Design</h3>
-    <ul><li>TODO</li><li>TODO</li></ul>
+    <div class="skills">
+      <div class="skills__group">
+        <h3>Design &amp; Interface</h3>
+        <ul>
+          <li>Figma</li>
+          <li>Adobe Creative Suite</li>
+        </ul>
+      </div>
 
-    <h3>Software</h3>
-    <ul><li>TODO: Rhino, Grasshopper…</li></ul>
+      <div class="skills__group">
+        <h3>3D &amp; CAD</h3>
+        <ul>
+          <li>Rhino</li>
+          <li>Grasshopper</li>
+          <li>SolidWorks</li>
+          <li>Fusion 360</li>
+          <li>Blender</li>
+          <li>Cinema 4D</li>
+          <li>KeyShot</li>
+        </ul>
+      </div>
 
-    <h3>Code</h3>
-    <ul><li>TODO: C, HTML/CSS/JS…</li></ul>
+      <div class="skills__group">
+        <h3>Interactive &amp; Real-time</h3>
+        <ul>
+          <li>TouchDesigner</li>
+          <li>Unity</li>
+          <li>MadMapper</li>
+          <li>three.js</li>
+        </ul>
+      </div>
 
-    <h3>Fabrication</h3>
-    <ul><li>TODO: 模型制作、激光切割…</li></ul>
+      <div class="skills__group">
+        <h3>Code</h3>
+        <ul>
+          <li>Python</li>
+          <li>C / C++</li>
+          <li>JavaScript</li>
+          <li>Arduino / ESP32</li>
+        </ul>
+      </div>
+
+      <div class="skills__group">
+        <h3>Fabrication</h3>
+        <ul>
+          <li>3D printing</li>
+          <li>Soft robotics — TPU, silicone air actuators</li>
+          <li>Fashion — design, patternmaking, construction</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
-  <!-- 你说想放的小 demo / 没那么正式的东西 -->
-  <section class="info__demos">
-    <h2>Experiments</h2>
-    <ul class="demos">
-      <li>
-        <h3>TODO: demo 名字</h3>
-        <p>TODO: 一句话说明</p>
+  <!-- 教育经历 -->
+  <section class="info__education">
+    <h2>Education</h2>
+    <ul class="entries">
+      <li class="entry">
+        <span class="entry__title">Carnegie Mellon University</span>
+        <span class="entry__meta">Design &amp; Product Management · 2025–2029</span>
       </li>
     </ul>
   </section>
 
+  <!--
+    ══ Experiments 区，素材齐了再放出来 ══
+    结构照抄上面的 entries 就行，每条一个 <li class="entry">。
+
+    <section class="info__experiments">
+      <h2>Experiments</h2>
+      <ul class="entries">
+        <li class="entry">
+          <span class="entry__title">名字</span>
+          <span class="entry__meta">一句话说明</span>
+        </li>
+      </ul>
+    </section>
+  -->
+
   <section class="info__contact">
     <h2>Contact</h2>
-    <!-- 邮箱明文写出来。mailto: 在没配邮件客户端的电脑上点了没反应，这是降级方案 -->
-    <p><a href="mailto:TODO@andrew.cmu.edu">TODO@andrew.cmu.edu</a></p>
+    <!-- 邮箱明文写出来：mailto: 在没配邮件客户端的电脑上点了没反应，这是降级方案 -->
+    <p class="info__email">
+      <a href="mailto:yubozhang1224@outlook.com">yubozhang1224@outlook.com</a>
+    </p>
     <ul class="social">
-      <li><a href="TODO" target="_blank" rel="noopener">LinkedIn</a></li>
-      <li><a href="TODO" target="_blank" rel="noopener">Instagram</a></li>
-      <li><a href="TODO" target="_blank" rel="noopener">Medium</a></li>
-      <li><a href="https://github.com/zhangyubooo" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/yubo-zhang-57994b399/"
+             target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://www.instagram.com/zhangyubooo/"
+             target="_blank" rel="noopener">Instagram</a></li>
+      <li><a href="https://medium.com/@yubozhan"
+             target="_blank" rel="noopener">Medium</a></li>
+      <li><a href="https://github.com/zhangyubooo"
+             target="_blank" rel="noopener">GitHub</a></li>
     </ul>
   </section>
 
@@ -78,7 +182,6 @@
 
 <footer class="footer">
   <p>© 2026 Yubo Zhang</p>
-  <p class="footer__credits">TODO: 素材来源</p>
 </footer>
 
 <script src="script.js"></script>

@@ -319,68 +319,145 @@ a { color: inherit; }
  
  
 /* ⑧ INFO 页 --------------------------------------------------*/
-.page-info { padding-top: var(--s-8); }   /* 这一页导航常驻，给它让出高度 */
- 
+.page-info { padding-top: var(--s-6); }   /* 这一页导航常驻，给它让出高度 */
+
 .info {
-  max-width: 760px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: var(--s-6) var(--gutter) var(--s-8);
 }
- 
+
 .info section + section { margin-top: var(--s-7); }
- 
-.info h1 {
+
+.info__heading {
   font-size: var(--t-xl);
   font-weight: 600;
   letter-spacing: -0.025em;
-  margin-bottom: var(--s-4);
+  margin-bottom: var(--s-5);
 }
- 
+
 .info h2 {
   font-size: var(--t-lg);
   font-weight: 500;
   letter-spacing: -0.015em;
-  margin-bottom: var(--s-3);
+  margin-bottom: var(--s-4);
 }
- 
+
+/* 小标题：全大写 + 拉开字距 + 灰色。
+   这是"标签"而不是"标题"的经典处理 —— 小、克制、不抢正文的戏。
+   全大写字母之间天然拥挤，所以必须正向加字距（和大标题相反）。 */
 .info h3 {
   font-size: var(--t-xs);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--c-muted);
-  margin: var(--s-4) 0 var(--s-2);
+  margin-bottom: var(--s-2);
 }
- 
+
+/* 照片 + 自我介绍：手机上下堆叠 */
+.info__top {
+  display: grid;
+  gap: var(--s-5);
+}
+
+/* 照片不裁切：保持原图比例，横竖都行。
+   height: auto 让高度跟着宽度按原始比例走。 */
 .info__portrait img {
   width: 100%;
-  aspect-ratio: var(--cover-ratio);
-  object-fit: cover;
+  height: auto;
   background: var(--c-fill);
 }
- 
-.info ul li + li { margin-top: var(--s-1); }
- 
+
+/* 正文比全站默认小一档，密度更接近参考图 */
+.info__bio { font-size: var(--t-sm); }
+.info__bio p + p { margin-top: var(--s-3); }
+
+/* 单栏堆叠时，三段之间留一个空行。
+   每段各自包在一个 div 里，所以 p + p 选不中它们，
+   要用相邻 div 的间距来做。分三栏时由 grid 的 gap 接管，这里归零。 */
+.info__bio-col + .info__bio-col { margin-top: var(--s-4); }
+
+/* 技能：自动分列。auto-fit + minmax 让列数随宽度自己决定，
+   不用写任何媒体查询 —— 窄了就少几列，宽了就多几列。 */
+.skills {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--s-5) var(--s-4);
+}
+
+.skills ul { font-size: var(--t-sm); }
+.skills li + li { margin-top: var(--s-1); }
+
+/* 教育 / Experiments 的条目：标题一行，说明一行灰字 */
+.entry {
+  display: block;
+  padding: var(--s-3) 0;
+  border-top: 1px solid var(--c-line);
+}
+
+.entries .entry:last-child { border-bottom: 1px solid var(--c-line); }
+
+.entry__title {
+  display: block;
+  font-size: var(--t-base);
+}
+
+.entry__meta {
+  display: block;
+  font-size: var(--t-sm);
+  color: var(--c-muted);
+}
+
+.info__email {
+  font-size: var(--t-lg);
+  margin-bottom: var(--s-3);
+}
+
+.info__email a { text-underline-offset: 4px; }
+
+.info .social {
+  margin-top: 0;
+  padding: 0;
+  border-top: none;
+}
+
+/* 桌面：照片在左约 45%，正文在右并且自己再分两栏 */
+@media (min-width: 900px) {
+  .info__top {
+    /* 照片栏收到约原来的 1/3 宽，图跟着等比缩小 */
+    grid-template-columns: clamp(150px, 14vw, 200px) 1fr;
+    gap: var(--s-6);
+    align-items: start;
+  }
+
+}
+
+/* 更宽的屏幕才把正文分三栏 —— 三段各占一栏。
+   低于这个宽度保持单栏，否则每栏只有一百多像素，一行放不下几个词。 */
+@media (min-width: 1100px) {
+  .info__bio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s-5);
+    align-items: start;
+  }
+
+  .info__bio-col + .info__bio-col { margin-top: 0; }
+}
+
 .footer {
-  max-width: 760px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: var(--s-6) var(--gutter) var(--s-7);
+  padding: var(--s-5) var(--gutter) var(--s-6);
   border-top: 1px solid var(--c-line);
   font-size: var(--t-xs);
   color: var(--c-muted);
 }
- 
-.footer h2 {
-  font-size: var(--t-lg);
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  color: var(--c-text);
-  margin-bottom: var(--s-3);
-}
- 
+
 .footer p + p { margin-top: var(--s-2); }
- 
- 
+
+
 /* ⑨ 响应式 ---------------------------------------------------
    Mobile-first：上面写的是手机版，这里往大屏"加"东西。
    反过来写（先桌面再 max-width 缩小）需要不断撤销样式，代码会更乱。
