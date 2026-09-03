@@ -403,9 +403,10 @@ a { color: inherit; }
    ------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: auto;
-    scroll-snap-type: none;   /* 新增 */
-  }
+  scroll-behavior: smooth;
+  /* scroll-snap-type 整行删掉 */
+  scroll-padding-top: var(--s-6);
+}
  
   *,
   *::before,
