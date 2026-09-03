@@ -73,8 +73,10 @@ img, video {
 /* ③ BASE -----------------------------------------------------*/
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;   /* proximity → mandatory */
   scroll-padding-top: var(--s-6);
+  /* 首屏 ↔ Projects 的硬切换改由 script.js 接管。
+     CSS 的 scroll-snap: mandatory 在"最后一屏比视口矮"时会把用户
+     弹回上一个吸附点 —— 这里就是滚到 email 那行时被弹回项目区顶部。 */
 }
  
 body {
@@ -168,9 +170,6 @@ a { color: inherit; }
   justify-content: center;
   padding: var(--s-8) var(--gutter) var(--s-7);
   position: relative;
-  scroll-snap-align: start;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
  
 .intro__greeting {
@@ -211,7 +210,6 @@ a { color: inherit; }
   max-width: var(--max-w);
   margin: 0 auto;
   padding: var(--s-7) var(--gutter) 0;
-  scroll-snap-align: start;
 }
  
 .projects__heading {
@@ -402,12 +400,10 @@ a { color: inherit; }
    尊重这个设置是 WCAG 要求，不是可选的礼貌。
    ------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
-  html {
-  scroll-behavior: smooth;
-  /* scroll-snap-type 整行删掉 */
-  scroll-padding-top: var(--s-6);
-}
- 
+  /* 关掉平滑滚动。script.js 里也读了同一个设置，
+     首屏的硬切换在这种模式下整个不启用。 */
+  html { scroll-behavior: auto; }
+
   *,
   *::before,
   *::after {
