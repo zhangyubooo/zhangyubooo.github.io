@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Info — Yubo Zhang</title>
+  <title>About — Yubo Zhang</title>
   <meta name="description" content="About Yubo Zhang — a designer working across interfaces, products, and environments, studying Design &amp; PM at Carnegie Mellon University.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,74 +11,50 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="page-info">
+<body class="page-about">
 
 <!-- 这一页导航常驻显示，所以直接写上 is-visible，不等 JS -->
 <header class="nav is-visible">
   <nav aria-label="Main navigation">
     <a class="nav__name" href="index.html#intro">Yubo Zhang</a>
     <ul class="nav__links">
-      <li><a href="info.html" aria-current="page">Info</a></li>
+      <li><a href="about.html" aria-current="page">About</a></li>
+      <li><a href="play.html">Play</a></li>
       <li><a href="mailto:yubozhang1224@outlook.com">Contact me</a></li>
     </ul>
   </nav>
 </header>
 
-<main class="info">
+<main class="about">
 
   <!-- 大标题单独一行，和下面的照片左对齐 -->
-  <h1 class="info__heading">Info</h1>
+  <h1 class="about__heading">About</h1>
 
   <!-- 照片 + 自我介绍：桌面照片在左、正文分两栏在右；手机上下堆叠 -->
-  <section class="info__top">
-    <figure class="info__portrait">
+  <section class="about__top">
+    <figure class="about__portrait">
       <img src="images/portrait.jpg" alt="Yubo Zhang in a suit">
     </figure>
 
-    <div class="info__bio">
-      <div class="info__bio-col">
-      <p>
-        I've always found it hard to define my interests through a single design
-        discipline. Rather than focusing only on interfaces, products, or spaces,
-        I'm drawn to how those experiences connect. For me, the object of design
-        isn't necessarily a screen or an artifact — it can be the whole arc a
-        person moves through across different touchpoints. That's what led me
-        toward technology as a way of dissolving the boundaries between media, so
-        that digital, physical, and spatial experiences behave as one continuous
-        system.
-      </p>
-      </div>
-
-      <div class="info__bio-col">
-      <p>
-        I'm especially drawn to the new kinds of interaction that emerging
-        technology makes possible. Rather than using technology for its own sake,
-        what interests me is a sharper question: what experience does this new
-        capability make possible that wasn't before? Does it actually make the
-        relationship between people and a product, a space, or a system feel more
-        natural? Studying Design and Product Management at CMU has pushed me to
-        think about this from a fuller product perspective — not only whether an
-        experience is compelling, but whether it meets a real user need, is
-        technically feasible, and can become something genuinely valuable.
-      </p>
-      </div>
-
-      <div class="info__bio-col">
-      <p>
-        Next, I want to work on problems that still hold a lot of unknowns —
-        especially ones sitting at the intersection of design, technology, and
-        product. I enjoy working alongside engineers, designers, researchers, and
-        product teams to take a vague idea and turn it into something real and
-        experienceable. Whether it ends up as a digital product, a smart object,
-        or an interactive space, I want to keep exploring how technology creates
-        new behaviors, new experiences, and new product possibilities.
-      </p>
+    <div class="about__bio">
+      <div class="about__bio-col">
+        <p>Hi again!</p>
+        <p>
+          This is Yubo. I've always been curious about new technologies and the
+          different ways they can change how we design. I like moving between
+          interfaces, physical objects, and spaces, because each one gives me a
+          different way to think about interaction. When I come across a new tool
+          or technology, my first reaction is usually to wonder what I could make
+          with it, how it could change an experience, and where else it could be
+          applied. I enjoy learning by experimenting, and I hope to keep exploring
+          new technologies not just as tools, but as new materials for design.
+        </p>
       </div>
     </div>
   </section>
 
   <!-- 技能：五组。分组本身就是一种自我定位 —— 别人一眼看出你的能力覆盖面 -->
-  <section class="info__skills">
+  <section class="about__skills">
     <h2>Skills</h2>
 
     <div class="skills">
@@ -135,7 +111,7 @@
   </section>
 
   <!-- 教育经历 -->
-  <section class="info__education">
+  <section class="about__education">
     <h2>Education</h2>
     <ul class="entries">
       <li class="entry">
@@ -146,10 +122,10 @@
   </section>
 
   <!--
-    ══ Experiments 区，素材齐了再放出来 ══
+    ══ 已移到 play.html，这段留着备查 ══
     结构照抄上面的 entries 就行，每条一个 <li class="entry">。
 
-    <section class="info__experiments">
+    <section class="about__experiments">
       <h2>Experiments</h2>
       <ul class="entries">
         <li class="entry">
@@ -160,10 +136,10 @@
     </section>
   -->
 
-  <section class="info__contact">
+  <section class="about__contact">
     <h2>Contact</h2>
     <!-- 邮箱明文写出来：mailto: 在没配邮件客户端的电脑上点了没反应，这是降级方案 -->
-    <p class="info__email">
+    <p class="about__email">
       <a href="mailto:yubozhang1224@outlook.com">yubozhang1224@outlook.com</a>
     </p>
     <ul class="social">

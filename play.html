@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play — Yubo Zhang</title>
+  <meta name="description" content="Experiments, sketches, and side projects by Yubo Zhang.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="page-play">
+
+<header class="nav is-visible">
+  <nav aria-label="Main navigation">
+    <a class="nav__name" href="index.html#intro">Yubo Zhang</a>
+    <ul class="nav__links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="play.html" aria-current="page">Play</a></li>
+      <li><a href="mailto:yubozhang1224@outlook.com">Contact me</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="play">
+
+  <h1 class="play__heading">Play</h1>
+
+  <!--
+    瀑布流画廊。图片和视频都不裁切，保持原始比例。
+    最新的放最上面 —— 直接把新的 <figure> 粘在下面这行的下方。
+  -->
+  <div class="play__grid">
+
+    <!-- ▼▼▼ 新素材加在这一行下面 ▼▼▼ -->
+
+    <!--
+      ══ 图片模板 ══
+      <figure class="play__item">
+        <img src="images/play-01.jpg" alt="描述画面里是什么" loading="lazy">
+      </figure>
+
+      ══ 视频模板 ══
+      data-autoplay：滚进视口才播、滚出去暂停（script.js 负责）
+      <figure class="play__item">
+        <video src="videos/play-01.mp4"
+               poster="images/play-01-poster.jpg"
+               muted loop playsinline data-autoplay
+               aria-label="描述视频里发生了什么"></video>
+      </figure>
+    -->
+
+  </div>
+
+  <!--
+    素材填进去之前这一页是空的。如果交作业前还没填完，
+    把下面这行的注释去掉，页面至少有个交代。
+    <p class="play__empty">More coming soon.</p>
+  -->
+
+</main>
+
+<footer class="footer">
+  <p>© 2026 Yubo Zhang</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

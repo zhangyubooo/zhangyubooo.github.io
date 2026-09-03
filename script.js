@@ -136,7 +136,9 @@ carousels.forEach((carousel) => {
    如果四个封面视频同时自动播，笔记本风扇会响、手机会烫会掉电。
    所以只播用户正在看的那一个。
    ------------------------------------------------------------ */
-const videos = document.querySelectorAll('.project__media video');
+/* data-autoplay 是钩子：任何页面上想"滚进视口才播"的视频，加这个属性即可。
+   用 data 属性而不是 class，是因为 class 属于 CSS，改样式时不该误伤行为。 */
+const videos = document.querySelectorAll('video[data-autoplay]');
 
 videos.forEach((video) => {
   if (reduceMotion) return;   // 减弱动态效果时只显示 poster 静帧
