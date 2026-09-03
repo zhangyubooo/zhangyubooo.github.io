@@ -72,9 +72,9 @@ img, video {
  
 /* ③ BASE -----------------------------------------------------*/
 html {
-  scroll-behavior: smooth;          /* 锚点跳转平滑滚动。一行 CSS 代替十几行 JS */
-  scroll-snap-type: y proximity;    /* 接近时吸附。用 mandatory 会在长内容里劫持滚动 */
-  scroll-padding-top: var(--s-6);   /* 锚点跳转时给固定导航留出空间，不然标题被盖住 */
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;   /* proximity → mandatory */
+  scroll-padding-top: var(--s-6);
 }
  
 body {
@@ -169,6 +169,8 @@ a { color: inherit; }
   padding: var(--s-8) var(--gutter) var(--s-7);
   position: relative;
   scroll-snap-align: start;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
  
 .intro__greeting {
@@ -400,7 +402,10 @@ a { color: inherit; }
    尊重这个设置是 WCAG 要求，不是可选的礼貌。
    ------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  html {
+    scroll-behavior: auto;
+    scroll-snap-type: none;   /* 新增 */
+  }
  
   *,
   *::before,
