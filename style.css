@@ -1,0 +1,412 @@
+/* ============================================================
+   Yubo Zhang — Portfolio
+   style.css
+ 
+   结构：① Tokens ② Reset ③ Base ④ Nav ⑤ Intro
+        ⑥ Projects ⑦ Social ⑧ Info 页 ⑨ 响应式 ⑩ 无障碍
+ 
+   AI 使用说明：token 体系、布局方案与注释由 Claude 提议并解释；
+   具体数值（字号级差、间距尺度、断点）经我在浏览器中反复调整后确定。
+   详见 prompt-log.md
+   ============================================================ */
+ 
+ 
+/* ① TOKENS ---------------------------------------------------
+   全站的设计系统。改这里 = 改全站。
+   等同于 Figma 里的 Styles / Variables。
+   ------------------------------------------------------------ */
+:root {
+  /* 颜色 —— 纯黑白灰 */
+  --c-bg:          #ffffff;
+  --c-text:        #111111;
+  --c-muted:       #666666;  /* 对白底 5.7:1，通过 WCAG AA */
+  --c-line:        #e5e5e5;
+  --c-fill:        #f2f2f2;  /* 占位块、图片底色 */
+ 
+  /* 字体 —— 后面的是回退栈，字体没加载出来时用系统字体顶上 */
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-sans:  "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+ 
+  /* 字号 —— 五档，够用且克制。rem 相对根字号，用户放大字体时会跟着变 */
+  --t-xs:      0.8125rem;  /* 13px  项目标签 */
+  --t-sm:      0.9375rem;  /* 15px  导航、社交链接 */
+  --t-base:    1.0625rem;  /* 17px  正文 */
+  --t-lg:      1.375rem;   /* 22px  项目标题 */
+  --t-xl:      1.75rem;    /* 28px  区标题 */
+  --t-display: 3.25rem;    /* 52px  你好! */
+ 
+  /* 间距 —— 4px 基准的模数系统。只用这几个值，不出现 37px 这种数 */
+  --s-1: 0.25rem;   /*   4 */
+  --s-2: 0.5rem;    /*   8 */
+  --s-3: 1rem;      /*  16 */
+  --s-4: 1.5rem;    /*  24 */
+  --s-5: 2.5rem;    /*  40 */
+  --s-6: 4rem;      /*  64 */
+  --s-7: 6rem;      /*  96 */
+  --s-8: 9rem;      /* 144 */
+ 
+  /* 布局 */
+  --max-w:       1200px;
+  --gutter:      var(--s-4);
+  --cover-ratio: 3 / 2;      /* 封面比例。改这一个值，全站封面同步变 */
+}
+ 
+ 
+/* ② RESET ----------------------------------------------------
+   抹平浏览器默认样式的差异。不同浏览器的默认 margin、字号
+   并不一致，不清掉的话你的排版在 Safari 和 Chrome 里会不一样。
+   ------------------------------------------------------------ */
+*,
+*::before,
+*::after { box-sizing: border-box; }  /* 让 padding 和 border 算进宽度内，不撑大盒子 */
+ 
+body, h1, h2, h3, p, ul, figure { margin: 0; padding: 0; }
+ 
+ul { list-style: none; }
+ 
+img, video {
+  display: block;      /* 去掉 inline 元素底部那几像素的基线空隙 */
+  max-width: 100%;
+}
+ 
+ 
+/* ③ BASE -----------------------------------------------------*/
+html {
+  scroll-behavior: smooth;          /* 锚点跳转平滑滚动。一行 CSS 代替十几行 JS */
+  scroll-snap-type: y proximity;    /* 接近时吸附。用 mandatory 会在长内容里劫持滚动 */
+  scroll-padding-top: var(--s-6);   /* 锚点跳转时给固定导航留出空间，不然标题被盖住 */
+}
+ 
+body {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+ 
+a { color: inherit; }
+ 
+/* 键盘用户看得见焦点在哪。绝对不要写 outline: none 把它删掉 */
+:focus-visible {
+  outline: 2px solid var(--c-text);
+  outline-offset: 3px;
+}
+ 
+ 
+/* ④ NAV ------------------------------------------------------
+   默认完全隐藏。script.js 检测到用户滚离首屏后加上 .is-visible。
+   ------------------------------------------------------------ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--c-bg);
+  border-bottom: 1px solid transparent;
+ 
+  /* 隐藏状态 */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-100%);
+  transition: opacity .35s ease, transform .35s ease, visibility .35s;
+}
+ 
+.nav.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  border-bottom-color: var(--c-line);
+}
+ 
+.nav nav {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: var(--s-3) var(--gutter);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+ 
+.nav__name {
+  font-family: var(--font-serif);
+  font-size: var(--t-lg);
+  text-decoration: none;
+}
+ 
+.nav__links {
+  display: flex;
+  gap: var(--s-4);
+  font-size: var(--t-sm);
+}
+ 
+.nav__links a {
+  text-decoration: none;
+  color: var(--c-muted);
+  transition: color .2s ease;
+}
+ 
+.nav__links a:hover,
+.nav__links a[aria-current="page"] { color: var(--c-text); }
+ 
+ 
+/* ⑤ INTRO ----------------------------------------------------*/
+.intro {
+  /* 两行都写：不认识 svh 的旧浏览器用第一行，新浏览器用第二行覆盖。
+     svh = small viewport height，永远取手机地址栏展开时的高度，
+     保证内容不被地址栏切掉。用 min-height 不用 height，
+     窗口很矮或用户放大字体时内容才不会被裁。 */
+  min-height: 100vh;
+  min-height: 100svh;
+ 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-8) var(--gutter) var(--s-7);
+  position: relative;
+  scroll-snap-align: start;
+}
+ 
+.intro__greeting {
+  font-family: var(--font-serif);
+  font-size: var(--t-display);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: var(--s-8);
+  text-align: center;
+}
+ 
+.intro__text {
+  max-width: 58ch;   /* ch = 当前字体 "0" 的宽度。55–70ch 是公认的最佳阅读行宽 */
+}
+ 
+.intro__text p + p { margin-top: var(--s-4); }
+ 
+/* 滚动提示：首屏什么都没有，用户需要知道下面还有东西 */
+.intro__cue {
+  position: absolute;
+  bottom: var(--s-5);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--t-lg);
+  color: var(--c-muted);
+  text-decoration: none;
+  animation: cue-bob 2.4s ease-in-out infinite;
+}
+ 
+@keyframes cue-bob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50%      { transform: translate(-50%, 8px); }
+}
+ 
+ 
+/* ⑥ PROJECTS -------------------------------------------------*/
+.projects {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: var(--s-7) var(--gutter) 0;
+  scroll-snap-align: start;
+}
+ 
+.projects__heading {
+  font-family: var(--font-serif);
+  font-size: var(--t-xl);
+  font-weight: 400;
+  margin-bottom: var(--s-6);
+}
+ 
+.projects__grid {
+  display: grid;
+  grid-template-columns: 1fr;        /* 手机优先：默认单列 */
+  gap: var(--s-6) var(--s-4);        /* 行间距 列间距 */
+}
+ 
+.project__link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+ 
+/* 封面容器。aspect-ratio 定死形状，任意比例的原图/视频都被统一 */
+.project__media {
+  position: relative;
+  aspect-ratio: var(--cover-ratio);
+  overflow: hidden;
+  background: var(--c-fill);
+  margin-bottom: var(--s-3);
+}
+ 
+.project__media img,
+.project__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* 填满容器并居中裁切，绝不拉伸变形 */
+  transition: transform .6s ease;
+}
+ 
+/* 轮播：所有图叠在一起，只有 .is-active 那张不透明。
+   JS 负责轮流切换这个 class。JS 没跑起来时只显示第一张 —— 优雅降级 */
+[data-carousel] img {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+ 
+[data-carousel] img.is-active { opacity: 1; }
+ 
+/* hover 时封面极轻微放大。0.02 已经足够被感知，再大就廉价了 */
+.project__link:hover .project__media img,
+.project__link:hover .project__media video { transform: scale(1.02); }
+ 
+.project__title {
+  font-family: var(--font-serif);
+  font-size: var(--t-lg);
+  font-weight: 400;
+  margin-bottom: var(--s-1);
+}
+ 
+.project__tags {
+  font-size: var(--t-xs);
+  color: var(--c-muted);
+  letter-spacing: 0.02em;
+}
+ 
+/* 占位卡：没有链接，所以鼠标保持默认箭头，暗示"点不了" */
+.project--placeholder { cursor: default; }
+.project--placeholder .project__title { color: var(--c-muted); }
+ 
+ 
+/* ⑦ SOCIAL ---------------------------------------------------
+   项目区末尾的一行链接，同时充当主页页脚
+   ------------------------------------------------------------ */
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  margin-top: var(--s-7);
+  padding: var(--s-4) 0 var(--s-7);
+  border-top: 1px solid var(--c-line);
+  font-size: var(--t-sm);
+}
+ 
+.social a {
+  text-decoration: none;
+  color: var(--c-muted);
+  transition: color .2s ease;
+}
+ 
+.social a:hover {
+  color: var(--c-text);
+  text-decoration: underline;
+  text-underline-offset: 4px;   /* 下划线往下挪，不糊在字母的下伸部上 */
+}
+ 
+ 
+/* ⑧ INFO 页 --------------------------------------------------*/
+.page-info { padding-top: var(--s-8); }   /* 这一页导航常驻，给它让出高度 */
+ 
+.info {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--s-6) var(--gutter) var(--s-8);
+}
+ 
+.info section + section { margin-top: var(--s-7); }
+ 
+.info h1 {
+  font-family: var(--font-serif);
+  font-size: var(--t-xl);
+  font-weight: 400;
+  margin-bottom: var(--s-4);
+}
+ 
+.info h2 {
+  font-family: var(--font-serif);
+  font-size: var(--t-lg);
+  font-weight: 400;
+  margin-bottom: var(--s-3);
+}
+ 
+.info h3 {
+  font-size: var(--t-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-muted);
+  margin: var(--s-4) 0 var(--s-2);
+}
+ 
+.info__portrait img {
+  width: 100%;
+  aspect-ratio: var(--cover-ratio);
+  object-fit: cover;
+  background: var(--c-fill);
+}
+ 
+.info ul li + li { margin-top: var(--s-1); }
+ 
+.footer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--s-6) var(--gutter) var(--s-7);
+  border-top: 1px solid var(--c-line);
+  font-size: var(--t-xs);
+  color: var(--c-muted);
+}
+ 
+.footer h2 {
+  font-family: var(--font-serif);
+  font-size: var(--t-lg);
+  font-weight: 400;
+  color: var(--c-text);
+  margin-bottom: var(--s-3);
+}
+ 
+.footer p + p { margin-top: var(--s-2); }
+ 
+ 
+/* ⑨ 响应式 ---------------------------------------------------
+   Mobile-first：上面写的是手机版，这里往大屏"加"东西。
+   反过来写（先桌面再 max-width 缩小）需要不断撤销样式，代码会更乱。
+   ------------------------------------------------------------ */
+ 
+/* 平板及以上：项目变两列 */
+@media (min-width: 768px) {
+  :root {
+    --t-display: 4.5rem;
+    --gutter: var(--s-5);
+  }
+ 
+  .projects__grid { grid-template-columns: repeat(2, 1fr); }
+}
+ 
+/* 桌面：字号和留白再放大一档 */
+@media (min-width: 1100px) {
+  :root {
+    --t-display: 5.5rem;
+    --t-xl: 2rem;
+    --gutter: var(--s-6);
+  }
+}
+ 
+ 
+/* ⑩ 无障碍 ---------------------------------------------------
+   有些人（前庭功能障碍、偏头痛、晕动症）在系统里开了"减弱动态效果"。
+   尊重这个设置是 WCAG 要求，不是可选的礼貌。
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+ 
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

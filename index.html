@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yubo Zhang — Environments Designer</title>
   <meta name="description" content="Yubo Zhang — a designer working across interfaces, products, and environments, studying Design &amp; PM at Carnegie Mellon University.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -28,7 +31,7 @@
 
   <!-- ========== 第一屏：自我介绍 ========== -->
   <section class="intro" id="intro">
-    <h1 class="intro__greeting">TODO: 一个招呼词</h1>
+    <h1 class="intro__greeting">你好</h1>
 
     <div class="intro__text">
       <p>I'm Yubo, from Harbin, China, and now based in Pittsburgh. I design
@@ -51,76 +54,95 @@
     <a class="intro__cue" href="#projects" aria-label="Scroll to projects">↓</a>
   </section>
 
-  <!-- ========== 第二屏：项目 ========== -->
+    <!-- ========== 第二屏：项目 ==========
+       结构（两列 grid、data-carousel 轮播钩子、整卡可点击）由 Claude 提议；
+       项目排序、标签措辞、alt 文案由我决定。过程见 prompt-log.md
+  -->
   <section class="projects" id="projects">
     <h2 class="projects__heading">Projects</h2>
 
     <div class="projects__grid">
 
-      <!-- 项目 1：视频封面 -->
-      <article class="project">
-        <div class="project__media">
-          <video
-            src="videos/TODO-project1.mp4"
-            poster="images/TODO-project1-poster.jpg"
-            muted loop playsinline
-            aria-label="TODO: 描述这段视频里发生了什么"></video>
-        </div>
-        <h3 class="project__title">TODO: 项目标题</h3>
-        <p class="project__tags">TODO: Installation, Interaction Design · 2025</p>
-      </article>
+      <!-- ▼▼▼ 新项目加在这一行下面。最新的在最上。 ▼▼▼ -->
 
-      <!-- 项目 2：多图轮播封面 -->
-      <article class="project">
-        <div class="project__media" data-carousel>
-          <img class="is-active" src="images/TODO-p2-a.jpg" alt="TODO: 描述这张图">
-          <img src="images/TODO-p2-b.jpg" alt="TODO: 描述这张图">
-          <img src="images/TODO-p2-c.jpg" alt="TODO: 描述这张图">
-        </div>
-        <h3 class="project__title">TODO: 项目标题</h3>
-        <p class="project__tags">TODO: 分类 · 年份</p>
-      </article>
-
-      <!-- 项目 3：这个网站本身（作业明确要求包含） -->
-      <article class="project">
-        <div class="project__media" data-carousel>
-          <img class="is-active" src="images/TODO-site-desktop.jpg" alt="本站桌面端截图">
-          <img src="images/TODO-site-mobile.jpg" alt="本站手机端截图">
-        </div>
-        <h3 class="project__title">This Portfolio</h3>
-        <p class="project__tags">HTML, CSS, JavaScript · 2026</p>
-        <a class="project__external"
-           href="https://github.com/zhangyubooo/zhangyubooo.github.io"
-           target="_blank" rel="noopener">Code on GitHub ↗</a>
-      </article>
-
-      <!-- 项目 4：占位。作业说了要为未来项目留位置 -->
+      <!-- 1. 最新。照片未就绪，暂用占位卡（无链接、不可点）
+           拿到图后：删掉下面的 <div class="project__media"></div>，
+           把注释里的轮播块放出来 -->
       <article class="project project--placeholder">
         <div class="project__media"></div>
-        <h3 class="project__title">Coming this semester</h3>
-        <p class="project__tags">15-113 Project 2</p>
+        <h3 class="project__title">Hybrid Exhibition: Napier</h3>
+        <p class="project__tags">Exhibition Design · 2026 · In progress</p>
+        <!--
+        <div class="project__media" data-carousel>
+          <img class="is-active" src="images/napier-01.jpg" alt="TODO">
+          <img src="images/napier-02.jpg" alt="TODO">
+          <img src="images/napier-03.jpg" alt="TODO">
+        </div>
+        -->
+      </article>
+
+      <!-- 2. 视频封面 -->
+      <article class="project">
+        <a class="project__link" href="restless-mind.html">
+          <div class="project__media">
+            <video src="videos/restless-mind-cover.mp4"
+                   poster="images/restless-mind-poster.jpg"
+                   muted loop playsinline
+                   aria-label="Audience interacting with the installation"></video>
+          </div>
+          <h3 class="project__title">Restless Mind</h3>
+          <p class="project__tags">Soft Robotics · Interactive Installation · 2025</p>
+        </a>
+      </article>
+
+      <!-- 3. 三图轮播封面 -->
+      <article class="project">
+        <a class="project__link" href="lethe.html">
+          <div class="project__media" data-carousel>
+            <img class="is-active" src="images/lethe-01.jpg"
+                 alt="Five looks from the Lethe line photographed together">
+            <img src="images/lethe-02.jpg"
+                 alt="Models walking the Lunar Gala runway in the opening Lethe look">
+            <img src="images/lethe-03.jpg"
+                 alt="Receiving flowers on stage after the show">
+          </div>
+          <h3 class="project__title">Lethe</h3>
+          <p class="project__tags">Fashion Design · Lunar Gala 2026</p>
+        </a>
+      </article>
+
+      <!-- 4. 这个网站本身（作业要求包含） -->
+      <article class="project">
+        <a class="project__link"
+           href="https://github.com/zhangyubooo/zhangyubooo.github.io"
+           target="_blank" rel="noopener">
+          <div class="project__media" data-carousel>
+            <img class="is-active" src="images/site-desktop.jpg"
+                 alt="This portfolio site viewed on a laptop">
+            <img src="images/site-mobile.jpg"
+                 alt="This portfolio site viewed on a phone">
+          </div>
+          <h3 class="project__title">Portfolio Website</h3>
+          <p class="project__tags">HTML, CSS, JavaScript · 2026</p>
+        </a>
       </article>
 
     </div>
 
-    <!-- 项目区末尾的一行链接 -->
+    <!-- 项目区末尾的一行链接。这一行同时充当页脚，主页不放 credits。 -->
     <ul class="social">
-      <li><a href="mailto:TODO@andrew.cmu.edu">Email</a></li>
-      <li><a href="TODO" target="_blank" rel="noopener">LinkedIn</a></li>
-      <li><a href="TODO" target="_blank" rel="noopener">Instagram</a></li>
-      <li><a href="TODO" target="_blank" rel="noopener">Medium</a></li>
+      <li><a href="mailto:yubozhang1224@outlook.com">Email</a></li>
+      <li><a href="https://www.linkedin.com/in/yubo-zhang-57994b399/"
+             target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://www.instagram.com/zhangyubooo/"
+             target="_blank" rel="noopener">Instagram</a></li>
+      <li><a href="https://medium.com/@yubozhan"
+             target="_blank" rel="noopener">Medium</a></li>
     </ul>
 
   </section>
 
 </main>
-
-<footer class="footer">
-  <p>© 2026 Yubo Zhang</p>
-  <p class="footer__credits">
-    TODO: 素材来源。视觉参考、字体、任何不是你自己拍/画的图，都写在这。
-  </p>
-</footer>
 
 <script src="script.js"></script>
 </body>
