@@ -23,16 +23,16 @@
   --c-line:        #e5e5e5;
   --c-fill:        #f2f2f2;  /* 占位块、图片底色 */
  
-  /* 字体 —— 后面的是回退栈，字体没加载出来时用系统字体顶上 */
-  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
-  --font-sans:  "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  /* 字体 —— 全站单一 grotesk。后面的是回退栈，字体没加载出来时用系统字体顶上。
+     层级不靠换字体，靠字重（400/500/600）和字号 —— 参考图就是这个做法。 */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
  
   /* 字号 —— 五档，够用且克制。rem 相对根字号，用户放大字体时会跟着变 */
   --t-xs:      0.8125rem;  /* 13px  项目标签 */
   --t-sm:      0.9375rem;  /* 15px  导航、社交链接 */
   --t-base:    1.0625rem;  /* 17px  正文 */
   --t-lg:      1.375rem;   /* 22px  项目标题 */
-  --t-xl:      1.75rem;    /* 28px  区标题 */
+  --t-xl:      1.75rem;    /* 28px  区标题，加粗 */
   --t-display: 3.25rem;    /* 52px  你好! */
  
   /* 间距 —— 4px 基准的模数系统。只用这几个值，不出现 37px 这种数 */
@@ -46,8 +46,11 @@
   --s-8: 9rem;      /* 144 */
  
   /* 布局 */
-  --max-w:       1200px;
-  --gutter:      var(--s-4);
+  --max-w:       1800px;
+  /* clamp(最小, 随窗口变, 最大) —— 边距随窗口宽度流动，
+     窄屏不至于挤到贴边，宽屏也不会撑得太夸张。
+     不用媒体查询就实现了连续变化。 */
+  --gutter:      clamp(1rem, 2vw, 2rem);
   --cover-ratio: 3 / 2;      /* 封面比例。改这一个值，全站封面同步变 */
 }
  
@@ -134,8 +137,9 @@ a { color: inherit; }
 }
  
 .nav__name {
-  font-family: var(--font-serif);
-  font-size: var(--t-lg);
+  font-size: var(--t-base);
+  font-weight: 500;
+  letter-spacing: -0.01em;
   text-decoration: none;
 }
  
@@ -173,10 +177,10 @@ a { color: inherit; }
 }
  
 .intro__greeting {
-  font-family: var(--font-serif);
   font-size: var(--t-display);
-  font-weight: 400;
-  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.03em;   /* 大字号必须收紧字距，否则字母之间会散开 */
+  line-height: 1.05;
   margin-bottom: var(--s-8);
   text-align: center;
 }
@@ -213,16 +217,16 @@ a { color: inherit; }
 }
  
 .projects__heading {
-  font-family: var(--font-serif);
   font-size: var(--t-xl);
-  font-weight: 400;
-  margin-bottom: var(--s-6);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin-bottom: var(--s-5);
 }
  
 .projects__grid {
   display: grid;
   grid-template-columns: 1fr;        /* 手机优先：默认单列 */
-  gap: var(--s-6) var(--s-4);        /* 行间距 列间距 */
+  gap: var(--s-5) var(--s-4);        /* 行间距 列间距 */
 }
  
 .project__link {
@@ -237,7 +241,7 @@ a { color: inherit; }
   aspect-ratio: var(--cover-ratio);
   overflow: hidden;
   background: var(--c-fill);
-  margin-bottom: var(--s-3);
+  margin-bottom: 0.875rem;   /* 14px —— 封面和标题贴得近，读作一组 */
 }
  
 .project__media img,
@@ -264,16 +268,18 @@ a { color: inherit; }
 .project__link:hover .project__media video { transform: scale(1.02); }
  
 .project__title {
-  font-family: var(--font-serif);
-  font-size: var(--t-lg);
+  font-size: var(--t-sm);
   font-weight: 400;
-  margin-bottom: var(--s-1);
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  margin-bottom: 0;          /* 标题和标签之间只留行距，不额外加间隔 */
 }
  
 .project__tags {
-  font-size: var(--t-xs);
+  font-size: var(--t-sm);    /* 和标题同字号 —— 靠颜色分层，不靠大小 */
+  font-weight: 400;
+  line-height: 1.45;
   color: var(--c-muted);
-  letter-spacing: 0.02em;
 }
  
 /* 占位卡：没有链接，所以鼠标保持默认箭头，暗示"点不了" */
@@ -319,16 +325,16 @@ a { color: inherit; }
 .info section + section { margin-top: var(--s-7); }
  
 .info h1 {
-  font-family: var(--font-serif);
   font-size: var(--t-xl);
-  font-weight: 400;
+  font-weight: 600;
+  letter-spacing: -0.025em;
   margin-bottom: var(--s-4);
 }
  
 .info h2 {
-  font-family: var(--font-serif);
   font-size: var(--t-lg);
-  font-weight: 400;
+  font-weight: 500;
+  letter-spacing: -0.015em;
   margin-bottom: var(--s-3);
 }
  
@@ -360,9 +366,9 @@ a { color: inherit; }
 }
  
 .footer h2 {
-  font-family: var(--font-serif);
   font-size: var(--t-lg);
-  font-weight: 400;
+  font-weight: 500;
+  letter-spacing: -0.015em;
   color: var(--c-text);
   margin-bottom: var(--s-3);
 }
@@ -379,7 +385,6 @@ a { color: inherit; }
 @media (min-width: 768px) {
   :root {
     --t-display: 4.5rem;
-    --gutter: var(--s-5);
   }
  
   .projects__grid { grid-template-columns: repeat(2, 1fr); }
@@ -390,7 +395,6 @@ a { color: inherit; }
   :root {
     --t-display: 5.5rem;
     --t-xl: 2rem;
-    --gutter: var(--s-6);
   }
 }
  
