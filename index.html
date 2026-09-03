@@ -3,9 +3,125 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yubo — Portfolio</title>
+  <title>Yubo Zhang — Environments Designer</title>
+  <meta name="description" content="Yubo Zhang — a designer working across interfaces, products, and environments, studying Design &amp; PM at Carnegie Mellon University.">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <h1>Deployment works.</h1>
+
+<!--
+  导航：默认隐藏。script.js 会在用户滚动离开首屏时给它加上 .is-visible。
+  放在 <main> 外面，因为它不属于页面主体内容。
+-->
+<header class="nav" data-nav>
+  <nav aria-label="Main navigation">
+    <a class="nav__name" href="#intro">Yubo Zhang</a>
+    <ul class="nav__links">
+      <li><a href="info.html">Info</a></li>
+      <li><a href="mailto:yubozhang1224@outlook.com">Contact me</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ========== 第一屏：自我介绍 ========== -->
+  <section class="intro" id="intro">
+    <h1 class="intro__greeting">TODO: 一个招呼词</h1>
+
+    <div class="intro__text">
+      <p>I'm Yubo, from Harbin, China, and now based in Pittsburgh. I design
+        experiences across interfaces, physical products, and environments. I'm
+        interested in how technology can connect these different scales of
+        interaction and make the way people engage with products, spaces, and
+        systems more intuitive and meaningful. Currently, I'm studying Design
+        &amp; PM @ Carnegie Mellon University.</p>
+      <p>I believe great products are built at the intersection of user needs,
+        technological possibilities, and market opportunities. Design is the
+        bridge that brings them together.</p>
+      <p>I'm passionate about emerging technologies and drawn to projects that
+        bring technology and creativity together to unlock new possibilities.</p>
+    </div>
+
+    <!--
+      滚动提示。首屏什么都没有的设计有个代价：用户不知道下面还有内容。
+      这个箭头是解决方案，同时它也是个锚点链接，点了会平滑滚到 projects。
+    -->
+    <a class="intro__cue" href="#projects" aria-label="Scroll to projects">↓</a>
+  </section>
+
+  <!-- ========== 第二屏：项目 ========== -->
+  <section class="projects" id="projects">
+    <h2 class="projects__heading">Projects</h2>
+
+    <div class="projects__grid">
+
+      <!-- 项目 1：视频封面 -->
+      <article class="project">
+        <div class="project__media">
+          <video
+            src="videos/TODO-project1.mp4"
+            poster="images/TODO-project1-poster.jpg"
+            muted loop playsinline
+            aria-label="TODO: 描述这段视频里发生了什么"></video>
+        </div>
+        <h3 class="project__title">TODO: 项目标题</h3>
+        <p class="project__tags">TODO: Installation, Interaction Design · 2025</p>
+      </article>
+
+      <!-- 项目 2：多图轮播封面 -->
+      <article class="project">
+        <div class="project__media" data-carousel>
+          <img class="is-active" src="images/TODO-p2-a.jpg" alt="TODO: 描述这张图">
+          <img src="images/TODO-p2-b.jpg" alt="TODO: 描述这张图">
+          <img src="images/TODO-p2-c.jpg" alt="TODO: 描述这张图">
+        </div>
+        <h3 class="project__title">TODO: 项目标题</h3>
+        <p class="project__tags">TODO: 分类 · 年份</p>
+      </article>
+
+      <!-- 项目 3：这个网站本身（作业明确要求包含） -->
+      <article class="project">
+        <div class="project__media" data-carousel>
+          <img class="is-active" src="images/TODO-site-desktop.jpg" alt="本站桌面端截图">
+          <img src="images/TODO-site-mobile.jpg" alt="本站手机端截图">
+        </div>
+        <h3 class="project__title">This Portfolio</h3>
+        <p class="project__tags">HTML, CSS, JavaScript · 2026</p>
+        <a class="project__external"
+           href="https://github.com/zhangyubooo/zhangyubooo.github.io"
+           target="_blank" rel="noopener">Code on GitHub ↗</a>
+      </article>
+
+      <!-- 项目 4：占位。作业说了要为未来项目留位置 -->
+      <article class="project project--placeholder">
+        <div class="project__media"></div>
+        <h3 class="project__title">Coming this semester</h3>
+        <p class="project__tags">15-113 Project 2</p>
+      </article>
+
+    </div>
+
+    <!-- 项目区末尾的一行链接 -->
+    <ul class="social">
+      <li><a href="mailto:TODO@andrew.cmu.edu">Email</a></li>
+      <li><a href="TODO" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="TODO" target="_blank" rel="noopener">Instagram</a></li>
+      <li><a href="TODO" target="_blank" rel="noopener">Medium</a></li>
+    </ul>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© 2026 Yubo Zhang</p>
+  <p class="footer__credits">
+    TODO: 素材来源。视觉参考、字体、任何不是你自己拍/画的图，都写在这。
+  </p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
