@@ -56,7 +56,7 @@
   </section>
 
     <!-- ========== 第二屏：项目 ==========
-       结构（两列 grid、data-carousel 轮播钩子、整卡可点击）由 Claude 提议；
+       结构（两列 grid、data-carousel 轮播钩子）由 Claude 提议；
        项目排序、标签措辞、alt 文案由我决定。过程见 prompt-log.md
   -->
   <section class="projects" id="projects">
@@ -66,50 +66,42 @@
 
       <!-- ▼▼▼ 新项目加在这一行下面。最新的在最上。 ▼▼▼ -->
 
-      <!-- 1. 最新。照片未就绪，暂用占位卡（无链接、不可点）
-           拿到图后：删掉下面的 <div class="project__media"></div>，
-           把注释里的轮播块放出来 -->
-      <article class="project project--placeholder">
-        <div class="project__media"></div>
+      <!-- 1. 最新。暂无详情页，所以整张卡不是链接 -->
+      <article class="project">
+        <div class="project__media">
+          <img src="images/napier-01.jpg"
+               alt="Line drawing of Napier's bones — numbered calculating rods laid across a tan ground">
+        </div>
         <h3 class="project__title">Hybrid Exhibition: Napier</h3>
         <p class="project__tags">Exhibition Design · 2026 · In progress</p>
-        <!--
-        <div class="project__media" data-carousel>
-          <img class="is-active" src="images/napier-01.jpg" alt="TODO">
-          <img src="images/napier-02.jpg" alt="TODO">
-          <img src="images/napier-03.jpg" alt="TODO">
-        </div>
-        -->
       </article>
 
       <!-- 2. 视频封面 -->
       <article class="project">
-        <a class="project__link" href="restless-mind.html">
-          <div class="project__media">
-            <video src="videos/restless-mind-cover.mp4"
-                   poster="images/restless-mind-poster.jpg"
-                   muted loop playsinline data-autoplay
-                   aria-label="Audience interacting with the installation"></video>
-          </div>
-          <h3 class="project__title">Restless Mind</h3>
-          <p class="project__tags">Soft Robotics · Interactive Installation · 2026</p>
-        </a>
+        <!-- 详情页待做，暂时不设链接，避免死链 -->
+        <div class="project__media">
+          <video src="videos/restless-mind-cover.mp4"
+                 poster="images/restless-mind-poster.jpg"
+                 muted loop playsinline data-autoplay
+                 aria-label="Audience interacting with the installation"></video>
+        </div>
+        <h3 class="project__title">Restless Mind</h3>
+        <p class="project__tags">Soft Robotics · Interactive Installation · 2026</p>
       </article>
 
       <!-- 3. 三图轮播封面 -->
       <article class="project">
-        <a class="project__link" href="lethe.html">
-          <div class="project__media" data-carousel>
-            <img class="is-active" src="images/lethe-01.jpg"
-                 alt="Five looks from the Lethe line photographed together">
-            <img src="images/lethe-02.jpg"
-                 alt="Models walking the Lunar Gala runway in the opening Lethe look">
-            <img src="images/lethe-03.jpg"
-                 alt="Receiving flowers on stage after the show">
-          </div>
-          <h3 class="project__title">Lethe</h3>
-          <p class="project__tags">Fashion Design · Lunar Gala · 2026</p>
-        </a>
+        <!-- 详情页待做，暂时不设链接，避免死链 -->
+        <div class="project__media" data-carousel>
+          <img class="is-active" src="images/lethe-01.jpg"
+               alt="Five looks from the Lethe line photographed together">
+          <img src="images/lethe-02.jpg"
+               alt="Models walking the Lunar Gala runway in the opening Lethe look">
+          <img src="images/lethe-03.jpg"
+               alt="Receiving flowers on stage after the show">
+        </div>
+        <h3 class="project__title">Lethe</h3>
+        <p class="project__tags">Fashion Design · Lunar Gala · 2026</p>
       </article>
 
     </div>
