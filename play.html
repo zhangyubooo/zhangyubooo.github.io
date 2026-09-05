@@ -30,35 +30,73 @@
 
   <!--
     瀑布流画廊。图片和视频都不裁切，保持原始比例。
-    最新的放最上面 —— 直接把新的 <figure> 粘在下面这行的下方。
+    最新的放最上面 —— 新的 <figure> 粘在下面这行的下方。
   -->
   <div class="play__grid">
 
     <!-- ▼▼▼ 新素材加在这一行下面 ▼▼▼ -->
 
+    <figure class="play__item">
+      <video src="videos/play-weave.mp4"
+             poster="images/play-weave-poster.jpg"
+             muted loop playsinline data-autoplay
+             aria-label="A woven paper panel with black dots, seen from above"></video>
+    </figure>
+
+    <figure class="play__item">
+      <img src="images/play-boxhead.jpg" loading="lazy"
+           alt="A person outdoors holding a cardboard viewing box over their head">
+    </figure>
+
+    <figure class="play__item">
+      <img src="images/play-wave-tiles.jpg" loading="lazy"
+           alt="A grid of cast plaster tiles forming a continuous wave pattern">
+    </figure>
+
+    <figure class="play__item">
+      <img src="images/play-camera.jpg" loading="lazy"
+           alt="Adjusting a filter on a tripod-mounted camera with a shotgun mic">
+    </figure>
+
+    <figure class="play__item">
+      <img src="images/play-alphabet.jpg" loading="lazy"
+           alt="A display alphabet built from circles and rectangles, white on black">
+    </figure>
+
+    <figure class="play__item">
+      <img src="images/play-freedom.jpg" loading="lazy"
+           alt="A typographic poster reading FREEDOM in tightly stacked orange and black letters">
+    </figure>
+
+    <figure class="play__item">
+      <video src="videos/play-model-room.mp4"
+             poster="images/play-model-room-poster.jpg"
+             muted loop playsinline data-autoplay
+             aria-label="A white scale model of a room with a figure facing a lit screen"></video>
+    </figure>
+
+    <figure class="play__item">
+      <img src="images/play-diorama.jpg" loading="lazy"
+           alt="A small paper diorama with two cut-out figures, a cabin, and a yellow form">
+    </figure>
+
     <!--
-      ══ 图片模板 ══
+      ══ 模板 ══
+      图片：
       <figure class="play__item">
-        <img src="images/play-01.jpg" alt="描述画面里是什么" loading="lazy">
+        <img src="images/play-xxx.jpg" loading="lazy" alt="描述画面里是什么">
       </figure>
 
-      ══ 视频模板 ══
-      data-autoplay：滚进视口才播、滚出去暂停（script.js 负责）
+      视频（data-autoplay：滚进视口才播，script.js 负责）：
       <figure class="play__item">
-        <video src="videos/play-01.mp4"
-               poster="images/play-01-poster.jpg"
+        <video src="videos/play-xxx.mp4"
+               poster="images/play-xxx-poster.jpg"
                muted loop playsinline data-autoplay
                aria-label="描述视频里发生了什么"></video>
       </figure>
     -->
 
   </div>
-
-  <!--
-    素材填进去之前这一页是空的。如果交作业前还没填完，
-    把下面这行的注释去掉，页面至少有个交代。
-    <p class="play__empty">More coming soon.</p>
-  -->
 
 </main>
 
