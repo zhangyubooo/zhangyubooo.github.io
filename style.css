@@ -396,8 +396,9 @@ a { color: inherit; }
   background: var(--c-fill);
 }
 
-/* 正文比全站默认小一档，密度更接近参考图 */
-.about__bio { font-size: var(--t-sm); }
+/* 正文用全站基准字号；行宽收窄让文字块变高，
+   好和左边放大后的照片高度接近 */
+.about__bio { font-size: var(--t-base); }
 .about__bio p + p { margin-top: var(--s-3); }
 
 /* 单栏堆叠时，三段之间留一个空行。
@@ -452,10 +453,12 @@ a { color: inherit; }
 /* 桌面：照片在左约 45%，正文在右并且自己再分两栏 */
 @media (min-width: 900px) {
   .about__top {
-    /* 照片栏收到约原来的 1/3 宽，图跟着等比缩小 */
-    grid-template-columns: clamp(150px, 14vw, 200px) 1fr;
+    /* 照片占 42%，配上右边收窄的文字块，两边高度大致相当。
+       图片不裁切，所以高度由原图比例决定 —— 严格等高做不到，
+       只能让两者接近，再用 align-items: center 让差值均分到上下。 */
+    grid-template-columns: 42% 1fr;
     gap: var(--s-6);
-    align-items: start;
+    align-items: center;
   }
 
 }
@@ -463,7 +466,7 @@ a { color: inherit; }
 /* 正文自动分栏：auto-fit + minmax 让列数随内容块数量和可用宽度自己决定。
    现在只有一段，它会独占整行；以后拆成两三段，就自动变成两三栏。
    加 max-width 是因为单段独占整行时行会太长 —— 超过 70 个字符就容易串行。 */
-.about__bio { max-width: 62ch; }
+.about__bio { max-width: 50ch; }
 
 @media (min-width: 1000px) {
   .about__bio {
