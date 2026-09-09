@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yubo Zhang — Environments Designer</title>
-  <meta name="description" content="Yubo Zhang — a designer working across interfaces, products, and environments, studying Design &amp; PM at Carnegie Mellon University.">
+  <title>Yubo Zhang — Environments &amp; Product Design · Carnegie Mellon</title>
+  <meta name="description" content="Yubo Zhang is a designer at Carnegie Mellon University working across interfaces, physical products, and environments. Portfolio of installations, exhibition and game design.">
+  <link rel="canonical" href="https://zhangyubooo.github.io/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -32,7 +33,14 @@
 
   <!-- ========== 第一屏：自我介绍 ========== -->
   <section class="intro" id="intro">
-    <h1 class="intro__greeting">你好</h1>
+    <!-- 真正的页面标题。视觉上隐藏，但搜索引擎和读屏器读得到 ——
+         "你好" 作为设计元素说不清这一页是关于谁的。 -->
+    <h1 class="visually-hidden">
+      Yubo Zhang — designer working across interfaces, products, and
+      environments at Carnegie Mellon University
+    </h1>
+
+    <p class="intro__greeting" aria-hidden="true">你好</p>
 
     <div class="intro__text">
       <p>I'm Yubo, from Harbin, China, and now based in Pittsburgh. I design
@@ -135,6 +143,42 @@
   </section>
 
 </main>
+
+<!-- 结构化数据。让搜索引擎把这个网站和"Yubo Zhang 这个人"关联起来，
+     并知道他和 CMU、以及那些社交账号是同一个实体。 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Yubo Zhang",
+  "url": "https://zhangyubooo.github.io/",
+  "image": "https://zhangyubooo.github.io/images/portrait.jpg",
+  "jobTitle": "Designer",
+  "description": "Designer working across interfaces, physical products, and environments.",
+  "alumniOf": {
+    "@type": "CollegeOrUniversity",
+    "name": "Carnegie Mellon University"
+  },
+  "affiliation": {
+    "@type": "CollegeOrUniversity",
+    "name": "Carnegie Mellon University"
+  },
+  "knowsAbout": [
+    "Environment design",
+    "Exhibition design",
+    "Interaction design",
+    "Product design",
+    "Soft robotics"
+  ],
+  "email": "mailto:yubozhang1224@outlook.com",
+  "sameAs": [
+    "https://www.linkedin.com/in/yubo-zhang-57994b399/",
+    "https://www.instagram.com/zhangyubooo/",
+    "https://medium.com/@yubozhan",
+    "https://github.com/zhangyubooo"
+  ]
+}
+</script>
 
 <script src="script.js"></script>
 </body>
