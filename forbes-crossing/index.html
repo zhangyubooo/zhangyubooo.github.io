@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Forbes Crossing — a CMU campus crossing game by Yubo Zhang</title>
+  <meta name="description" content="Forbes Crossing: a browser game by Yubo Zhang. Cross Forbes Ave, the Cut, and the endless CMU construction on foot. Arrow keys or swipe.">
+  <link rel="canonical" href="https://zhangyubooo.github.io/forbes-crossing/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="game.css">
+</head>
+
+<body>
+
+<!-- 回主站的入口。游戏是作品集的一部分，不该是个走不回去的死胡同。 -->
+<a class="back" href="../index.html">← Yubo Zhang</a>
+
+<!--
+  舞台。canvas 用 CSS 铺满视口，实际像素在 game.js 里按 devicePixelRatio 设置，
+  否则在 Retina 屏上整个画面是糊的。
+-->
+<div class="stage">
+  <canvas id="game" aria-label="Forbes Crossing game canvas" role="img"></canvas>
+
+  <!-- ===== HUD ===== 用 DOM 而不是画在 canvas 里：
+       文字排版交给 CSS，字体和主站一致，也不用自己处理换行和缩放。 -->
+  <div class="hud" id="hud" hidden>
+    <div class="hud__score"><span id="score">0</span></div>
+    <div class="hud__meta">
+      <span>BEST <b id="best">0</b></span>
+      <span class="hud__coffee">COFFEE <b id="coffee">0</b></span>
+    </div>
+  </div>
+
+  <button class="sound" id="sound" hidden aria-label="Toggle sound">♪</button>
+
+  <!-- ===== 开始界面 ===== -->
+  <div class="panel" id="start">
+    <p class="panel__eyebrow">Carnegie Mellon, 10 minutes before class</p>
+    <h1 class="panel__title">Forbes<br>Crossing</h1>
+    <p class="panel__body">
+      Get across Forbes Ave, the Cut, and whatever they're digging up this
+      week. Every row forward is a point. Stand still too long and a campus
+      squirrel takes an interest in you.
+    </p>
+    <ul class="keys">
+      <li><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></li>
+      <li class="keys__touch">Swipe to move · tap to hop forward</li>
+    </ul>
+    <button class="btn" id="startBtn">Start walking</button>
+  </div>
+
+  <!-- ===== 结束界面 ===== -->
+  <div class="panel panel--over" id="over" hidden>
+    <p class="panel__eyebrow" id="cause">You got hit by the 61C.</p>
+    <p class="panel__score"><span id="finalScore">0</span></p>
+    <p class="panel__body panel__body--tight">
+      blocks crossed · best <b id="finalBest">0</b> · coffee <b id="finalCoffee">0</b>
+    </p>
+    <button class="btn" id="againBtn">Again</button>
+    <p class="panel__hint">or press <kbd>space</kbd></p>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
