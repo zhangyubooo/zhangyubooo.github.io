@@ -145,10 +145,25 @@ const C = {
   trench:  '#0e0e10',   // 施工沟：几乎全黑
   plate:   '#8d8f93',
   mark:    '#f4f4f2',
-  accent:  '#c8102e',   // 只给三样东西：帽衫、61C、咖啡隔热套
+  accent:  '#c8102e',   // CMU 红：帽衫、61C、警灯、咖啡隔热套
+  rig:     '#d9a021',   // 工程黄：只给挖掘机和运土车
+  rigDark: '#b3831a',
+  cone:    '#e0712a',   // 锥筒橙
+  navy:    '#2f4374',   // 警灯的另一半，全场只有这么几像素
   dark:    '#141416',
-  skin:    '#f2ede7',
+  hair:    '#3a332e',   // 后脑勺
+  skin:    '#f6e3cf',   // 脸。和头发拉开两档，转身才看得出来
 };
+
+// 车身上的字。都是 CMU 的梗 —— 苏格兰格纹、吉祥物 Scotty、Buggy 比赛。
+const LABELS = ['TARTANS', 'SCOTTY', 'PLAID', 'CMU', 'BUGGY', 'FENCE'];
+
+// 给定底色，返回压在上面还读得清的字色。
+function inkOn(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const lum = 0.299 * ((n >> 16) & 255) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255);
+  return lum > 140 ? '#1b1b1d' : '#f4f4f2';
+}
 
 // 车。w/d 单位是格，h 单位是 UNIT。
 const VEHICLES = [
@@ -157,8 +172,10 @@ const VEHICLES = [
   { w: 1.95, d: 0.90, h: 0.95, body: '#8b8d91', roof: '#6f7175' },
   { w: 2.60, d: 0.92, h: 1.15, body: '#f4f4f2', roof: '#dcdcd9', truck: true },
 ];
-// 61C —— 唯一用强调色的车，也是唯一会在专用道上冲过来的东西。
-const BUS = { w: 3.6, d: 0.95, h: 1.25, body: C.accent, roof: '#9c0d24', bus: true };
+// 61C —— 唯一会在专用道上冲过来的东西。
+const BUS = { w: 3.6, d: 0.95, h: 1.25, body: C.accent, roof: '#9c0d24', bus: true, label: '61C' };
+// 校警车。白车 + 车顶警灯，警灯两块交替亮，是全场唯一出现蓝色的地方。
+const POLICE = { w: 2.0, d: 0.9, h: 0.95, body: '#f6f6f4', roof: '#e0e0dc', police: true, label: 'CMU POLICE' };
 
 
 /* ④ 世界生成 ------------------------------------------------ */
@@ -184,6 +201,8 @@ function makeLane(row) {
     // 开局正前方一定是通的。否则第一下就撞墙，玩家会以为游戏坏了。
     lane.blocked.delete(0);
     lane.obstacles = lane.obstacles.filter(o => o.col !== 0);
+    // 第 0 行左边留给 Walking to the Sky，把那边的树清掉，别叠在一起。
+    if (row === 0) lane.obstacles = lane.obstacles.filter(o => o.col > MINC - 1);
     return lane;
   }
 
@@ -269,7 +288,10 @@ function makeProp(col, kind) {
 function roadLane(row, d) {
   const dir = Math.random() < 0.5 ? 1 : -1;
   const speed = rand(2.0, 3.8) * (1 + 0.55 * d);
-  const kind = pick(VEHICLES);
+  // 一条道上跑同一种车。12% 的概率整条道是校警车。
+  const kind = Math.random() < 0.12 ? POLICE : pick(VEHICLES);
+  // 车身上刷字：车够宽才刷，太窄的车字会挤成一团。
+  const label = kind.label || (kind.w >= 1.9 && Math.random() < 0.55 ? pick(LABELS) : null);
   const gap = rand(3.4, 7.0) - 1.6 * d;
   const period = kind.w + Math.max(1.8, gap);
   // 循环长度取 period 的整数倍，否则绕回来的时候间距会突然变。
@@ -281,7 +303,7 @@ function roadLane(row, d) {
   for (let i = 0; i < count; i++) {
     entities.push({ x: LANE_L + offset + i * period, kind });
   }
-  return { type: 'road', row, base: 0, color: C.road, dir, speed, span, entities, obstacles: [], blocked: new Set(), coffee: null };
+  return { type: 'road', row, base: 0, color: C.road, dir, speed, span, entities, label, obstacles: [], blocked: new Set(), coffee: null };
 }
 
 /* 施工沟：CMU 版的"过河"。钢板就是原木，踩不上去就掉下去。 */
@@ -307,6 +329,13 @@ function trenchLane(row, d) {
         off: Math.random() < 0.5 ? 0 : len - 2,   // 靠一端停，至少留一格能站
         face: Math.random() < 0.5 ? -1 : 1,
       };
+    }
+    // 锥筒摆在板子的两条长边上，不占中间那条能站人的线，纯装饰。
+    e.cones = [];
+    for (let k = 0; k < len; k++) {
+      if (Math.random() < 0.32) {
+        e.cones.push({ o: k + rand(0.3, 0.7), s: Math.random() < 0.5 ? 0.15 : 0.85 });
+      }
     }
     entities.push(e);
   }
@@ -612,11 +641,15 @@ function drawLane(lane) {
 
   for (const o of lane.obstacles) drawProp(o, r, lane.base);
 
+  // 起点那一行的左边立着 Walking to the Sky。开局第一眼就看得到，
+  // 走远之后自然滚出画面 —— 它是地标，不是背景板。
+  if (r === 0) drawSculpture(r);
+
   if (lane.type === 'road') {
     // 屏幕外的车不用画。一条道 12 辆车，画一半就够，省一半的多边形。
     for (const e of lane.entities) {
       if (e.x > EDGE + 1 || e.x + e.kind.w < -EDGE - 1) continue;
-      drawVehicle(e.x, r, e.kind, lane.dir);
+      drawVehicle(e.x, r, e.kind, lane.dir, lane.label);
     }
   } else if (lane.type === 'trench') {
     for (const e of lane.entities) {
@@ -624,7 +657,7 @@ function drawLane(lane) {
       drawPlate(e, r);
     }
   } else if (lane.type === 'busway' && lane.running) {
-    drawVehicle(lane.x, r, BUS, lane.dir);
+    drawVehicle(lane.x, r, BUS, lane.dir, BUS.label);
   }
 }
 
@@ -639,7 +672,7 @@ function drawWarning(lane) {
   }
 }
 
-function drawVehicle(x, row, kind, dir) {
+function drawVehicle(x, row, kind, dir, label) {
   const y = row + (1 - kind.d) / 2;
   const bodyH = UNIT * kind.h * 0.85;
   tile(x - 0.06, y + 0.06, kind.w, kind.d, 'rgba(0,0,0,0.10)');   // 影子
@@ -647,10 +680,37 @@ function drawVehicle(x, row, kind, dir) {
   // 车顶/车厢，往车尾方向缩一点，看着才有头有尾。
   const roofW = kind.bus ? kind.w * 0.86 : kind.w * 0.52;
   const roofX = dir > 0 ? x + kind.w - roofW - kind.w * 0.08 : x + kind.w * 0.08;
-  box(roofX, y + 0.08, roofW, kind.d - 0.16, UNIT * kind.h * 0.5, kind.roof, bodyH);
+  const roofH = UNIT * kind.h * 0.5;
+  box(roofX, y + 0.08, roofW, kind.d - 0.16, roofH, kind.roof, bodyH);
   // 车头灯：一小块白，顺便告诉你车往哪开。
   const lx = dir > 0 ? x + kind.w - 0.12 : x;
   tile(lx, y + 0.18, 0.12, kind.d - 0.36, '#ffffff', bodyH * 0.55);
+
+  if (kind.police) {
+    // 警灯：红蓝两块交替亮。亮的那块画满高度，暗的那块压扁，
+    // 不用改颜色就有闪的效果。
+    const on = Math.floor(performance.now() / 260) % 2 === 0;
+    const bar = roofX + roofW * 0.16;
+    box(bar, y + kind.d * 0.32, roofW * 0.3, kind.d * 0.3,
+        UNIT * (on ? 0.16 : 0.07), C.accent, bodyH + roofH);
+    box(bar + roofW * 0.36, y + kind.d * 0.32, roofW * 0.3, kind.d * 0.3,
+        UNIT * (on ? 0.07 : 0.16), C.navy, bodyH + roofH);
+  }
+
+  // 车身上的字。画在车的正面 —— 这个投影里正面的上下缘是水平的，
+  // 所以直接用 fillText 就行，不需要任何变换。
+  if (label) {
+    const A = P(x, y), B = P(x + kind.w, y);
+    const wpx = B.x - A.x;
+    let fs = Math.max(6, bodyH * 0.4);
+    ctx.font = `600 ${fs}px Inter, system-ui, sans-serif`;
+    const over = ctx.measureText(label).width / (wpx * 0.78);
+    if (over > 1) { fs = Math.max(5, fs / over); ctx.font = `600 ${fs}px Inter, system-ui, sans-serif`; }
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = inkOn(kind.body);
+    ctx.fillText(label, (A.x + B.x) / 2, A.y - bodyH * 0.46);
+  }
 }
 
 function drawPlate(e, row) {
@@ -660,6 +720,52 @@ function drawPlate(e, row) {
     tile(e.x + i - 0.02, row + 0.08, 0.04, 0.84, shade(C.plate, 0.72), UNIT * 0.22);
   }
   if (e.rig) drawRig(e.rig, e.x + e.rig.off, row, UNIT * 0.22);
+  if (e.cones) for (const c of e.cones) drawCone(e.x + c.o, row + c.s, UNIT * 0.22);
+}
+
+/*
+  Walking to the Sky —— 起点左边那根斜柱子。
+  斜杆同样是一串小盒子沿折线摆出来的（和挖掘机的动臂是同一个办法）：
+  每往上一段就往右挪一点，攒出一根倾斜的柱子。
+  柱子上和地面上的小人用几种不同颜色的长方体，是全场唯一放开用色的地方。
+*/
+const SKY_FIG = ['#c8102e', '#3a332e', '#f2f2f0', '#d9a021', '#8e9094', '#5c6f8a'];
+
+function drawSculpture(row) {
+  const bx = -5.2;                  // 活动范围之外的左边
+  const by = row + 0.55;
+  const N = 13;
+  const RISE = UNIT * 0.34;         // 每段升高
+  const RUN = 0.10;                 // 每段右移 —— 这两个数的比值就是倾角
+
+  tile(bx - 0.9, by - 0.75, 1.8, 1.5, 'rgba(0,0,0,0.10)');
+  box(bx - 0.75, by - 0.6, 1.5, 1.2, UNIT * 0.12, '#d6d6d2');       // 基座
+
+  // 地面上仰头看的几个人
+  const ground = [[-0.45, -0.32], [-0.24, 0.28], [0.34, -0.12]];
+  ground.forEach(([ox, oy], i) => {
+    box(bx + ox - 0.07, by + oy - 0.06, 0.14, 0.12, UNIT * 0.3,
+        SKY_FIG[(i + 2) % SKY_FIG.length], UNIT * 0.12);
+  });
+
+  // 柱子。一段一段往上摞，每段顺带右移 —— 就是一根斜柱。
+  for (let i = 0; i < N; i++) {
+    box(bx - 0.12 + i * RUN, by - 0.12 + i * RUN * 0.45, 0.24, 0.24,
+        RISE + 1, '#bcbeb9', UNIT * 0.12 + i * RISE);
+  }
+  // 柱子上往上走的人，隔一段一个
+  for (let i = 1; i < N; i += 2) {
+    box(bx + i * RUN + 0.04, by + i * RUN * 0.45 - 0.09, 0.19, 0.18, UNIT * 0.38,
+        SKY_FIG[((i - 1) / 2) % SKY_FIG.length], UNIT * 0.12 + i * RISE + RISE * 0.3);
+  }
+}
+
+// 锥筒。四段越往上越细的盒子 —— 这套画法里没有斜面，收口只能靠一层层缩。
+function drawCone(cx, cy, base) {
+  box(cx - 0.075, cy - 0.075, 0.15, 0.15, UNIT * 0.04, C.dark, base);
+  box(cx - 0.055, cy - 0.055, 0.11, 0.11, UNIT * 0.09, C.cone, base + UNIT * 0.04);
+  box(cx - 0.042, cy - 0.042, 0.084, 0.084, UNIT * 0.05, '#f2f2f0', base + UNIT * 0.13);
+  box(cx - 0.028, cy - 0.028, 0.056, 0.056, UNIT * 0.09, C.cone, base + UNIT * 0.18);
 }
 
 // 工地围挡。四块黑白相间的小盒子拼成一段，斜纹在纯黑白里也读得出"施工"，
@@ -695,23 +801,27 @@ function drawRig(rig, x0, row, base) {
   const cy = row + 0.5;
   const f = rig.face;   // 车头朝向：+1 右，-1 左
 
+  // 机身用工程黄。之前全是灰的，和钢板、路面混在一起，
+  // 完全看不出是机械 —— 一个不属于这套黑白灰的颜色反而是最省事的解法。
   if (rig.kind === 'excavator') {
-    bc(cx, cy, 1.5, 0.7, UNIT * 0.20, '#2c2e33', base);                          // 履带
-    bc(cx - f * 0.28, cy, 0.92, 0.6, UNIT * 0.6, '#d2d4cf', base + UNIT * 0.20); // 回转平台 + 驾驶室
-    bc(cx - f * 0.62, cy, 0.3, 0.46, UNIT * 0.34, '#4e5054', base + UNIT * 0.20); // 后配重
+    bc(cx, cy, 1.5, 0.7, UNIT * 0.20, '#2c2e33', base);                            // 履带
+    bc(cx - f * 0.28, cy, 0.92, 0.6, UNIT * 0.6, C.rig, base + UNIT * 0.20);       // 回转平台
+    bc(cx - f * 0.06, cy - 0.04, 0.4, 0.42, UNIT * 0.3, '#2f3338', base + UNIT * 0.5); // 驾驶室玻璃
+    bc(cx - f * 0.62, cy, 0.3, 0.46, UNIT * 0.34, C.rigDark, base + UNIT * 0.20);  // 后配重
 
     // 动臂：三段盒子沿"上去再下来"的折线摆，假装成一根斜的臂。
     // 整套渲染里没有旋转，画不出真正的斜杆 —— 折线是唯一的办法。
     const arm = [[0.34, 0.58, 0.52], [0.66, 0.86, 0.36], [0.90, 0.36, 0.54]];
     for (const [off, up, h] of arm) {
-      bc(cx + f * off, cy, 0.26, 0.24, UNIT * h, '#7e807a', base + UNIT * up);
+      bc(cx + f * off, cy, 0.26, 0.24, UNIT * h, C.rig, base + UNIT * up);
     }
-    bc(cx + f * 0.95, cy, 0.4, 0.34, UNIT * 0.26, '#3a3c40', base);              // 铲斗
+    bc(cx + f * 0.95, cy, 0.4, 0.34, UNIT * 0.26, '#3a3c40', base);                // 铲斗
   } else {
-    bc(cx, cy + 0.26, 1.9, 0.18, UNIT * 0.18, '#1d1f22', base);                  // 轮子
-    bc(cx, cy, 1.95, 0.6, UNIT * 0.2, '#43454a', base + UNIT * 0.14);            // 底盘
-    bc(cx + f * 0.66, cy, 0.62, 0.52, UNIT * 0.58, '#e2e2de', base + UNIT * 0.34); // 驾驶室
-    bc(cx - f * 0.38, cy, 1.1, 0.58, UNIT * 0.7, '#33353a', base + UNIT * 0.34);   // 车斗
+    bc(cx, cy + 0.26, 1.9, 0.18, UNIT * 0.18, '#1d1f22', base);                    // 轮子
+    bc(cx, cy, 1.95, 0.6, UNIT * 0.2, '#43454a', base + UNIT * 0.14);              // 底盘
+    bc(cx + f * 0.66, cy, 0.62, 0.52, UNIT * 0.58, C.rig, base + UNIT * 0.34);     // 驾驶室
+    bc(cx + f * 0.66, cy - f * 0.02, 0.44, 0.4, UNIT * 0.16, '#2f3338', base + UNIT * 0.78); // 玻璃
+    bc(cx - f * 0.38, cy, 1.1, 0.58, UNIT * 0.7, C.rigDark, base + UNIT * 0.34);   // 车斗
     bc(cx - f * 0.38, cy, 0.9, 0.44, UNIT * 0.16, '#8e8f88', base + UNIT * 1.04);  // 斗里的土
   }
 }
@@ -785,24 +895,31 @@ function drawBody(col, row, y, h, f, scale = 1) {
   box(col - (hw * 0.9) / 2 - fx * 0.14, row + 0.5 - (hd * 0.9) / 2 - fy * 0.14,
       hw * 0.9, hd * 0.9, UNIT * 0.3 * scale, C.accent, y + h);               // 背后的帽子
 
-  box(col - hw / 2 + fx * 0.02, row + 0.5 - hd / 2 + fy * 0.02,
-      hw, hd, UNIT * 0.26 * scale, C.skin, y + h + UNIT * 0.11 * scale);      // 头
+  // 头分两块：后脑勺（深色头发）+ 脸（浅色）。
+  // 这是这个人物最关键的一处：
+  // 这个投影只看得到顶面、正面和右侧面 —— 左侧面根本不出现，
+  // 所以任何"贴在侧面"的记号往左走时都会消失。
+  // 把脸做成一整块和头发差两档明度、并且往朝向方向探出去一点的盒子之后，
+  // 它在顶面上就是一块明显偏在某一侧的浅色，四个方向都读得出来。
+  const headY = y + h + UNIT * 0.12 * scale;
+  const headH = UNIT * 0.27 * scale;
+  box(col - hw / 2, row + 0.5 - hd / 2, hw, hd, headH, C.hair, headY);
 
   if (f !== 0) {
-    // 眼睛：贴在朝向的那一面。
-    const ey = y + h + UNIT * 0.21 * scale;
-    if (fx === 0) box(col - hw * 0.34, row + 0.5 + fy * (hd / 2) - 0.02, hw * 0.68, 0.04, UNIT * 0.06 * scale, C.dark, ey);
-    else          box(col + fx * (hw / 2) - 0.02, row + 0.5 - hd * 0.34, 0.04, hd * 0.68, UNIT * 0.06 * scale, C.dark, ey);
+    const fw = (fx === 0 ? hw * 0.86 : hw * 0.5);
+    const fd = (fx === 0 ? hd * 0.5 : hd * 0.86);
+    const fcx = col + fx * (hw / 2 - fw / 2 + 0.06);
+    const fcy = row + 0.5 + fy * (hd / 2 - fd / 2 + 0.06);
+    box(fcx - fw / 2, fcy - fd / 2, fw, fd, headH * 0.9, C.skin, headY);       // 脸
 
-    // 帽檐：朝朝向的方向探出一小块。
-    // 这个投影只看得到顶面、正面和右侧面 —— 左侧面根本不出现，
-    // 所以只靠贴在侧面的眼睛，往左走时完全看不出人转过去了。
-    // 探出来的这一块会改变顶面的轮廓，四个方向都读得出来。
-    const bw2 = fx === 0 ? 0.24 * scale : 0.11 * scale;
-    const bd2 = fx === 0 ? 0.11 * scale : 0.24 * scale;
-    box(col + fx * (hw / 2 + 0.055) - bw2 / 2,
-        row + 0.5 + fy * (hd / 2 + 0.055) - bd2 / 2,
-        bw2, bd2, UNIT * 0.11 * scale, C.accent, y + h + UNIT * 0.17 * scale);
+    // 两只眼睛压在脸的顶面上，靠外侧。从上面看得到，从正面也看得到。
+    const eTop = headY + headH * 0.9 - UNIT * 0.015 * scale;
+    const e = 0.05 * scale, gap = 0.085 * scale;
+    for (const sgn of [-1, 1]) {
+      const ex = fx === 0 ? fcx + sgn * gap : fcx + fx * (fw / 2 - e * 0.7);
+      const ey = fx === 0 ? fcy + fy * (fd / 2 - e * 0.7) : fcy + sgn * gap;
+      box(ex - e / 2, ey - e / 2, e, e, UNIT * 0.045 * scale, C.dark, eTop);
+    }
   }
 }
 

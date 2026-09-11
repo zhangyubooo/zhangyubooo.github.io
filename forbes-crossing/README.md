@@ -57,6 +57,19 @@ between steel plates get wider, and the bus lane shows up more often. The
 first 8 rows never contain a trench or a bus lane, so there is time to learn
 the basic rule first.
 
+## Things to look for
+
+- **Walking to the Sky** stands to the left of the starting row — the leaning
+  pole with figures climbing it. It scrolls out of frame once you get going.
+- Traffic is CMU traffic: vans and trucks lettered TARTANS, SCOTTY, PLAID,
+  BUGGY, FENCE, and every so often a whole lane of **CMU Police** cars with a
+  red-and-blue bar flashing on the roof.
+- The **61C** is the only thing on the bus lane, and the only vehicle that
+  warns you before it arrives.
+- Everything on the construction lanes is safety yellow and orange: excavators
+  and dump trucks riding the steel plates, traffic cones along the plate edges,
+  black-and-white barriers at the sides of the pit.
+
 ## Built with
 
 - **Claude Opus 5** (`claude-opus-5`), used through the **Claude desktop app
@@ -102,5 +115,8 @@ endless without ever holding more than a screenful of state.
   built from translation and scaling only, for the same reason.
 - Colour only; no high-contrast mode. The game is fully keyboard-driven but
   is not usable with a screen reader.
+- The lettering on the vehicles is drawn on their front faces only, because
+  that is the one face this projection keeps horizontal. On a narrow phone the
+  longer words shrink until they are hard to read.
 - The squirrel is a rule, not an animation. You get a shadow and a game-over
   line, not an actual squirrel.
