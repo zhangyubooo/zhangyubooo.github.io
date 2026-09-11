@@ -145,9 +145,10 @@ const C = {
   trench:  '#0e0e10',   // 施工沟：几乎全黑
   plate:   '#8d8f93',
   mark:    '#f4f4f2',
-  accent:  '#c8102e',
+  accent:  '#c8102e',   // 只给三样东西：帽衫、61C、咖啡隔热套
   dark:    '#141416',
-  skin:    '#ffffff',
+  pack:    '#2a2c30',   // 背包
+  skin:    '#f2ede7',
 };
 
 // 车。w/d 单位是格，h 单位是 UNIT。
@@ -299,7 +300,15 @@ function trenchLane(row, d) {
   for (let i = 0; i < count; i++) {
     entities.push({ x: LANE_L + offset + i * period, len });
   }
-  return { type: 'trench', row, base: 0, color: C.trench, dir, speed, span, entities, obstacles: [], blocked: new Set(), coffee: null };
+
+  // 停在活动范围之外的工程机械。纯装饰、不参与判定 ——
+  // 光有一条黑带子读不出"施工沟"，得有挖掘机和运土车在旁边才说得通。
+  const rig = Math.random() < 0.7
+    ? { kind: Math.random() < 0.55 ? 'excavator' : 'dumper',
+        side: Math.random() < 0.5 ? -1 : 1 }
+    : null;
+
+  return { type: 'trench', row, base: 0, color: C.trench, dir, speed, span, entities, rig, obstacles: [], blocked: new Set(), coffee: null };
 }
 
 /* 公交专用道：先亮灯警告，再让 61C 全速冲过去。 */
@@ -567,9 +576,18 @@ function drawLane(lane) {
       for (let c = -EDGE; c < EDGE; c += 1.5) tile(c, r + 0.74, 0.7, 0.06, 'rgba(255,255,255,0.34)');
       if (!lane.running) drawWarning(lane);
     } else if (lane.type === 'trench') {
-      // 沟底再压暗一层，边上一道警示黄线的灰度版
-      tile(-EDGE, r + 0.12, EDGE * 2, 0.76, '#0b0b0c');
-      for (let c = -EDGE; c < EDGE; c += 0.6) tile(c, r, 0.3, 0.1, 'rgba(255,255,255,0.13)');
+      tile(-EDGE, r + 0.14, EDGE * 2, 0.72, '#0b0b0c');          // 沟底再压暗一层
+      // 只在近侧留一道浅色切边，读作混凝土的开口。
+      // 试过在整条车道上下都铺黑白斜纹，结果和马路的虚线撞在一起，
+      // 远看两种车道一模一样 —— 警示纹改成放在活动范围之外的实体围挡。
+      tile(-EDGE, r + 0.9, EDGE * 2, 0.06, '#6e7074');
+      // 沟底的钢筋和管线。窄屏上两边的机械会被裁掉，
+      // 这两笔是唯一在任何屏幕上都看得到的"这是挖开的沟"的证据。
+      for (let c = -EDGE; c < EDGE; c += 0.8) tile(c, r + 0.2, 0.07, 0.6, '#26282c');
+      tile(-EDGE, r + 0.5, EDGE * 2, 0.11, '#3d3f44');
+      // 有机械的那一侧不再放围挡，两个东西叠在一起谁也看不清。
+      if (!lane.rig || lane.rig.side > 0) drawBarrier(MINC - 1.7, r);
+      if (!lane.rig || lane.rig.side < 0) drawBarrier(MAXC + 1.3, r);
     }
   }
 
@@ -588,6 +606,7 @@ function drawLane(lane) {
       if (e.x > EDGE + 1 || e.x + e.len < -EDGE - 1) continue;
       drawPlate(e, r);
     }
+    if (lane.rig) drawRig(lane.rig, r);
   } else if (lane.type === 'busway' && lane.running) {
     drawVehicle(lane.x, r, BUS, lane.dir);
   }
@@ -626,6 +645,75 @@ function drawPlate(e, row) {
   }
 }
 
+// 工地围挡。四块黑白相间的小盒子拼成一段，斜纹在纯黑白里也读得出"施工"，
+// 不用动强调色 —— 红色留给帽衫、61C 和咖啡。
+function drawBarrier(x0, row) {
+  for (let i = 0; i < 4; i++) {
+    box(x0 + i * 0.25, row + 0.34, 0.25, 0.16, UNIT * 0.32,
+        i % 2 ? '#1b1b1d' : '#eeeeec');
+  }
+  box(x0 - 0.04, row + 0.3, 0.08, 0.24, UNIT * 0.36, '#5c5e62');   // 支腿
+  box(x0 + 1.0, row + 0.3, 0.08, 0.24, UNIT * 0.36, '#5c5e62');
+}
+
+// 按中心点画盒子。工程机械的零件都是相对机身中心摆的，
+// 用左边角算每一块都要自己减一次宽度的一半，很容易错。
+function bc(cx, cy, w, d, h, color, base = 0) {
+  box(cx - w / 2, cy - d / 2, w, d, h, color, base);
+}
+
+/*
+  停在沟边的工程机械。全部是装饰：不参与碰撞，也不挡路，
+  位置永远在可走的 9 格之外。
+  side = +1 停在右边（臂朝左伸进沟里），-1 反之。
+*/
+function drawRig(rig, row) {
+  const s = rig.side;
+  // 机身中心紧贴活动范围外沿。再往外一点就会被窄屏裁掉 ——
+  // 手机上可走范围之外只剩一格多的余量。
+  // 挖掘机往外让一格：它的动臂要伸回沟上，机身留在原位的话铲斗会压到可走的格子上，
+  // 看着像障碍物但其实走得过去 —— 那是最糟的一种视觉谎言。
+  // 让开之后机身在窄屏上会被裁掉，但动臂和铲斗（最能认出是挖掘机的部分）还在。
+  const out = rig.kind === 'excavator' ? 1.0 : 0;
+  const cx = s > 0 ? MAXC + 2.2 + out : MINC - 1.2 - out;
+  const cy = row + 0.5;
+  const inward = -s;                            // 朝沟的方向
+
+  tile(cx - 1.2, cy - 0.42, 2.4, 0.84, 'rgba(0,0,0,0.13)');
+
+  if (rig.kind === 'excavator') {
+    bc(cx, cy, 1.9, 0.8, UNIT * 0.26, '#2c2e33');                        // 履带
+    bc(cx - inward * 0.25, cy, 1.25, 0.66, UNIT * 0.75, '#d2d4cf', UNIT * 0.26);  // 回转平台 + 驾驶室
+    bc(cx - inward * 0.72, cy, 0.4, 0.5, UNIT * 0.42, '#4e5054', UNIT * 0.26);    // 后配重
+
+    // 动臂：三段盒子沿"上去再下来"的折线摆，假装成一根斜的臂。
+    // 整套渲染里没有旋转，画不出真正的斜杆 —— 折线是唯一的办法。
+    const arm = [[0.62, 0.72, 0.62], [1.18, 1.04, 0.44], [1.62, 0.30, 0.78]];
+    for (const [off, base, h] of arm) {
+      bc(cx + inward * off, cy, 0.34, 0.28, UNIT * h, '#7e807a', UNIT * base);
+    }
+    bc(cx + inward * 1.9, cy, 0.54, 0.4, UNIT * 0.34, '#3a3c40');        // 铲斗，落在沟沿上
+  } else {
+    bc(cx, cy + 0.3, 2.3, 0.22, UNIT * 0.24, '#1d1f22');                 // 轮子
+    bc(cx, cy, 2.35, 0.66, UNIT * 0.24, '#43454a', UNIT * 0.18);         // 底盘
+    bc(cx + inward * 0.8, cy, 0.78, 0.58, UNIT * 0.72, '#e2e2de', UNIT * 0.42);  // 驾驶室
+    bc(cx - inward * 0.45, cy, 1.35, 0.64, UNIT * 0.86, '#33353a', UNIT * 0.42); // 车斗
+    bc(cx - inward * 0.45, cy, 1.12, 0.5, UNIT * 0.2, '#8e8f88', UNIT * 1.28);   // 斗里的土
+  }
+}
+
+/*
+  一杯咖啡。地上那杯和顶在头上的那些是同一个函数 ——
+  纸杯是下窄上宽，所以是三段逐渐变宽的盒子加一个盖。
+  scale 让头顶那摞可以画小一点。
+*/
+function cup(cx, cy, y, k = 1) {
+  bc(cx, cy, 0.17 * k, 0.16 * k, UNIT * 0.11 * k, '#f7f7f5', y);                       // 杯底
+  bc(cx, cy, 0.21 * k, 0.19 * k, UNIT * 0.09 * k, C.accent, y + UNIT * 0.11 * k);      // 隔热套
+  bc(cx, cy, 0.23 * k, 0.21 * k, UNIT * 0.07 * k, '#fbfbf9', y + UNIT * 0.20 * k);     // 杯口
+  bc(cx, cy, 0.26 * k, 0.24 * k, UNIT * 0.05 * k, '#4a4c50', y + UNIT * 0.27 * k);     // 杯盖
+}
+
 function drawProp(o, row, base) {
   const c = o.col;
   // 每个物件底下压一块淡影子。没有它，所有盒子都像浮在半空。
@@ -648,9 +736,9 @@ function drawProp(o, row, base) {
 }
 
 function drawCoffee(col, row, base) {
-  const bob = Math.sin(performance.now() / 300 + col) * UNIT * 0.08;
-  box(col + 0.36, row + 0.38, 0.28, 0.26, UNIT * 0.34, '#f6f6f4', base + UNIT * 0.18 + bob);
-  box(col + 0.36, row + 0.38, 0.28, 0.26, UNIT * 0.08, C.accent, base + UNIT * 0.52 + bob);
+  const bob = Math.sin(performance.now() / 300 + col) * UNIT * 0.07;
+  tile(col + 0.34, row + 0.36, 0.32, 0.28, 'rgba(0,0,0,0.10)', base);
+  cup(col + 0.5, row + 0.5, base + UNIT * 0.14 + bob);
 }
 
 function drawPlayer() {
@@ -675,19 +763,31 @@ function drawPlayer() {
   if (mode === 'dying') {
     // 被撞：压成一张纸，留在原地
     const f = clamp(dyingT / 0.25, 0, 1);
-    box(col - 0.3, row + 0.2, 0.6, 0.6, Math.max(UNIT * 0.06, h * (1 - f)), C.skin, base);
+    box(col - 0.3, row + 0.2, 0.6, 0.6, Math.max(UNIT * 0.06, h * (1 - f)), C.accent, base);
     return;
   }
 
   const y = base + arc;
-  // 先画一个略大的深色盒子，再把白色身体压上去 —— 这一圈露出来的边就是描边。
-  // 没有它，白色的人站在浅色广场上会整个消失。
+  // 先画一个略大的深色盒子，再把身体压上去 —— 这一圈露出来的边就是描边。
+  // 世界里既有近白的广场也有近黑的马路，任何单一颜色的人都会在其中一种上消失。
   box(col - 0.30, row + 0.22, 0.60, 0.52, h + 2, C.dark, y - 1);
-  box(col - 0.27, row + 0.25, 0.54, 0.46, h, C.skin, y);                 // 身体
-  box(col - 0.23, row + 0.29, 0.46, 0.38, UNIT * 0.32, C.dark, y + h);   // 头
-  // 背包。永远在身后，也是画面里除了 61C 之外唯一的红色。
+  box(col - 0.27, row + 0.25, 0.54, 0.46, h, C.accent, y);                    // 红帽衫
+
+  // 兜帽在后、脸在前，两块错开 0.06 格，露出来的那一圈红边就是帽子的轮廓。
+  box(col - 0.26, row + 0.28, 0.52, 0.42, UNIT * 0.34, C.accent, y + h);          // 兜帽
+  box(col - 0.15, row + 0.22, 0.30, 0.28, UNIT * 0.26, C.skin, y + h + UNIT * 0.04); // 头
+
+  // 背包改成深灰。帽衫占了红色之后，再叠一块红就分不出哪块是哪块了。
   const bpRow = player.facing === 2 ? row + 0.69 : row + 0.17;
-  box(col - 0.18, bpRow, 0.36, 0.16, UNIT * 0.46, C.accent, y + h * 0.25);
+  box(col - 0.18, bpRow, 0.36, 0.16, UNIT * 0.46, C.pack, y + h * 0.25);
+
+  // 收集到的咖啡顶在头上摞起来。最多画 6 杯 —— 再高就挡住前面的车道了，
+  // 真实数量以 HUD 为准。
+  const stack = Math.min(coffee, 6);
+  for (let i = 0; i < stack; i++) {
+    const wobble = t < 1 ? Math.sin(t * Math.PI) * 0.012 * (i + 1) : 0;
+    cup(col + wobble, row + 0.47, y + h + UNIT * (0.30 + i * 0.30), 0.92);
+  }
 
   // 待太久时头顶出现的阴影，是松鼠要来了的提示。
   if (player.idle > 9.5) {

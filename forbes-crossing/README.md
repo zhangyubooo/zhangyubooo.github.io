@@ -33,7 +33,9 @@ where you started. Going sideways or backwards is free but earns nothing, and
 you can never go more than 4 blocks back from your furthest point.
 
 Coffee cups sit on some of the safe lanes. They are pure collectible — they
-count on the game-over screen but do not affect the score.
+count on the game-over screen but do not affect the score. Every cup you pick
+up stacks on top of your head; the visible tower stops at six so it does not
+block your view of the lanes ahead, but the counter keeps going.
 
 Your best score is kept in the browser (`localStorage`), so it survives a
 reload but is per-device.
@@ -93,6 +95,9 @@ endless without ever holding more than a screenful of state.
   traffic cannot teleport into you), but there is no way to stop mid-run.
 - The character does not visibly turn when moving sideways — only the backpack
   flips to the correct side when walking back toward the camera.
+- The excavators and dump trucks parked along the trenches are decoration only.
+  On a narrow phone screen their bodies get cropped off the edge; the arm and
+  bucket stay visible, which is the part that identifies them.
 - Colour only; no high-contrast mode. The game is fully keyboard-driven but
   is not usable with a screen reader.
 - The squirrel is a rule, not an animation. You get a shadow and a game-over
