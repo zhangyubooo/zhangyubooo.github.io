@@ -32,10 +32,10 @@ Your score is the number of blocks you have moved *forward*, counted from
 where you started. Going sideways or backwards is free but earns nothing, and
 you can never go more than 4 blocks back from your furthest point.
 
-Coffee cups sit on some of the safe lanes. They are pure collectible — they
-count on the game-over screen but do not affect the score. Every cup you pick
-up stacks on top of your head; the visible tower stops at six so it does not
-block your view of the lanes ahead, but the counter keeps going.
+**How you win.** Coffee cups sit on some of the safe lanes, about one every
+seven or eight rows. Each cup you pick up stacks on top of your head. Get to
+**seven cups and you win** — you made it to class. That is the only way the
+game ends well; everything else kills you.
 
 Your best score is kept in the browser (`localStorage`), so it survives a
 reload but is per-device.
@@ -49,8 +49,9 @@ reload but is per-device.
    plates have an excavator or a dump truck parked on them; those two cells
    are solid, so a long plate is not always a safe plate.
 4. A steel plate carries you off the edge of the site.
-5. You stand still for about 14 seconds and a campus squirrel gets you.
-   A shadow appears over your head a few seconds before that happens.
+5. You stand still for about 14 seconds and a campus squirrel — considerably
+   larger than you are — runs in from the side and eats you. A shadow appears
+   over your head a few seconds before that happens.
 
 **Difficulty** ramps with distance: roads get faster and more crowded, gaps
 between steel plates get wider, and the bus lane shows up more often. The
@@ -61,9 +62,9 @@ the basic rule first.
 
 - **Walking to the Sky** stands to the left of the starting row — the leaning
   pole with figures climbing it. It scrolls out of frame once you get going.
-- Traffic is CMU traffic: vans and trucks lettered TARTANS, SCOTTY, PLAID,
-  BUGGY, FENCE, and every so often a whole lane of **CMU Police** cars with a
-  red-and-blue bar flashing on the roof.
+- Traffic is CMU traffic: the occasional van lettered TARTANS or SCOTTY, and
+  every so often a whole lane of **CMU Police** cars with a red-and-blue bar
+  flashing on the roof.
 - The **61C** is the only thing on the bus lane, and the only vehicle that
   warns you before it arrives.
 - Everything on the construction lanes is safety yellow and orange: excavators
@@ -118,5 +119,8 @@ endless without ever holding more than a screenful of state.
 - The lettering on the vehicles is drawn on their front faces only, because
   that is the one face this projection keeps horizontal. On a narrow phone the
   longer words shrink until they are hard to read.
+- Seven coffees is a long run — you have to detour for nearly every cup you
+  see. I have not tuned how many rows a win actually takes; it may still be
+  too far.
 - The squirrel is a rule, not an animation. You get a shadow and a game-over
   line, not an actual squirrel.

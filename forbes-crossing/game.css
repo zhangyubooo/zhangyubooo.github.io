@@ -135,6 +135,8 @@ canvas {
   color: var(--c-muted);
 }
 .panel--over .panel__eyebrow { color: var(--c-accent); }
+/* 赢的时候同一块面板，但抬头行不能是红的 —— 红色在这一屏里的意思是"你死了" */
+.panel--over[data-win="true"] .panel__eyebrow { color: var(--c-text); }
 
 .panel__title {
   margin: 0 0 1.1rem;

@@ -155,8 +155,11 @@ const C = {
   skin:    '#f6e3cf',   // 脸。和头发拉开两档，转身才看得出来
 };
 
-// 车身上的字。都是 CMU 的梗 —— 苏格兰格纹、吉祥物 Scotty、Buggy 比赛。
-const LABELS = ['TARTANS', 'SCOTTY', 'PLAID', 'CMU', 'BUGGY', 'FENCE'];
+// 车身上的字。校队名和吉祥物，两个就够 ——
+// 第一版有六种、而且整条道的车刷同一个字，一屏能看到十几个单词，
+// 画面变成了广告牌。现在是每辆车各自小概率刷。
+const LABELS = ['TARTANS', 'SCOTTY'];
+const LABEL_CHANCE = 0.16;
 
 // 给定底色，返回压在上面还读得清的字色。
 function inkOn(hex) {
@@ -271,7 +274,9 @@ function safeLane(row, kind, density) {
   }
 
   // 咖啡。放在空格上，纯收集物，捡不捡都不影响输赢。
-  if (row > 4 && Math.random() < 0.16) lane.coffee = pick(free);
+  // 出现率从 0.16 提到 0.28：七杯是通关条件，太稀就永远赢不了。
+  // 安全车道占全部行的四成左右，所以大约每七八行会出现一杯。
+  if (row > 4 && Math.random() < 0.28) lane.coffee = pick(free);
 
   return lane;
 }
@@ -288,10 +293,8 @@ function makeProp(col, kind) {
 function roadLane(row, d) {
   const dir = Math.random() < 0.5 ? 1 : -1;
   const speed = rand(2.0, 3.8) * (1 + 0.55 * d);
-  // 一条道上跑同一种车。12% 的概率整条道是校警车。
-  const kind = Math.random() < 0.12 ? POLICE : pick(VEHICLES);
-  // 车身上刷字：车够宽才刷，太窄的车字会挤成一团。
-  const label = kind.label || (kind.w >= 1.9 && Math.random() < 0.55 ? pick(LABELS) : null);
+  // 一条道上跑同一种车。10% 的概率整条道是校警车。
+  const kind = Math.random() < 0.10 ? POLICE : pick(VEHICLES);
   const gap = rand(3.4, 7.0) - 1.6 * d;
   const period = kind.w + Math.max(1.8, gap);
   // 循环长度取 period 的整数倍，否则绕回来的时候间距会突然变。
@@ -301,9 +304,13 @@ function roadLane(row, d) {
 
   const entities = [];
   for (let i = 0; i < count; i++) {
-    entities.push({ x: LANE_L + offset + i * period, kind });
+    // 刷字是逐辆决定的，车够宽才刷 —— 太窄的车字会挤成一团。
+    // 警车和 61C 自带车身标识，不参与随机。
+    const label = kind.label
+      || (kind.w >= 1.9 && Math.random() < LABEL_CHANCE ? pick(LABELS) : null);
+    entities.push({ x: LANE_L + offset + i * period, kind, label });
   }
-  return { type: 'road', row, base: 0, color: C.road, dir, speed, span, entities, label, obstacles: [], blocked: new Set(), coffee: null };
+  return { type: 'road', row, base: 0, color: C.road, dir, speed, span, entities, obstacles: [], blocked: new Set(), coffee: null };
 }
 
 /* 施工沟：CMU 版的"过河"。钢板就是原木，踩不上去就掉下去。 */
@@ -374,11 +381,14 @@ const player = {
 
 const cam = { row: 0 };
 
-let mode = 'title';          // title | playing | dying | over
+const GOAL = 7;              // 咖啡集满这么多杯 = 安全到教室，赢
+let winT = 0;
+
+let mode = 'title';          // title | playing | dying | winning | over
 let dyingT = 0, cause = '';
 // 死亡动画：种类决定播什么、播多久；deathDir 是被撞飞/被带走的方向
 let deathKind = 'hit', deathDir = 1;
-const DEATH_TIME = { hit: 0.95, fall: 0.85, carried: 0.95, squirrel: 1.35 };
+const DEATH_TIME = { hit: 0.95, fall: 0.85, carried: 0.95, squirrel: 1.9 };
 let queued = null;           // 跳跃中按的下一个方向，落地后立刻执行
 let coffee = 0;
 let best = 0;
@@ -391,7 +401,7 @@ function resetGame() {
   player.t = 1; player.facing = 0; player.ride = null;
   player.maxRow = 0; player.idle = 0; player.squish = 0;
   cam.row = 0;
-  coffee = 0; queued = null; dyingT = 0;
+  coffee = 0; queued = null; dyingT = 0; winT = 0;
   for (let r = -8; r < 24; r++) laneAt(Math.max(r, 0));
   setScore(0);
   ui.coffee.textContent = '0';
@@ -441,17 +451,19 @@ function land() {
     player.ride = null;
   }
 
+  // 先记分再判胜利：赢在哪一行，那一行也得算进分数里。
+  if (player.row > player.maxRow) {
+    player.maxRow = player.row;
+    player.idle = 0;
+    setScore(player.maxRow);
+  }
+
   if (lane.coffee !== null && Math.round(player.col) === lane.coffee) {
     lane.coffee = null;
     coffee++;
     ui.coffee.textContent = coffee;
     sfx('coin');
-  }
-
-  if (player.row > player.maxRow) {
-    player.maxRow = player.row;
-    player.idle = 0;
-    setScore(player.maxRow);
+    if (coffee >= GOAL) { win(); return; }
   }
 
   if (queued) { const q = queued; queued = null; hop(q[0], q[1]); }
@@ -477,8 +489,16 @@ function die(reason, kind = 'hit', dir = 1) {
   dyingT = 0;
   cause = reason;
   deathKind = kind;
-  deathDir = dir;
+  // 松鼠从哪一边窜出来是随机的
+  deathDir = kind === 'squirrel' ? (Math.random() < 0.5 ? -1 : 1) : dir;
   sfx('die');
+}
+
+function win() {
+  if (mode !== 'playing') return;
+  mode = 'winning';
+  winT = 0;
+  sfx('win');
 }
 
 
@@ -506,6 +526,9 @@ function update(dt) {
   } else if (mode === 'dying') {
     dyingT += dt;
     if (dyingT > DEATH_TIME[deathKind]) gameOver();
+  } else if (mode === 'winning') {
+    winT += dt;
+    if (winT > 1.15) showWin();
   }
 
   // 镜头跟随。指数平滑：离目标越远追得越快，停下时又不会抖。
@@ -649,7 +672,7 @@ function drawLane(lane) {
     // 屏幕外的车不用画。一条道 12 辆车，画一半就够，省一半的多边形。
     for (const e of lane.entities) {
       if (e.x > EDGE + 1 || e.x + e.kind.w < -EDGE - 1) continue;
-      drawVehicle(e.x, r, e.kind, lane.dir, lane.label);
+      drawVehicle(e.x, r, e.kind, lane.dir, e.label);
     }
   } else if (lane.type === 'trench') {
     for (const e of lane.entities) {
@@ -923,12 +946,38 @@ function drawBody(col, row, y, h, f, scale = 1) {
   }
 }
 
-// 松鼠。只在把人叼走的那一秒出现，所以就是身体 + 大尾巴 + 两只耳朵。
-function drawSquirrel(col, row, y) {
-  box(col - 0.17, row + 0.4, 0.34, 0.26, UNIT * 0.26, '#4a4c50', y);
-  box(col - 0.09, row + 0.62, 0.18, 0.12, UNIT * 0.52, '#5c5e62', y + UNIT * 0.06);  // 尾巴
-  box(col - 0.06, row + 0.34, 0.06, 0.06, UNIT * 0.08, '#4a4c50', y + UNIT * 0.26);  // 耳朵
-  box(col + 0.02, row + 0.34, 0.06, 0.06, UNIT * 0.08, '#4a4c50', y + UNIT * 0.26);
+/*
+  松鼠。比人还大一圈 —— 校园松鼠本来就该是这个气势。
+  认出它靠的是那条竖起来的大尾巴：三块往上、往回弯的盒子。
+  f 是它面朝的方向（+1 右 / -1 左），squash 用来做"一口咬下去"的压扁。
+*/
+const SQ = { fur: '#6e6459', fur2: '#857a6d', tail: '#9a8f80', belly: '#dcd2c4' };
+
+function drawSquirrel(cx, row, base, f, squash = 1) {
+  const cy = row + 0.5;
+  const k = squash;
+
+  tile(cx - 0.85, cy - 0.42, 1.7, 0.84, 'rgba(0,0,0,0.14)', base);
+
+  // 尾巴：三块往上再往前弯，最粗的一块在最上面
+  bc(cx - f * 0.72, cy, 0.30, 0.40, UNIT * 0.55 * k, SQ.tail, base);
+  bc(cx - f * 0.84, cy, 0.34, 0.42, UNIT * 0.50 * k, SQ.tail, base + UNIT * 0.52 * k);
+  bc(cx - f * 0.66, cy, 0.32, 0.40, UNIT * 0.34 * k, SQ.tail, base + UNIT * 0.98 * k);
+
+  bc(cx - f * 0.22, cy, 0.52, 0.5, UNIT * 0.66 * k, SQ.fur, base);        // 后腿/臀
+  bc(cx + f * 0.12, cy, 0.78, 0.46, UNIT * 0.56 * k, SQ.fur2, base);      // 身子
+  bc(cx + f * 0.30, cy + 0.02, 0.34, 0.34, UNIT * 0.3 * k, SQ.belly, base); // 肚子
+
+  const hb = base + UNIT * 0.42 * k;
+  bc(cx + f * 0.56, cy, 0.44, 0.42, UNIT * 0.44 * k, SQ.fur2, hb);        // 头
+  bc(cx + f * 0.82, cy, 0.22, 0.28, UNIT * 0.22 * k, SQ.belly, hb + UNIT * 0.06 * k); // 口鼻
+  bc(cx + f * 0.46, cy - 0.13, 0.13, 0.11, UNIT * 0.20 * k, SQ.fur, hb + UNIT * 0.42 * k); // 耳朵
+  bc(cx + f * 0.46, cy + 0.13, 0.13, 0.11, UNIT * 0.20 * k, SQ.fur, hb + UNIT * 0.42 * k);
+  bc(cx + f * 0.70, cy - 0.10, 0.07, 0.07, UNIT * 0.05, C.dark, hb + UNIT * 0.34 * k);   // 眼睛
+  bc(cx + f * 0.70, cy + 0.10, 0.07, 0.07, UNIT * 0.05, C.dark, hb + UNIT * 0.34 * k);
+
+  bc(cx + f * 0.34, cy + 0.2, 0.14, 0.12, UNIT * 0.16, SQ.fur, base);     // 前爪
+  bc(cx + f * 0.34, cy - 0.2, 0.14, 0.12, UNIT * 0.16, SQ.fur, base);
 }
 
 function drawPlayer() {
@@ -952,12 +1001,13 @@ function drawPlayer() {
 
   tile(col - 0.3, row + 0.2, 0.6, 0.56, 'rgba(0,0,0,0.16)', base);
 
-  const y = base + arc;
-  drawBody(col, row, y, h, player.facing);
+  // 赢了之后原地蹦两下，面朝镜头 —— 到教室了，可以喘口气
+  const cheer = mode === 'winning' ? Math.abs(Math.sin(winT * 11)) * UNIT * 0.5 : 0;
+  const y = base + arc + cheer;
+  drawBody(col, row, y, h, mode === 'winning' ? 2 : player.facing);
 
-  // 收集到的咖啡顶在头上摞起来。最多画 6 杯 —— 再高就挡住前面的车道了，
-  // 真实数量以 HUD 为准。
-  const stack = Math.min(coffee, 6);
+  // 收集到的咖啡顶在头上摞起来。集满 GOAL 杯就赢，所以最多也就这么高。
+  const stack = Math.min(coffee, GOAL);
   for (let i = 0; i < stack; i++) {
     const wobble = t < 1 ? Math.sin(t * Math.PI) * 0.012 * (i + 1) : 0;
     cup(col + wobble, row + 0.47, y + h + UNIT * (0.30 + i * 0.30), 0.92);
@@ -1002,12 +1052,36 @@ function drawDeath(col, row, base, h) {
     return;
   }
 
-  // 被松鼠叼走：先被拽起来，再一路带出画面，人在下面荡
-  const lift = p * p * UNIT * 7;
-  const sway = Math.sin(p * 9) * 0.1 * p;
-  tile(col - 0.3, row + 0.2, 0.6, 0.56, `rgba(0,0,0,${0.16 * (1 - p)})`, base);
-  drawBody(col + sway, row, base + lift, h, 2, 1 - p * 0.25);
-  drawSquirrel(col + sway * 1.3, row, base + lift + h + UNIT * 0.5);
+  // 被松鼠吃掉：一只巨大的松鼠从旁边窜过来，一口把人吞了，再窜走。
+  // 三段：跑过来 → 咬 → 跑掉。跑动时上下弹，弹跳比位移更能说明"它在跑"。
+  const IN = 0.34, BITE = 0.62;
+  const from = deathDir;                     // 从哪一侧来
+  const away = col + from * 10;
+  let sx, hop = 0, squash = 1;
+
+  if (p < IN) {
+    const t2 = p / IN;
+    sx = away + (col - away) * (1 - (1 - t2) * (1 - t2));   // 减速冲过来
+    hop = Math.abs(Math.sin(t2 * 9)) * UNIT * 0.45;
+  } else if (p < BITE) {
+    const t2 = (p - IN) / (BITE - IN);
+    sx = col;
+    squash = 1 - Math.sin(t2 * Math.PI) * 0.28;             // 低头一口
+  } else {
+    const t2 = (p - BITE) / (1 - BITE);
+    sx = col + (away - col) * t2 * t2;                      // 加速窜走
+    hop = Math.abs(Math.sin(t2 * 9)) * UNIT * 0.45;
+  }
+
+  // 人在被咬到之前还在原地缩着，之后就没了
+  if (p < IN + (BITE - IN) * 0.45) {
+    const cower = 1 - clamp((p - IN * 0.5) / IN, 0, 1) * 0.25;
+    tile(col - 0.3, row + 0.2, 0.6, 0.56, 'rgba(0,0,0,0.16)', base);
+    drawBody(col, row, base, h * cower, from > 0 ? 1 : 3, cower);
+  }
+
+  // 跑回去的时候要掉头，不然是倒着窜出画面的
+  drawSquirrel(sx, row, base + hop, p < BITE ? -from : from, squash);
 }
 
 
@@ -1070,7 +1144,8 @@ function sfx(kind) {
     if (kind === 'hop')  { o.type = 'square';   o.frequency.setValueAtTime(520, now); o.frequency.exponentialRampToValueAtTime(760, now + 0.06); g.gain.setValueAtTime(0.05, now); }
     if (kind === 'coin') { o.type = 'triangle'; o.frequency.setValueAtTime(880, now); o.frequency.setValueAtTime(1320, now + 0.07); g.gain.setValueAtTime(0.07, now); }
     if (kind === 'die')  { o.type = 'sawtooth'; o.frequency.setValueAtTime(320, now); o.frequency.exponentialRampToValueAtTime(70, now + 0.4); g.gain.setValueAtTime(0.08, now); }
-    g.gain.exponentialRampToValueAtTime(0.0001, now + (kind === 'die' ? 0.45 : 0.12));
+    if (kind === 'win')  { o.type = 'triangle'; [523, 659, 784, 1047].forEach((f, i) => o.frequency.setValueAtTime(f, now + i * 0.11)); g.gain.setValueAtTime(0.08, now); }
+    g.gain.exponentialRampToValueAtTime(0.0001, now + (kind === 'die' ? 0.45 : kind === 'win' ? 0.6 : 0.12));
     o.connect(g); g.connect(audio.destination);
     o.start(now); o.stop(now + 0.5);
   } catch (_) { /* 声音失败绝不能拖垮游戏 */ }
@@ -1104,19 +1179,24 @@ function start() {
   ui.sound.hidden = false;
 }
 
-function gameOver() {
+// 输和赢共用同一块面板，只换文案和一个 data-win —— 结构一样，没必要写两遍。
+function endPanel(eyebrow, isWin) {
   mode = 'over';
   if (player.maxRow > best) {
     best = player.maxRow;
     try { localStorage.setItem('fc-best', String(best)); } catch (_) { /* 无痕模式，忍了 */ }
   }
   ui.best.textContent = best;
-  ui.cause.textContent = cause;
+  ui.cause.textContent = eyebrow;
   ui.finalScore.textContent = player.maxRow;
   ui.finalBest.textContent = best;
   ui.finalCoffee.textContent = coffee;
+  ui.over.dataset.win = isWin ? 'true' : 'false';
   ui.over.hidden = false;
 }
+
+function gameOver() { endPanel(cause, false); }
+function showWin() { endPanel('You made it to class.', true); }
 
 document.getElementById('startBtn').addEventListener('click', start);
 document.getElementById('againBtn').addEventListener('click', start);
