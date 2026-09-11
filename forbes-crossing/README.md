@@ -10,7 +10,7 @@ Play it: **https://zhangyubooo.github.io/forbes-crossing/**
 > 要求：一到两句，说明这个游戏是什么、和原版 Crossy Road 有什么不同。
 > 可以参考的事实（用你自己的话重写）：场景换成了 CMU 校园；
 > "过河踩原木" 换成了 "过施工沟踩钢板"；多了一条 61C 公交专用道，
-> 车来之前会先闪红灯；站着不动太久会被校园松鼠叼走；
+> 车来之前会先闪红灯；站着不动太久会被一只巨大的校园松鼠吃掉；集满七杯咖啡就算安全到教室、通关；
 > 美术是黑白灰 + 一个 CMU 红，和我 portfolio 用的是同一套设计系统。
 >
 > _写完把这段引用块整个删掉。_
@@ -112,15 +112,14 @@ endless without ever holding more than a screenful of state.
 - The character turns to face the direction you last moved, but the turn is
   instant — there is no rotation, because nothing in this renderer can rotate.
 - The four deaths each have their own animation (knocked flying, sinking into
-  the trench, carried off by a plate, carried off by a squirrel). They are all
+  the trench, carried off by a plate, eaten by a squirrel). They are all
   built from translation and scaling only, for the same reason.
 - Colour only; no high-contrast mode. The game is fully keyboard-driven but
   is not usable with a screen reader.
-- The lettering on the vehicles is drawn on their front faces only, because
-  that is the one face this projection keeps horizontal. On a narrow phone the
-  longer words shrink until they are hard to read.
+- The lettering on the vehicles is a hand-built 3x5 bitmap font drawn as
+  filled squares, on their front faces only, because that is the one face this
+  projection keeps horizontal. On a narrow phone the squares drop below two
+  pixels and the lettering is left off rather than smeared.
 - Seven coffees is a long run — you have to detour for nearly every cup you
   see. I have not tuned how many rows a win actually takes; it may still be
   too far.
-- The squirrel is a rule, not an animation. You get a shadow and a game-over
-  line, not an actual squirrel.
