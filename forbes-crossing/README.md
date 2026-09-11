@@ -45,7 +45,9 @@ reload but is per-device.
 1. A car or a facilities truck hits you on a road.
 2. The 61C hits you on the bus lane. It flashes red lights before it comes;
    the faster they blink, the closer it is.
-3. You land in a construction trench with no steel plate under you.
+3. You land in a construction trench with no steel plate under you. Some
+   plates have an excavator or a dump truck parked on them; those two cells
+   are solid, so a long plate is not always a safe plate.
 4. A steel plate carries you off the edge of the site.
 5. You stand still for about 14 seconds and a campus squirrel gets you.
    A shadow appears over your head a few seconds before that happens.
@@ -93,11 +95,11 @@ endless without ever holding more than a screenful of state.
   too punishing compared to the roads.
 - There is no pause. Switching tabs is safe (the loop clamps the time step so
   traffic cannot teleport into you), but there is no way to stop mid-run.
-- The character does not visibly turn when moving sideways — only the backpack
-  flips to the correct side when walking back toward the camera.
-- The excavators and dump trucks parked along the trenches are decoration only.
-  On a narrow phone screen their bodies get cropped off the edge; the arm and
-  bucket stay visible, which is the part that identifies them.
+- The character turns to face the direction you last moved, but the turn is
+  instant — there is no rotation, because nothing in this renderer can rotate.
+- The four deaths each have their own animation (knocked flying, sinking into
+  the trench, carried off by a plate, carried off by a squirrel). They are all
+  built from translation and scaling only, for the same reason.
 - Colour only; no high-contrast mode. The game is fully keyboard-driven but
   is not usable with a screen reader.
 - The squirrel is a rule, not an animation. You get a shadow and a game-over

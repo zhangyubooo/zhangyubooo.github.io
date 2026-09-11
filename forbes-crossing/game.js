@@ -147,7 +147,6 @@ const C = {
   mark:    '#f4f4f2',
   accent:  '#c8102e',   // 只给三样东西：帽衫、61C、咖啡隔热套
   dark:    '#141416',
-  pack:    '#2a2c30',   // 背包
   skin:    '#f2ede7',
 };
 
@@ -298,17 +297,21 @@ function trenchLane(row, d) {
 
   const entities = [];
   for (let i = 0; i < count; i++) {
-    entities.push({ x: LANE_L + offset + i * period, len });
+    const e = { x: LANE_L + offset + i * period, len };
+    // 工程机械停在钢板上。第一版是停在活动范围之外的路肩上，
+    // 结果窄一点的窗口全被裁掉，等于没画。放到板子上就一定在视野里，
+    // 而且顺手变成了障碍物：这块板能站，但只能站没被占的那半边。
+    if (len >= 3 && Math.random() < 0.42) {
+      e.rig = {
+        kind: Math.random() < 0.5 ? 'excavator' : 'dumper',
+        off: Math.random() < 0.5 ? 0 : len - 2,   // 靠一端停，至少留一格能站
+        face: Math.random() < 0.5 ? -1 : 1,
+      };
+    }
+    entities.push(e);
   }
 
-  // 停在活动范围之外的工程机械。纯装饰、不参与判定 ——
-  // 光有一条黑带子读不出"施工沟"，得有挖掘机和运土车在旁边才说得通。
-  const rig = Math.random() < 0.7
-    ? { kind: Math.random() < 0.55 ? 'excavator' : 'dumper',
-        side: Math.random() < 0.5 ? -1 : 1 }
-    : null;
-
-  return { type: 'trench', row, base: 0, color: C.trench, dir, speed, span, entities, rig, obstacles: [], blocked: new Set(), coffee: null };
+  return { type: 'trench', row, base: 0, color: C.trench, dir, speed, span, entities, obstacles: [], blocked: new Set(), coffee: null };
 }
 
 /* 公交专用道：先亮灯警告，再让 61C 全速冲过去。 */
@@ -344,6 +347,9 @@ const cam = { row: 0 };
 
 let mode = 'title';          // title | playing | dying | over
 let dyingT = 0, cause = '';
+// 死亡动画：种类决定播什么、播多久；deathDir 是被撞飞/被带走的方向
+let deathKind = 'hit', deathDir = 1;
+const DEATH_TIME = { hit: 0.95, fall: 0.85, carried: 0.95, squirrel: 1.35 };
 let queued = null;           // 跳跃中按的下一个方向，落地后立刻执行
 let coffee = 0;
 let best = 0;
@@ -378,6 +384,8 @@ function hop(dx, dy) {
 
   if (target < MINC || target > MAXC) return;
   if (lane.blocked.has(Math.round(target))) return;
+  // 板子上停着机械的那两格过不去。没板子的地方照旧允许跳 —— 那是主动跳进沟里。
+  if (lane.type === 'trench' && rigBlocks(plateUnder(lane, target), target)) return;
 
   player.fromCol = player.col; player.fromRow = player.row;
   player.toCol = target;      player.toRow = dest;
@@ -396,7 +404,7 @@ function land() {
 
   if (lane.type === 'trench') {
     const p = plateUnder(lane, player.col);
-    if (!p) return die('You went into the trench they never finish.');
+    if (!p) return die('You went into the trench they never finish.', 'fall');
     player.ride = p;
     // 站上去时对齐到板子上的相对位置，之后跟着板子走。
     player.rideOffset = player.col - p.x;
@@ -427,11 +435,20 @@ function plateUnder(lane, col) {
   return null;
 }
 
-function die(reason) {
+// 板子上停着机械的那两格站不了人。判定用人的中心（col + 0.5）。
+function rigBlocks(plate, col) {
+  if (!plate || !plate.rig) return false;
+  const c = col + 0.5;
+  return c > plate.x + plate.rig.off && c < plate.x + plate.rig.off + 2;
+}
+
+function die(reason, kind = 'hit', dir = 1) {
   if (mode !== 'playing') return;
   mode = 'dying';
   dyingT = 0;
   cause = reason;
+  deathKind = kind;
+  deathDir = dir;
   sfx('die');
 }
 
@@ -459,7 +476,7 @@ function update(dt) {
     checkHazards(dt);
   } else if (mode === 'dying') {
     dyingT += dt;
-    if (dyingT > 0.75) gameOver();
+    if (dyingT > DEATH_TIME[deathKind]) gameOver();
   }
 
   // 镜头跟随。指数平滑：离目标越远追得越快，停下时又不会抖。
@@ -494,9 +511,9 @@ function updatePlayer(dt) {
     const lane = laneAt(player.row);
     player.col = player.ride.x + player.rideOffset;
     if (player.col < MINC - 0.7 || player.col > MAXC + 0.7) {
-      return die('The steel plate carried you off site.');
+      return die('The steel plate carried you off site.', 'carried', lane.dir);
     }
-    if (!plateUnder(lane, player.col)) return die('You went into the trench they never finish.');
+    if (!plateUnder(lane, player.col)) return die('You went into the trench they never finish.', 'fall');
     void lane;
   }
 
@@ -504,7 +521,7 @@ function updatePlayer(dt) {
 
   // 站着不动的惩罚。松鼠是 Crossy Road 那只老鹰的 CMU 版本。
   player.idle += dt;
-  if (player.idle > 14) die('A campus squirrel decided you were food.');
+  if (player.idle > 14) die('A campus squirrel decided you were food.', 'squirrel');
 }
 
 function checkHazards(dt) {
@@ -518,12 +535,13 @@ function checkHazards(dt) {
     for (const e of lane.entities) {
       const c = e.x + e.kind.w / 2 - 0.5;
       if (Math.abs(px - c) < e.kind.w / 2 + halfP - 0.14) {
-        return die(e.kind.truck ? 'A facilities truck got you.' : 'You got hit crossing Forbes.');
+        return die(e.kind.truck ? 'A facilities truck got you.' : 'You got hit crossing Forbes.',
+                   'hit', lane.dir);
       }
     }
   } else if (lane.type === 'busway' && lane.running) {
     const c = lane.x + BUS.w / 2 - 0.5;
-    if (Math.abs(px - c) < BUS.w / 2 + halfP - 0.14) return die('The 61C does not stop for you.');
+    if (Math.abs(px - c) < BUS.w / 2 + halfP - 0.14) return die('The 61C does not stop for you.', 'hit', lane.dir);
   }
 }
 
@@ -585,9 +603,8 @@ function drawLane(lane) {
       // 这两笔是唯一在任何屏幕上都看得到的"这是挖开的沟"的证据。
       for (let c = -EDGE; c < EDGE; c += 0.8) tile(c, r + 0.2, 0.07, 0.6, '#26282c');
       tile(-EDGE, r + 0.5, EDGE * 2, 0.11, '#3d3f44');
-      // 有机械的那一侧不再放围挡，两个东西叠在一起谁也看不清。
-      if (!lane.rig || lane.rig.side > 0) drawBarrier(MINC - 1.7, r);
-      if (!lane.rig || lane.rig.side < 0) drawBarrier(MAXC + 1.3, r);
+      drawBarrier(MINC - 1.7, r);
+      drawBarrier(MAXC + 1.3, r);
     }
   }
 
@@ -606,7 +623,6 @@ function drawLane(lane) {
       if (e.x > EDGE + 1 || e.x + e.len < -EDGE - 1) continue;
       drawPlate(e, r);
     }
-    if (lane.rig) drawRig(lane.rig, r);
   } else if (lane.type === 'busway' && lane.running) {
     drawVehicle(lane.x, r, BUS, lane.dir);
   }
@@ -643,6 +659,7 @@ function drawPlate(e, row) {
   for (let i = 1; i < e.len; i++) {
     tile(e.x + i - 0.02, row + 0.08, 0.04, 0.84, shade(C.plate, 0.72), UNIT * 0.22);
   }
+  if (e.rig) drawRig(e.rig, e.x + e.rig.off, row, UNIT * 0.22);
 }
 
 // 工地围挡。四块黑白相间的小盒子拼成一段，斜纹在纯黑白里也读得出"施工"，
@@ -667,38 +684,35 @@ function bc(cx, cy, w, d, h, color, base = 0) {
   位置永远在可走的 9 格之外。
   side = +1 停在右边（臂朝左伸进沟里），-1 反之。
 */
-function drawRig(rig, row) {
-  const s = rig.side;
-  // 机身中心紧贴活动范围外沿。再往外一点就会被窄屏裁掉 ——
-  // 手机上可走范围之外只剩一格多的余量。
-  // 挖掘机往外让一格：它的动臂要伸回沟上，机身留在原位的话铲斗会压到可走的格子上，
-  // 看着像障碍物但其实走得过去 —— 那是最糟的一种视觉谎言。
-  // 让开之后机身在窄屏上会被裁掉，但动臂和铲斗（最能认出是挖掘机的部分）还在。
-  const out = rig.kind === 'excavator' ? 1.0 : 0;
-  const cx = s > 0 ? MAXC + 2.2 + out : MINC - 1.2 - out;
+/*
+  停在钢板上的工程机械。占 2 格 × 1 行，整台都画在这个范围里 ——
+  多伸出去一点就会盖到旁边那格能站的板子上，看着像障碍物其实走得过去，
+  那是最糟的一种视觉谎言。
+  x0 是它占的两格里靠左那格的左边缘，base 是钢板的上表面。
+*/
+function drawRig(rig, x0, row, base) {
+  const cx = x0 + 1;
   const cy = row + 0.5;
-  const inward = -s;                            // 朝沟的方向
-
-  tile(cx - 1.2, cy - 0.42, 2.4, 0.84, 'rgba(0,0,0,0.13)');
+  const f = rig.face;   // 车头朝向：+1 右，-1 左
 
   if (rig.kind === 'excavator') {
-    bc(cx, cy, 1.9, 0.8, UNIT * 0.26, '#2c2e33');                        // 履带
-    bc(cx - inward * 0.25, cy, 1.25, 0.66, UNIT * 0.75, '#d2d4cf', UNIT * 0.26);  // 回转平台 + 驾驶室
-    bc(cx - inward * 0.72, cy, 0.4, 0.5, UNIT * 0.42, '#4e5054', UNIT * 0.26);    // 后配重
+    bc(cx, cy, 1.5, 0.7, UNIT * 0.20, '#2c2e33', base);                          // 履带
+    bc(cx - f * 0.28, cy, 0.92, 0.6, UNIT * 0.6, '#d2d4cf', base + UNIT * 0.20); // 回转平台 + 驾驶室
+    bc(cx - f * 0.62, cy, 0.3, 0.46, UNIT * 0.34, '#4e5054', base + UNIT * 0.20); // 后配重
 
     // 动臂：三段盒子沿"上去再下来"的折线摆，假装成一根斜的臂。
     // 整套渲染里没有旋转，画不出真正的斜杆 —— 折线是唯一的办法。
-    const arm = [[0.62, 0.72, 0.62], [1.18, 1.04, 0.44], [1.62, 0.30, 0.78]];
-    for (const [off, base, h] of arm) {
-      bc(cx + inward * off, cy, 0.34, 0.28, UNIT * h, '#7e807a', UNIT * base);
+    const arm = [[0.34, 0.58, 0.52], [0.66, 0.86, 0.36], [0.90, 0.36, 0.54]];
+    for (const [off, up, h] of arm) {
+      bc(cx + f * off, cy, 0.26, 0.24, UNIT * h, '#7e807a', base + UNIT * up);
     }
-    bc(cx + inward * 1.9, cy, 0.54, 0.4, UNIT * 0.34, '#3a3c40');        // 铲斗，落在沟沿上
+    bc(cx + f * 0.95, cy, 0.4, 0.34, UNIT * 0.26, '#3a3c40', base);              // 铲斗
   } else {
-    bc(cx, cy + 0.3, 2.3, 0.22, UNIT * 0.24, '#1d1f22');                 // 轮子
-    bc(cx, cy, 2.35, 0.66, UNIT * 0.24, '#43454a', UNIT * 0.18);         // 底盘
-    bc(cx + inward * 0.8, cy, 0.78, 0.58, UNIT * 0.72, '#e2e2de', UNIT * 0.42);  // 驾驶室
-    bc(cx - inward * 0.45, cy, 1.35, 0.64, UNIT * 0.86, '#33353a', UNIT * 0.42); // 车斗
-    bc(cx - inward * 0.45, cy, 1.12, 0.5, UNIT * 0.2, '#8e8f88', UNIT * 1.28);   // 斗里的土
+    bc(cx, cy + 0.26, 1.9, 0.18, UNIT * 0.18, '#1d1f22', base);                  // 轮子
+    bc(cx, cy, 1.95, 0.6, UNIT * 0.2, '#43454a', base + UNIT * 0.14);            // 底盘
+    bc(cx + f * 0.66, cy, 0.62, 0.52, UNIT * 0.58, '#e2e2de', base + UNIT * 0.34); // 驾驶室
+    bc(cx - f * 0.38, cy, 1.1, 0.58, UNIT * 0.7, '#33353a', base + UNIT * 0.34);   // 车斗
+    bc(cx - f * 0.38, cy, 0.9, 0.44, UNIT * 0.16, '#8e8f88', base + UNIT * 1.04);  // 斗里的土
   }
 }
 
@@ -741,6 +755,65 @@ function drawCoffee(col, row, base) {
   cup(col + 0.5, row + 0.5, base + UNIT * 0.14 + bob);
 }
 
+// 朝向向量。0 背对镜头 / 1 右 / 2 面对镜头 / 3 左
+const FACE = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+
+/*
+  画人。身体、兜帽、头三块盒子，外加一层深色描边。
+  朝向影响三件事：身体的长宽互换、兜帽往身后挪、眼睛贴在朝向的那一面。
+  背对镜头时先画头再画兜帽，让兜帽把脸盖住 —— 从背后本来就看不到脸。
+*/
+function drawBody(col, row, y, h, f, scale = 1) {
+  const [fx, fy] = FACE[f];
+  const sideways = fx !== 0;
+  const bw = (sideways ? 0.46 : 0.54) * scale;
+  const bd = (sideways ? 0.54 : 0.46) * scale;
+
+  // 略大的深色盒子垫在下面，露出来的一圈就是描边。
+  // 世界里既有近白的广场也有近黑的马路，任何单一颜色的人都会在其中一种上消失。
+  box(col - bw / 2 - 0.03, row + 0.5 - bd / 2 - 0.03, bw + 0.06, bd + 0.06, h + 2, C.dark, y - 1);
+  box(col - bw / 2, row + 0.5 - bd / 2, bw, bd, h, C.accent, y);        // 红帽衫
+
+  const hw = (sideways ? 0.30 : 0.34) * scale;
+  const hd = (sideways ? 0.34 : 0.30) * scale;
+
+  // 兜帽分两块：脖子上一圈领口 + 背后垂下来的那一坨。
+  // 早先是拿一个大红盒子整个罩住头，背对镜头时人就变成一根没有头的红柱子 ——
+  // 现在头永远露在外面，兜帽只负责说明"这是件帽衫"。
+  box(col - (hw + 0.16) / 2, row + 0.5 - (hd + 0.16) / 2, hw + 0.16, hd + 0.16,
+      UNIT * 0.15 * scale, C.accent, y + h);                                  // 领口
+  box(col - (hw * 0.9) / 2 - fx * 0.14, row + 0.5 - (hd * 0.9) / 2 - fy * 0.14,
+      hw * 0.9, hd * 0.9, UNIT * 0.3 * scale, C.accent, y + h);               // 背后的帽子
+
+  box(col - hw / 2 + fx * 0.02, row + 0.5 - hd / 2 + fy * 0.02,
+      hw, hd, UNIT * 0.26 * scale, C.skin, y + h + UNIT * 0.11 * scale);      // 头
+
+  if (f !== 0) {
+    // 眼睛：贴在朝向的那一面。
+    const ey = y + h + UNIT * 0.21 * scale;
+    if (fx === 0) box(col - hw * 0.34, row + 0.5 + fy * (hd / 2) - 0.02, hw * 0.68, 0.04, UNIT * 0.06 * scale, C.dark, ey);
+    else          box(col + fx * (hw / 2) - 0.02, row + 0.5 - hd * 0.34, 0.04, hd * 0.68, UNIT * 0.06 * scale, C.dark, ey);
+
+    // 帽檐：朝朝向的方向探出一小块。
+    // 这个投影只看得到顶面、正面和右侧面 —— 左侧面根本不出现，
+    // 所以只靠贴在侧面的眼睛，往左走时完全看不出人转过去了。
+    // 探出来的这一块会改变顶面的轮廓，四个方向都读得出来。
+    const bw2 = fx === 0 ? 0.24 * scale : 0.11 * scale;
+    const bd2 = fx === 0 ? 0.11 * scale : 0.24 * scale;
+    box(col + fx * (hw / 2 + 0.055) - bw2 / 2,
+        row + 0.5 + fy * (hd / 2 + 0.055) - bd2 / 2,
+        bw2, bd2, UNIT * 0.11 * scale, C.accent, y + h + UNIT * 0.17 * scale);
+  }
+}
+
+// 松鼠。只在把人叼走的那一秒出现，所以就是身体 + 大尾巴 + 两只耳朵。
+function drawSquirrel(col, row, y) {
+  box(col - 0.17, row + 0.4, 0.34, 0.26, UNIT * 0.26, '#4a4c50', y);
+  box(col - 0.09, row + 0.62, 0.18, 0.12, UNIT * 0.52, '#5c5e62', y + UNIT * 0.06);  // 尾巴
+  box(col - 0.06, row + 0.34, 0.06, 0.06, UNIT * 0.08, '#4a4c50', y + UNIT * 0.26);  // 耳朵
+  box(col + 0.02, row + 0.34, 0.06, 0.06, UNIT * 0.08, '#4a4c50', y + UNIT * 0.26);
+}
+
 function drawPlayer() {
   const t = player.t;
   // 逻辑上 col 是格号，格中心在 col+0.5 —— 障碍物、咖啡、碰撞判定都按中心算，
@@ -758,28 +831,12 @@ function drawPlayer() {
   const squish = 1 - player.squish * 0.28;
   const h = UNIT * 0.86 * squish;
 
+  if (mode === 'dying') { drawDeath(col, row, base, h); return; }
+
   tile(col - 0.3, row + 0.2, 0.6, 0.56, 'rgba(0,0,0,0.16)', base);
 
-  if (mode === 'dying') {
-    // 被撞：压成一张纸，留在原地
-    const f = clamp(dyingT / 0.25, 0, 1);
-    box(col - 0.3, row + 0.2, 0.6, 0.6, Math.max(UNIT * 0.06, h * (1 - f)), C.accent, base);
-    return;
-  }
-
   const y = base + arc;
-  // 先画一个略大的深色盒子，再把身体压上去 —— 这一圈露出来的边就是描边。
-  // 世界里既有近白的广场也有近黑的马路，任何单一颜色的人都会在其中一种上消失。
-  box(col - 0.30, row + 0.22, 0.60, 0.52, h + 2, C.dark, y - 1);
-  box(col - 0.27, row + 0.25, 0.54, 0.46, h, C.accent, y);                    // 红帽衫
-
-  // 兜帽在后、脸在前，两块错开 0.06 格，露出来的那一圈红边就是帽子的轮廓。
-  box(col - 0.26, row + 0.28, 0.52, 0.42, UNIT * 0.34, C.accent, y + h);          // 兜帽
-  box(col - 0.15, row + 0.22, 0.30, 0.28, UNIT * 0.26, C.skin, y + h + UNIT * 0.04); // 头
-
-  // 背包改成深灰。帽衫占了红色之后，再叠一块红就分不出哪块是哪块了。
-  const bpRow = player.facing === 2 ? row + 0.69 : row + 0.17;
-  box(col - 0.18, bpRow, 0.36, 0.16, UNIT * 0.46, C.pack, y + h * 0.25);
+  drawBody(col, row, y, h, player.facing);
 
   // 收集到的咖啡顶在头上摞起来。最多画 6 杯 —— 再高就挡住前面的车道了，
   // 真实数量以 HUD 为准。
@@ -795,6 +852,45 @@ function drawPlayer() {
     const rr = 0.55 * (1 - k * 0.55);
     tile(col - rr, row + 0.5 - rr, rr * 2, rr * 2, `rgba(0,0,0,${0.1 + k * 0.35})`, base + 0.5);
   }
+}
+
+/*
+  四种死法各有各的动画。都只用位移和缩放做 —— 这套渲染里没有旋转，
+  "翻滚"是靠盒子的宽高来回互换假装出来的。
+*/
+function drawDeath(col, row, base, h) {
+  const p = clamp(dyingT / DEATH_TIME[deathKind], 0, 1);
+  const f = player.facing;
+
+  if (deathKind === 'hit') {
+    // 被撞飞：顺着车的方向抛出去，空中翻两圈，落地压成一张纸
+    const fly = deathDir * p * 3.4;
+    const up = Math.sin(Math.min(p / 0.75, 1) * Math.PI) * UNIT * 2.4;
+    const tumble = Math.abs(Math.sin(p * Math.PI * 2.6));
+    const flat = p > 0.75 ? (p - 0.75) / 0.25 : 0;
+    const bw = 0.54 + tumble * 0.22;
+    const bh = Math.max(UNIT * 0.07, h * (1 - tumble * 0.55) * (1 - flat * 0.92));
+    tile(col + fly - 0.3, row + 0.2, 0.6, 0.56, `rgba(0,0,0,${0.16 * (1 - up / (UNIT * 3))})`, base);
+    box(col + fly - bw / 2, row + 0.25, bw, 0.46, bh, C.accent, base + up);
+    return;
+  }
+
+  if (deathKind === 'fall' || deathKind === 'carried') {
+    // 掉进沟里：往下沉、同时缩小。近处那一行的地面会在它上面画，
+    // 于是人是"被沟吃掉"的，不是凭空消失的 —— 遮挡关系是免费送的。
+    const drift = deathKind === 'carried' ? deathDir * p * 1.1 : 0;
+    const drop = p * p * UNIT * 2.6;
+    const k = 1 - p * 0.45;
+    drawBody(col + drift, row, base - drop, h * k, f, k);
+    return;
+  }
+
+  // 被松鼠叼走：先被拽起来，再一路带出画面，人在下面荡
+  const lift = p * p * UNIT * 7;
+  const sway = Math.sin(p * 9) * 0.1 * p;
+  tile(col - 0.3, row + 0.2, 0.6, 0.56, `rgba(0,0,0,${0.16 * (1 - p)})`, base);
+  drawBody(col + sway, row, base + lift, h, 2, 1 - p * 0.25);
+  drawSquirrel(col + sway * 1.3, row, base + lift + h + UNIT * 0.5);
 }
 
 
