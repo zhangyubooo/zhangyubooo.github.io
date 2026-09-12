@@ -24,22 +24,9 @@ looked at, not code instructions.
 
 ## Part 1 — the in-class sprint (Kiro)
 
-> **⚠️ TODO — this part is mine to fill in.**
-> Open Kiro, copy the prompts I typed during the 30-minute in-class sprint,
-> and paste them below one by one. The assignment says the point is to be able
-> to compare the sprint version with the finished one, so this section cannot
-> be skipped. Kiro's history is usually under `~/.kiro` or in its
-> session/history panel.
->
-> _Delete this blockquote once the prompts are in._
+> I didn't save the prompts after class.
 
-```
-(paste the in-class prompts here, one per line)
-```
-
-**Where the sprint ended up:** _TODO — one sentence on what actually worked
-when the 30 minutes ran out (e.g. "renders but the character doesn't move" /
-"traffic moves but there's no collision" / "white screen")._
+**Where the sprint ended up:** I made a playful classic crossy road game, but there are a few visual bugs.
 
 ---
 
@@ -192,8 +179,3 @@ fixes are the parts of this project I would actually talk about:
 
 ---
 
-## Changes I made myself
-
-_TODO — if I tune any values, colours, copy, or add or remove anything, write
-it here. One or two lines is enough, but be specific, e.g. "changed the hop
-duration from 0.13s to 0.11s, the original felt sticky."_
