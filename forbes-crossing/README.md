@@ -63,8 +63,8 @@ the basic rule first.
 - **Walking to the Sky** stands to the left of the starting row — the leaning
   pole with figures climbing it. It scrolls out of frame once you get going.
 - Traffic is CMU traffic: the occasional van lettered TARTANS or SCOTTY, and
-  every so often a whole lane of **CMU Police** cars with a red-and-blue bar
-  flashing on the roof.
+  now and then a single **CMU Police** car mixed into a line of ordinary
+  traffic, red-and-blue bar flashing on the roof.
 - The **61C** is the only thing on the bus lane, and the only vehicle that
   warns you before it arrives.
 - Everything on the construction lanes is safety yellow and orange: excavators

@@ -232,17 +232,21 @@ const textCells = t => {
 function pixelText(text, cx, cy, px, color) {
   let x0 = Math.round(cx - textCells(text) * px / 2);
   const y0 = Math.round(cy - 5 * px / 2);
-  ctx.fillStyle = color;
+  // 所有小方块攒进一条路径再一次填充。逐个 fillRect 的话
+  // "CMU POLICE" 一辆车就是九十来次绘制调用，一屏几辆就开始掉帧。
+  ctx.beginPath();
   for (let i = 0; i < text.length; i++) {
     const g = glyph(text[i]);
     const gw = g[0].length;
     for (let r = 0; r < 5; r++) {
       for (let c = 0; c < gw; c++) {
-        if (g[r][c] === '#') ctx.fillRect(x0 + c * px, y0 + r * px, px, px);
+        if (g[r][c] === '#') ctx.rect(x0 + c * px, y0 + r * px, px, px);
       }
     }
     x0 += (gw + 1) * px;
   }
+  ctx.fillStyle = color;
+  ctx.fill();
 }
 
 // 车。w/d 单位是格，h 单位是 UNIT。
@@ -370,10 +374,11 @@ function makeProp(col, kind) {
 function roadLane(row, d) {
   const dir = Math.random() < 0.5 ? 1 : -1;
   const speed = rand(2.0, 3.8) * (1 + 0.55 * d);
-  // 一条道上跑同一种车。10% 的概率整条道是校警车。
-  const kind = Math.random() < 0.10 ? POLICE : pick(VEHICLES);
+  // 一条道上跑同一种车，间距按这种车算。
+  const kind = pick(VEHICLES);
   const gap = rand(3.4, 7.0) - 1.6 * d;
-  const period = kind.w + Math.max(1.8, gap);
+  // 间距按最宽的可能车身留，这样中间混进一辆更宽的警车也不会把缝挤没。
+  const period = Math.max(kind.w, POLICE.w) + Math.max(1.8, gap);
   // 循环长度取 period 的整数倍，否则绕回来的时候间距会突然变。
   const count = Math.ceil((LANE_R - LANE_L) / period);
   const span = count * period;
@@ -381,11 +386,14 @@ function roadLane(row, d) {
 
   const entities = [];
   for (let i = 0; i < count; i++) {
-    // 刷字是逐辆决定的，车够宽才刷 —— 太窄的车字会挤成一团。
+    // 校警车是逐辆掷的。之前按整条道掷，一出现就是一整排警车 ——
+    // 那看着像在出警，不像在巡逻。现在是一排车里偶尔混一辆。
+    const k = Math.random() < 0.05 ? POLICE : kind;
+    // 刷字同样逐辆决定，车够宽才刷 —— 太窄的车字会挤成一团。
     // 警车和 61C 自带车身标识，不参与随机。
-    const label = kind.label
-      || (kind.w >= 1.9 && Math.random() < LABEL_CHANCE ? pick(LABELS) : null);
-    entities.push({ x: LANE_L + offset + i * period, kind, label });
+    const label = k.label
+      || (k.w >= 1.9 && Math.random() < LABEL_CHANCE ? pick(LABELS) : null);
+    entities.push({ x: LANE_L + offset + i * period, kind: k, label });
   }
   return { type: 'road', row, base: 0, color: C.road, dir, speed, span, entities, obstacles: [], blocked: new Set(), coffee: null };
 }
