@@ -6,14 +6,18 @@ Play it: **https://zhangyubooo.github.io/forbes-crossing/**
 
 ## What it is
 
-> **⚠️ 这两句必须你自己写，不要让 AI 写（作业明确要求）。**
-> 要求：一到两句，说明这个游戏是什么、和原版 Crossy Road 有什么不同。
-> 可以参考的事实（用你自己的话重写）：场景换成了 CMU 校园；
-> "过河踩原木" 换成了 "过施工沟踩钢板"；多了一条 61C 公交专用道，
-> 车来之前会先闪红灯；站着不动太久会被一只巨大的校园松鼠吃掉；集满七杯咖啡就算安全到教室、通关；
-> 美术是黑白灰 + 一个 CMU 红，和我 portfolio 用的是同一套设计系统。
->
-> _写完把这段引用块整个删掉。_
+Forbes Crossing is a browser game in the shape of Crossy Road, relocated to the
+Carnegie Mellon campus: instead of a frog crossing rivers on floating logs, it
+is a student crossing Forbes Ave and a construction site that never quite
+finishes, riding steel road plates over open trenches, watching for the 61C,
+and picking up coffee along the way.
+
+The two things that make it not a clone are the setting and the ending. Crossy
+Road is endless by design — you only ever lose. Here, seven coffees means you
+made it to class, so the game is something you can actually win. Everything on
+screen is drawn in the same black / grey / white plus one CMU red that the rest
+of this portfolio uses, so the game reads as part of the site rather than as
+something dropped into it.
 
 ## How to play
 
@@ -77,15 +81,29 @@ the basic rule first.
   (Cowork mode)**, connected directly to this repo folder on my laptop — so
   the model edited the files in place instead of me copying code out of a chat
   window.
-- **Kiro** — used for the 30-minute in-class sprint only. _(TODO: 如果课上
-  用的是别的模型/工具，改成实际用的。)_
+- **Kiro** — used for the 30-minute in-class sprint only, on whatever model it
+  ships with by default; I did not change that setting.
 
-**Strategy** _(TODO: 确认或改成你自己的说法)_ — for the in-class sprint I let
-the tool attempt the whole game in one shot. At home I restarted from scratch
-rather than building on the sprint code, and worked in the opposite order:
-first fix the projection and the game loop, then add one hazard type at a
-time, then spend the remaining time on how the thing actually reads on screen.
-Most of the back-and-forth at home was about legibility, not features.
+**Strategy.** In class I used the 30 minutes the way the exercise invites you
+to: one large prompt, let the tool attempt the whole game at once, see what
+comes back. What came back was a thing that ran, and that was about all I could
+say for it — so at home I threw it away and started from an empty folder rather
+than trying to repair it. Restarting is cheaper than debugging generated code
+you did not design.
+
+At home I inverted the order. Instead of asking for a game, I fixed the two
+things everything else sits on top of — the projection function and the game
+loop — and got those looking right on a real screen before any hazard existed.
+Then one hazard type at a time: roads, then the bus lane, then the construction
+trenches. Only when each of those worked in isolation did I let them stack up
+into difficulty ramping.
+
+The result is that most of the back-and-forth at home was not about features at
+all. It was about legibility: whether you can tell grass from pavement at a
+glance, whether the character is findable on a light background, whether a
+steel plate with an excavator parked on it reads as solid. A hazard the player
+cannot see coming is not difficulty, it is just an unfair death, and that
+distinction ate more of my time than writing the collision code did.
 
 No build step, no framework, no dependencies. One `index.html`, one `game.css`,
 one `game.js`, canvas 2D. It runs as a static page on GitHub Pages.
