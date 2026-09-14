@@ -37,6 +37,15 @@
 
     <!-- ▼▼▼ 新素材加在这一行下面 ▼▼▼ -->
 
+    <!-- 这条 68 秒，比其他素材长得多，所以加了 preload="none"：
+         页面加载时只下 poster 那张图，等 script.js 滚进视口调 play() 才开始缓冲。 -->
+    <figure class="play__item">
+      <video src="videos/play-light-study.mp4"
+             poster="images/play-light-study-poster.jpg"
+             muted loop playsinline preload="none" data-autoplay
+             aria-label="A white model room lit through a slatted window, the light cycling from amber to white to magenta to violet"></video>
+    </figure>
+
     <figure class="play__item">
       <video src="videos/play-weave.mp4"
              poster="images/play-weave-poster.jpg"
