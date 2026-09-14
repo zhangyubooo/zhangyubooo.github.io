@@ -2,35 +2,35 @@
    Yubo Zhang — Portfolio
    script.js
 
-   三个功能：
-   ① 滚离首屏后导航浮现
-   ② 项目封面多图轮播
-   ③ 视频只在滚进视口时播放
+   Three features:
+   ① the nav appears once you scroll past the intro
+   ② multi-image carousels on the project covers
+   ③ videos only play once they scroll into the viewport
 
-   三个都建立在同一个 API 上：IntersectionObserver。
-   它让浏览器替我们监视"某个元素是否进入了视口"，
-   比自己监听 scroll 事件高效得多 —— 见文件底部说明。
+   All three are built on the same API: IntersectionObserver.
+   It has the browser watch "has this element entered the viewport" for us,
+   far more efficiently than listening to scroll events ourselves — see the note at the bottom of this file.
 
-   AI 使用说明：三个功能的实现方案与注释由 Claude 提议并解释；
-   时间参数（轮播间隔、触发阈值）由我在浏览器中试出来后确定。
-   详见 prompt-log.md
+   AI disclosure: the implementation approach for all three, and the comments, were proposed and explained by Claude;
+   the timing values (carousel interval, trigger thresholds) I settled myself after trying them out in the browser.
+   See prompt-log.md
    ============================================================ */
 
 
-/* ---- 可调参数。想改节奏改这里，不用翻代码 ---- */
-const CAROUSEL_INTERVAL = 3200;   // 轮播每张停留毫秒数
-const NAV_THRESHOLD     = 0.4;    // 首屏可见面积低于 40% 时，导航出现
-const MEDIA_THRESHOLD   = 0.3;    // 封面露出 30% 时开始播放
+/* ---- Tunable parameters. Change the pacing here, no need to dig through the code ---- */
+const CAROUSEL_INTERVAL = 3200;   // milliseconds each carousel slide stays up
+const NAV_THRESHOLD     = 0.4;    // the nav appears once under 40% of the intro is visible
+const MEDIA_THRESHOLD   = 0.3;    // start playing once 30% of the cover is showing
 
-/* 用户在系统设置里开了"减弱动态效果"吗？
-   开了的话，轮播和视频都不自动播 —— WCAG 要求，不是可选的礼貌。 */
+/* Has the user switched on "reduce motion" in their system settings?
+   If so, neither the carousel nor the videos autoplay — a WCAG requirement, not optional politeness. */
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 
-/* ① 导航浮现 ------------------------------------------------
-   首屏（#intro）大部分离开视口时，给导航加上 .is-visible。
-   CSS 负责淡入和下滑动画，JS 只管切换这个 class ——
-   动画交给 CSS、状态交给 JS，是常见的分工。
+/* ① NAV REVEAL ----------------------------------------------
+   Once most of the intro (#intro) has left the viewport, add .is-visible to the nav.
+   CSS handles the fade and slide animation, JS only toggles this class —
+   animation to CSS, state to JS, the usual division of labour.
    ------------------------------------------------------------ */
 const nav = document.querySelector('[data-nav]');
 const intro = document.querySelector('#intro');
@@ -39,7 +39,7 @@ if (nav && intro) {
   const navObserver = new IntersectionObserver(
     (entries) => {
       const introIsVisible = entries[0].isIntersecting;
-      // 首屏可见 → 隐藏导航；首屏滚走了 → 显示导航
+      // intro visible → hide the nav; intro scrolled away → show the nav
       nav.classList.toggle('is-visible', !introIsVisible);
     },
     { threshold: NAV_THRESHOLD }
@@ -48,16 +48,16 @@ if (nav && intro) {
   navObserver.observe(intro);
 }
 
-/* ①b 首屏 ↔ Projects 的硬切换 -------------------------------
-   设计意图：不允许"半首屏半项目"的中间状态。
-   只接管这一次跳转，Projects 区内部滚动完全不干预 ——
-   这是纯 CSS 的 scroll-snap: mandatory 做不到的精度。
+/* ①b Hard intro ↔ Projects switch ---------------------------
+   Design intent: no half-intro, half-projects in-between state is allowed.
+   Only this one jump is taken over; scrolling inside the Projects section is left entirely alone —
+   a precision that pure CSS scroll-snap: mandatory cannot achieve.
    ------------------------------------------------------------ */
 const projectsSection = document.querySelector('#projects');
 
 if (intro && projectsSection && !reduceMotion) {
   let lastY = window.scrollY;
-  let locked = false;   // 程序自己滚动时，别让它触发自己
+  let locked = false;   // while the script is scrolling, don't let it trigger itself
 
   window.addEventListener('scroll', () => {
     const y = window.scrollY;
@@ -67,7 +67,7 @@ if (intro && projectsSection && !reduceMotion) {
     if (locked) return;
 
     const introHeight = intro.offsetHeight;
-    const inBetween = y > 8 && y < introHeight * 0.9;   // 处在"中间状态"
+    const inBetween = y > 8 && y < introHeight * 0.9;   // sitting in the "in-between state"
 
     if (!inBetween) return;
 
@@ -77,24 +77,24 @@ if (intro && projectsSection && !reduceMotion) {
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    // 平滑滚动大约 600ms，留点余量再解锁
+    // smooth scrolling takes about 600ms, so leave some margin before unlocking
     setTimeout(() => { locked = false; lastY = window.scrollY; }, 900);
   }, { passive: true });
 }
-// 注意：info.html 和详情页没有 #intro，上面的 if 会直接跳过，
-// 那些页面的导航靠 HTML 里写死的 class="nav is-visible" 常驻显示。
+// Note: info.html and the detail pages have no #intro, so the if above is simply skipped,
+// and the nav on those pages stays visible via a hard-coded class="nav is-visible" in the HTML.
 
 
-/* ② 封面轮播 ------------------------------------------------
-   HTML 里所有图叠在一起，只有带 .is-active 的那张不透明（CSS 控制）。
-   这里做的事就是轮流把 .is-active 从一张移到下一张。
+/* ② COVER CAROUSEL ------------------------------------------
+   In the HTML every image is stacked on the others, and only the one carrying .is-active is opaque (CSS does that).
+   All this does is move .is-active from one image to the next, in turn.
    ------------------------------------------------------------ */
 const carousels = document.querySelectorAll('[data-carousel]');
 
 carousels.forEach((carousel) => {
   const slides = carousel.querySelectorAll('img');
 
-  // 只有一张图就没什么可轮播的，直接跳过
+  // with only one image there is nothing to rotate, so skip it
   if (slides.length < 2) return;
 
   let index = 0;
@@ -102,7 +102,7 @@ carousels.forEach((carousel) => {
 
   function advance() {
     slides[index].classList.remove('is-active');
-    // % 取余：走到最后一张后回到 0，形成循环
+    // % modulo: after the last slide it wraps back to 0, forming a loop
     index = (index + 1) % slides.length;
     slides[index].classList.add('is-active');
   }
@@ -118,9 +118,9 @@ carousels.forEach((carousel) => {
     timer = null;
   }
 
-  if (reduceMotion) return;   // 减弱动态效果时，永远只显示第一张
+  if (reduceMotion) return;   // with reduced motion, only ever show the first image
 
-  // 只有滚进视口才跑定时器。看不见的地方没必要消耗性能。
+  // Only run the timer once it has scrolled into view. No point spending performance where nothing is visible.
   const carouselObserver = new IntersectionObserver(
     (entries) => {
       entries[0].isIntersecting ? start() : stop();
@@ -132,23 +132,23 @@ carousels.forEach((carousel) => {
 });
 
 
-/* ③ 视频按需播放 ---------------------------------------------
-   如果四个封面视频同时自动播，笔记本风扇会响、手机会烫会掉电。
-   所以只播用户正在看的那一个。
+/* ③ VIDEO ON DEMAND ------------------------------------------
+   If all four cover videos autoplayed at once, laptop fans would spin up and phones would get hot and lose charge.
+   So only the one the user is actually looking at plays.
    ------------------------------------------------------------ */
-/* data-autoplay 是钩子：任何页面上想"滚进视口才播"的视频，加这个属性即可。
-   用 data 属性而不是 class，是因为 class 属于 CSS，改样式时不该误伤行为。 */
+/* data-autoplay is the hook: any video on any page that should "only play once in view" just gets this attribute.
+   A data attribute rather than a class, because classes belong to CSS, and restyling shouldn't accidentally break behaviour. */
 const videos = document.querySelectorAll('video[data-autoplay]');
 
 videos.forEach((video) => {
-  if (reduceMotion) return;   // 减弱动态效果时只显示 poster 静帧
+  if (reduceMotion) return;   // with reduced motion, show only the poster still frame
 
   const videoObserver = new IntersectionObserver(
     (entries) => {
       if (entries[0].isIntersecting) {
-        // play() 返回一个 Promise，可能被浏览器拒绝
-        // （比如 iPhone 开了低电量模式）。不接住就会在控制台报错。
-        video.play().catch(() => { /* 播不了就保持 poster，不是错误 */ });
+        // play() returns a Promise, which the browser may reject
+        // (an iPhone in low power mode, for instance). Uncaught, it throws an error in the console.
+        video.play().catch(() => { /* if it can't play, keep the poster; that's not an error */ });
       } else {
         video.pause();
       }
@@ -160,37 +160,37 @@ videos.forEach((video) => {
 });
 
 
-/* ④ 切到别的标签页时暂停 -------------------------------------
-   IntersectionObserver 只管"在不在视口里"，管不了"用户切走了标签页"。
-   不处理的话，视频会在后台标签里一直播，白耗电。
+/* ④ PAUSE WHEN THE TAB IS HIDDEN -----------------------------
+   IntersectionObserver only knows "is it in the viewport", not "has the user switched tabs".
+   Left unhandled, a video keeps playing in a background tab, wasting battery.
    ------------------------------------------------------------ */
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     videos.forEach((video) => video.pause());
   }
-  // 切回来时不主动恢复播放 —— 交给 IntersectionObserver 判断，
-  // 因为用户切回来时未必还停在原来的位置。
+  // Coming back does not actively resume playback — that call is left to IntersectionObserver,
+  // because the user may no longer be at the same position when they switch back.
 });
 
 
 /* ============================================================
-   附：为什么用 IntersectionObserver，不用 scroll 事件
+   Appendix: why IntersectionObserver rather than scroll events
 
-   传统写法是监听 window 的 scroll 事件，每次触发时手动算元素位置：
+   The traditional way is to listen to window's scroll event and work out the element's position by hand on every fire:
 
      window.addEventListener('scroll', () => {
        const rect = el.getBoundingClientRect();
        if (rect.top < window.innerHeight) { ... }
      });
 
-   两个问题：
-   1. scroll 事件触发极其频繁 —— 滚一下可能几十上百次。每次都跑
-      JS 计算，容易掉帧。
-   2. getBoundingClientRect() 会强制浏览器重新计算布局
-      （叫 layout thrashing），是性能杀手。
+   Two problems:
+   1. The scroll event fires extremely often — one flick can be dozens or hundreds of times. Running
+      JS calculations on each of them drops frames easily.
+   2. getBoundingClientRect() forces the browser to recalculate layout
+      (this is called layout thrashing), which is a performance killer.
 
-   IntersectionObserver 把这件事交给浏览器底层去做，在合成线程上
-   异步判断，不阻塞主线程，只在状态真正变化时通知你一次。
+   IntersectionObserver hands the job down to the browser internals, deciding asynchronously on
+   the compositor thread, never blocking the main thread, notifying you once and only when the state really changes.
 
-   这是 2019 年之后的标准做法，但网上大量教程还停留在 scroll 事件。
+   This has been the standard approach since 2019, but a great many tutorials online are still stuck on scroll events.
    ============================================================ */

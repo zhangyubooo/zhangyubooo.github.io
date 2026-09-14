@@ -14,7 +14,7 @@
 
 <body class="page-about">
 
-<!-- 这一页导航常驻显示，所以直接写上 is-visible，不等 JS -->
+<!-- The nav is permanent on this page, so is-visible is hard-coded instead of waiting for JS -->
 <header class="nav is-visible">
   <nav aria-label="Main navigation">
     <a class="nav__name" href="index.html#intro">Yubo Zhang</a>
@@ -28,10 +28,10 @@
 
 <main class="about">
 
-  <!-- 大标题单独一行，和下面的照片左对齐 -->
+  <!-- The heading gets its own row, left-aligned with the portrait below it -->
   <h1 class="about__heading">About</h1>
 
-  <!-- 照片 + 自我介绍：桌面照片在左、正文分两栏在右；手机上下堆叠 -->
+  <!-- Portrait + bio: on desktop the photo sits left and the text right; on mobile they stack -->
   <section class="about__top">
     <figure class="about__portrait">
       <img src="images/portrait.jpg"
@@ -55,7 +55,7 @@
     </div>
   </section>
 
-  <!-- 技能：五组。分组本身就是一种自我定位 —— 别人一眼看出你的能力覆盖面 -->
+  <!-- Skills, in five groups. The grouping is itself a kind of positioning — it shows the range at a glance -->
   <section class="about__skills">
     <h2>Skills</h2>
 
@@ -112,7 +112,7 @@
     </div>
   </section>
 
-  <!-- 教育经历 -->
+  <!-- Education -->
   <section class="about__education">
     <h2>Education</h2>
     <ul class="entries">
@@ -124,15 +124,15 @@
   </section>
 
   <!--
-    ══ 已移到 play.html，这段留着备查 ══
-    结构照抄上面的 entries 就行，每条一个 <li class="entry">。
+    ══ Moved to play.html; kept here for reference ══
+    Copy the entries structure above: one <li class="entry"> per item.
 
     <section class="about__experiments">
       <h2>Experiments</h2>
       <ul class="entries">
         <li class="entry">
-          <span class="entry__title">名字</span>
-          <span class="entry__meta">一句话说明</span>
+          <span class="entry__title">Name</span>
+          <span class="entry__meta">One-line description</span>
         </li>
       </ul>
     </section>
@@ -140,7 +140,7 @@
 
   <section class="about__contact">
     <h2>Contact</h2>
-    <!-- 邮箱明文写出来：mailto: 在没配邮件客户端的电脑上点了没反应，这是降级方案 -->
+    <!-- Email spelled out in plain text: mailto: does nothing on a machine with no mail client, so this is the fallback -->
     <p class="about__email">
       <a href="mailto:yubozhang1224@outlook.com">yubozhang1224@outlook.com</a>
     </p>
@@ -159,7 +159,7 @@
 </main>
 
 <footer class="footer">
-  <!-- 本站源码。放在这里而不是 Projects 里，是和 TA 沟通后的决定 -->
+  <!-- Source for this site. Here rather than in Projects — decided after talking to the TA -->
   <p>
     This site was designed and built by me in HTML, CSS, and JavaScript.
     <a href="https://github.com/zhangyubooo/zhangyubooo.github.io"

@@ -2,40 +2,40 @@
    Yubo Zhang — Portfolio
    style.css
  
-   结构：① Tokens ② Reset ③ Base ④ Nav ⑤ Intro ⑥ Projects
-        ⑦ Social ⑧ About 页 ⑨ Play 页 ⑩ 响应式 ⑪ 无障碍
+   Structure: ① Tokens ② Reset ③ Base ④ Nav ⑤ Intro ⑥ Projects
+        ⑦ Social ⑧ About page ⑨ Play page ⑩ Responsive ⑪ Accessibility
  
-   AI 使用说明：token 体系、布局方案与注释由 Claude 提议并解释；
-   具体数值（字号级差、间距尺度、断点）经我在浏览器中反复调整后确定。
-   详见 prompt-log.md
+   AI disclosure: the token system, the layout approach and the comments were proposed and explained by Claude;
+   the actual numbers (type scale steps, spacing scale, breakpoints) I settled myself after repeated tuning in the browser.
+   See prompt-log.md
    ============================================================ */
  
  
 /* ① TOKENS ---------------------------------------------------
-   全站的设计系统。改这里 = 改全站。
-   等同于 Figma 里的 Styles / Variables。
+   The design system for the whole site. Change it here = change it everywhere.
+   The equivalent of Styles / Variables in Figma.
    ------------------------------------------------------------ */
 :root {
-  /* 颜色 —— 纯黑白灰 */
+  /* Colour — pure black, white and grey */
   --c-bg:          #ffffff;
   --c-text:        #111111;
-  --c-muted:       #666666;  /* 对白底 5.7:1，通过 WCAG AA */
+  --c-muted:       #666666;  /* 5.7:1 on white, passes WCAG AA */
   --c-line:        #e5e5e5;
-  --c-fill:        #f2f2f2;  /* 占位块、图片底色 */
+  --c-fill:        #f2f2f2;  /* placeholder blocks, image backdrop */
  
-  /* 字体 —— 全站单一 grotesk。后面的是回退栈，字体没加载出来时用系统字体顶上。
-     层级不靠换字体，靠字重（400/500/600）和字号 —— 参考图就是这个做法。 */
+  /* Type — one grotesk for the entire site. What follows is the fallback stack, so the system font stands in if it fails to load.
+     Hierarchy comes from weight (400/500/600) and size, not from swapping typefaces — that is how the reference does it too. */
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
  
-  /* 字号 —— 五档，够用且克制。rem 相对根字号，用户放大字体时会跟着变 */
-  --t-xs:      0.8125rem;  /* 13px  项目标签 */
-  --t-sm:      0.9375rem;  /* 15px  导航、社交链接 */
-  --t-base:    1.0625rem;  /* 17px  正文 */
-  --t-lg:      1.375rem;   /* 22px  项目标题 */
-  --t-xl:      1.75rem;    /* 28px  区标题，加粗 */
-  --t-display: clamp(1.75rem, 2.6vw, 2.5rem);  /* 28→40px 你好!，随窗口连续变化 */
+  /* Sizes — five steps, enough and restrained. rem is relative to the root size, so it follows when the user enlarges text */
+  --t-xs:      0.8125rem;  /* 13px  project tags */
+  --t-sm:      0.9375rem;  /* 15px  nav, social links */
+  --t-base:    1.0625rem;  /* 17px  body text */
+  --t-lg:      1.375rem;   /* 22px  project titles */
+  --t-xl:      1.75rem;    /* 28px  section headings, bold */
+  --t-display: clamp(1.75rem, 2.6vw, 2.5rem);  /* 28→40px the "Hello!", scales continuously with the window */
  
-  /* 间距 —— 4px 基准的模数系统。只用这几个值，不出现 37px 这种数 */
+  /* Spacing — a modular scale built on 4px. Only these values are used, so no stray numbers like 37px */
   --s-1: 0.25rem;   /*   4 */
   --s-2: 0.5rem;    /*   8 */
   --s-3: 1rem;      /*  16 */
@@ -45,30 +45,30 @@
   --s-7: 6rem;      /*  96 */
   --s-8: 9rem;      /* 144 */
  
-  /* 布局 */
+  /* Layout */
   --max-w:       1800px;
-  /* clamp(最小, 随窗口变, 最大) —— 边距随窗口宽度流动，
-     窄屏不至于挤到贴边，宽屏也不会撑得太夸张。
-     不用媒体查询就实现了连续变化。 */
+  /* clamp(min, scales with the window, max) — the gutter flows with viewport width,
+     so narrow screens are not squeezed right up to the edge and wide ones are not blown out.
+     Continuous scaling without a single media query. */
   --gutter:      clamp(1rem, 2vw, 2rem);
-  --cover-ratio: 3 / 2;      /* 封面比例。改这一个值，全站封面同步变 */
+  --cover-ratio: 3 / 2;      /* Cover ratio. Change this one value and every cover follows */
 }
  
  
 /* ② RESET ----------------------------------------------------
-   抹平浏览器默认样式的差异。不同浏览器的默认 margin、字号
-   并不一致，不清掉的话你的排版在 Safari 和 Chrome 里会不一样。
+   Levels out the differences between browser defaults. Default margins and font
+   sizes are not the same everywhere; leave them and your layout differs in Safari and Chrome.
    ------------------------------------------------------------ */
 *,
 *::before,
-*::after { box-sizing: border-box; }  /* 让 padding 和 border 算进宽度内，不撑大盒子 */
+*::after { box-sizing: border-box; }  /* counts padding and border inside the width, so boxes never grow */
  
 body, h1, h2, h3, p, ul, figure { margin: 0; padding: 0; }
  
 ul { list-style: none; }
  
 img, video {
-  display: block;      /* 去掉 inline 元素底部那几像素的基线空隙 */
+  display: block;      /* removes the few px of baseline gap under an inline element */
   max-width: 100%;
 }
  
@@ -77,9 +77,9 @@ img, video {
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--s-6);
-  /* 首屏 ↔ Projects 的硬切换改由 script.js 接管。
-     CSS 的 scroll-snap: mandatory 在"最后一屏比视口矮"时会把用户
-     弹回上一个吸附点 —— 这里就是滚到 email 那行时被弹回项目区顶部。 */
+  /* The hard intro ↔ Projects switch is handled by script.js instead.
+     CSS scroll-snap: mandatory throws the user back to the previous snap point whenever
+     "the last screen is shorter than the viewport" — here, scrolling to the email line bounced you back to the top of the projects. */
 }
  
 body {
@@ -93,10 +93,10 @@ body {
  
 a { color: inherit; }
  
-/* 视觉上隐藏，但读屏器和搜索引擎仍然读得到。
-   注意不是 display:none 也不是 visibility:hidden —— 那两个会把元素
-   从无障碍树里彻底移除，读屏器也读不到。这里的做法是把它裁成 1px
-   并挪出屏幕，元素依然存在于文档中。 */
+/* Hidden visually, but still readable by screen readers and search engines.
+   Note this is neither display:none nor visibility:hidden — both of those remove the
+   element from the accessibility tree entirely, so screen readers lose it too. The trick
+   here is to clip it to 1px and move it offscreen; the element stays in the document. */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -109,7 +109,7 @@ a { color: inherit; }
   border: 0;
 }
 
-/* 键盘用户看得见焦点在哪。绝对不要写 outline: none 把它删掉 */
+/* Keyboard users can see where focus is. Never write outline: none to delete it */
 :focus-visible {
   outline: 2px solid var(--c-text);
   outline-offset: 3px;
@@ -117,7 +117,7 @@ a { color: inherit; }
  
  
 /* ④ NAV ------------------------------------------------------
-   默认完全隐藏。script.js 检测到用户滚离首屏后加上 .is-visible。
+   Completely hidden by default. script.js adds .is-visible once the user scrolls away from the intro.
    ------------------------------------------------------------ */
 .nav {
   position: fixed;
@@ -128,7 +128,7 @@ a { color: inherit; }
   background: var(--c-bg);
   border-bottom: 1px solid transparent;
  
-  /* 隐藏状态 */
+  /* hidden state */
   opacity: 0;
   visibility: hidden;
   transform: translateY(-100%);
@@ -166,19 +166,19 @@ a { color: inherit; }
 }
  
 .nav__links a {
-  position: relative;          /* 给下面的 ::after 一个定位参照 */
+  position: relative;          /* gives the ::after below something to position against */
   text-decoration: none;
   color: var(--c-muted);
   transition: color .2s ease;
 }
 
-/* hover 横线。
-   用伪元素画线，而不是 text-decoration: underline ——
-   伪元素能做动画（从左往右展开），下划线属性只能瞬间出现。
+/* The hover rule.
+   The line is drawn with a pseudo-element rather than text-decoration: underline —
+   a pseudo-element can be animated (wiping open from the left); the underline property can only appear instantly.
 
-   content: "" 是伪元素的必需品，没有它元素根本不会生成。
-   background: currentColor 让线条自动取用链接当前的文字颜色，
-   所以 hover 时字变黑、线也跟着变黑，颜色不用写两遍。 */
+   content: "" is mandatory for a pseudo-element; without it nothing is generated at all.
+   background: currentColor makes the line take the link's current text colour automatically,
+   so on hover the text turns black and the line follows, with the colour written only once. */
 .nav__links a::after {
   content: "";
   position: absolute;
@@ -188,8 +188,8 @@ a { color: inherit; }
   height: 1px;
   background: currentColor;
 
-  /* 默认横向缩到 0（看不见），origin 设在左边，
-     所以展开时是"从左往右画出来"，而不是从中间往两边长。 */
+  /* Scaled to 0 horizontally by default (invisible), with the origin on the left,
+     so it opens by being "drawn from left to right" instead of growing outwards from the middle. */
   transform: scaleX(0);
   transform-origin: left;
   transition: transform .3s ease;
@@ -204,18 +204,18 @@ a { color: inherit; }
  
 /* ⑤ INTRO ----------------------------------------------------*/
 .intro {
-  /* 两行都写：不认识 svh 的旧浏览器用第一行，新浏览器用第二行覆盖。
-     svh = small viewport height，永远取手机地址栏展开时的高度，
-     保证内容不被地址栏切掉。用 min-height 不用 height，
-     窗口很矮或用户放大字体时内容才不会被裁。 */
+  /* Both lines are written: old browsers that don't know svh take the first, new ones override with the second.
+     svh = small viewport height — always the height with the mobile address bar expanded,
+     which guarantees the content is never cut off by that bar. min-height rather than height,
+     so nothing gets clipped when the window is very short or the user enlarges the text. */
   min-height: 100vh;
   min-height: 100svh;
  
-  /* 三行网格：auto = 招呼词按内容高度贴在顶部；
-     1fr  = 中间这行吃掉所有剩余高度，正文在其中垂直居中；
-     底部的箭头是绝对定位，不占行。
-     用 grid 而不是 flex，是因为"一个贴顶、一个居中"用 flex 的
-     justify-content 做不到 —— 它只能整体对齐，没法分别控制。 */
+  /* Three-row grid: auto = the greeting sits at the top at its own content height;
+     1fr  = this middle row swallows all the remaining height, with the body text centred in it;
+     the arrow at the bottom is absolutely positioned and takes no row of its own.
+     grid rather than flex, because "one pinned to the top, one centred" is not something
+     flex's justify-content can do — it only aligns the whole group, with no per-item control. */
   display: grid;
   grid-template-rows: auto 1fr;
   justify-items: center;
@@ -226,20 +226,20 @@ a { color: inherit; }
 .intro__greeting {
   font-size: var(--t-display);
   font-weight: 600;
-  letter-spacing: -0.03em;   /* 大字号必须收紧字距，否则字母之间会散开 */
+  letter-spacing: -0.03em;   /* large type has to have its tracking tightened, or the letters drift apart */
   line-height: 1.05;
   text-align: center;
 }
  
 .intro__text {
-  align-self: center;   /* 在 1fr 那行里垂直居中 */
-  max-width: 58ch;      /* ch = 当前字体 "0" 的宽度。55–70ch 是公认的最佳阅读行宽 */
+  align-self: center;   /* vertically centred inside the 1fr row */
+  max-width: 58ch;      /* ch = the width of "0" in the current font. 55–70ch is the accepted ideal measure */
   font-size: clamp(1rem, 1.15vw, 1.25rem);
 }
  
 .intro__text p + p { margin-top: var(--s-4); }
  
-/* 滚动提示：首屏什么都没有，用户需要知道下面还有东西 */
+/* Scroll cue: the intro screen is otherwise empty, so users need to know there is more below */
 .intro__cue {
   position: absolute;
   bottom: var(--s-5);
@@ -273,8 +273,8 @@ a { color: inherit; }
  
 .projects__grid {
   display: grid;
-  grid-template-columns: 1fr;        /* 手机优先：默认单列 */
-  gap: var(--s-5) var(--s-4);        /* 行间距 列间距 */
+  grid-template-columns: 1fr;        /* mobile first: one column by default */
+  gap: var(--s-5) var(--s-4);        /* row gap, column gap */
 }
  
 .project__link {
@@ -283,25 +283,25 @@ a { color: inherit; }
   color: inherit;
 }
  
-/* 封面容器。aspect-ratio 定死形状，任意比例的原图/视频都被统一 */
+/* Cover container. aspect-ratio locks the shape, so source images/videos of any ratio are unified */
 .project__media {
   position: relative;
   aspect-ratio: var(--cover-ratio);
   overflow: hidden;
   background: var(--c-fill);
-  margin-bottom: 0.875rem;   /* 14px —— 封面和标题贴得近，读作一组 */
+  margin-bottom: 0.875rem;   /* 14px — cover and title sit close together, so they read as one group */
 }
  
 .project__media img,
 .project__media video {
   width: 100%;
   height: 100%;
-  object-fit: cover;   /* 填满容器并居中裁切，绝不拉伸变形 */
+  object-fit: cover;   /* fills the container and crops from the centre, never stretches or distorts */
   transition: transform .6s ease;
 }
  
-/* 轮播：所有图叠在一起，只有 .is-active 那张不透明。
-   JS 负责轮流切换这个 class。JS 没跑起来时只显示第一张 —— 优雅降级 */
+/* Carousel: every image is stacked on top of the others, only the .is-active one is opaque.
+   JS takes care of rotating that class. If JS never runs, only the first image shows — graceful degradation */
 [data-carousel] img {
   position: absolute;
   inset: 0;
@@ -311,7 +311,7 @@ a { color: inherit; }
  
 [data-carousel] img.is-active { opacity: 1; }
  
-/* hover 时封面极轻微放大。0.02 已经足够被感知，再大就廉价了 */
+/* The cover scales up very slightly on hover. 0.02 is already perceptible; any more looks cheap */
 .project__link:hover .project__media img,
 .project__link:hover .project__media video { transform: scale(1.02); }
  
@@ -320,23 +320,23 @@ a { color: inherit; }
   font-weight: 400;
   line-height: 1.45;
   letter-spacing: -0.005em;
-  margin-bottom: 0;          /* 标题和标签之间只留行距，不额外加间隔 */
+  margin-bottom: 0;          /* only the line spacing separates title and tags, no extra gap */
 }
  
 .project__tags {
-  font-size: var(--t-sm);    /* 和标题同字号 —— 靠颜色分层，不靠大小 */
+  font-size: var(--t-sm);    /* same size as the title — layered by colour, not by size */
   font-weight: 400;
   line-height: 1.45;
   color: var(--c-muted);
 }
  
-/* 占位卡：没有链接，所以鼠标保持默认箭头，暗示"点不了" */
+/* Placeholder card: no link, so the cursor stays the default arrow, hinting "not clickable" */
 .project--placeholder { cursor: default; }
 .project--placeholder .project__title { color: var(--c-muted); }
  
  
 /* ⑦ SOCIAL ---------------------------------------------------
-   项目区末尾的一行链接，同时充当主页页脚
+   A row of links at the end of the projects section, doubling as the home page footer
    ------------------------------------------------------------ */
 .social {
   display: flex;
@@ -357,12 +357,12 @@ a { color: inherit; }
 .social a:hover {
   color: var(--c-text);
   text-decoration: underline;
-  text-underline-offset: 4px;   /* 下划线往下挪，不糊在字母的下伸部上 */
+  text-underline-offset: 4px;   /* pushes the underline down so it doesn't smudge into the descenders */
 }
  
  
-/* ⑧ ABOUT 页 --------------------------------------------------*/
-.page-about { padding-top: var(--s-6); }   /* 这一页导航常驻，给它让出高度 */
+/* ⑧ ABOUT PAGE -----------------------------------------------*/
+.page-about { padding-top: var(--s-6); }   /* the nav is permanent on this page, so clear its height */
 
 .about {
   max-width: 1400px;
@@ -386,9 +386,9 @@ a { color: inherit; }
   margin-bottom: var(--s-4);
 }
 
-/* 小标题：全大写 + 拉开字距 + 灰色。
-   这是"标签"而不是"标题"的经典处理 —— 小、克制、不抢正文的戏。
-   全大写字母之间天然拥挤，所以必须正向加字距（和大标题相反）。 */
+/* Sub-headings: all caps + opened-up tracking + grey.
+   The classic treatment for a "label" rather than a "heading" — small, restrained, never stealing the scene from the body copy.
+   All-caps letters are naturally cramped, so the tracking has to go positive here (the opposite of the display sizes). */
 .about h3 {
   font-size: var(--t-xs);
   font-weight: 500;
@@ -398,31 +398,31 @@ a { color: inherit; }
   margin-bottom: var(--s-2);
 }
 
-/* 照片 + 自我介绍：手机上下堆叠 */
+/* Photo + bio: stacked one above the other on phones */
 .about__top {
   display: grid;
   gap: var(--s-5);
 }
 
-/* 照片不裁切：保持原图比例，横竖都行。
-   height: auto 让高度跟着宽度按原始比例走。 */
+/* The photo is never cropped: it keeps the source ratio, landscape or portrait.
+   height: auto lets the height follow the width at that original ratio. */
 .about__portrait img {
   width: 100%;
   height: auto;
   background: var(--c-fill);
 }
 
-/* 正文比全站默认小一档，密度更接近参考图 */
+/* Body copy one step below the site default, a density closer to the reference */
 .about__bio { font-size: var(--t-base); }
 .about__bio p + p { margin-top: var(--s-3); }
 
-/* 单栏堆叠时，三段之间留一个空行。
-   每段各自包在一个 div 里，所以 p + p 选不中它们，
-   要用相邻 div 的间距来做。分三栏时由 grid 的 gap 接管，这里归零。 */
+/* When stacked in a single column, leave a blank line between the three blocks.
+   Each block is wrapped in its own div, so p + p cannot select them;
+   the spacing has to come from adjacent divs. In three columns the grid gap takes over and this drops to zero. */
 .about__bio-col + .about__bio-col { margin-top: var(--s-4); }
 
-/* 技能：自动分列。auto-fit + minmax 让列数随宽度自己决定，
-   不用写任何媒体查询 —— 窄了就少几列，宽了就多几列。 */
+/* Skills: columns split themselves. auto-fit + minmax lets the column count decide itself from the width,
+   with no media query at all — narrower means fewer columns, wider means more. */
 .skills {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -432,7 +432,7 @@ a { color: inherit; }
 .skills ul { font-size: var(--t-sm); }
 .skills li + li { margin-top: var(--s-1); }
 
-/* 教育 / Experiments 的条目：标题一行，说明一行灰字 */
+/* Education / Experiments entries: title on one line, a grey note on the next */
 .entry {
   display: block;
   padding: var(--s-3) 0;
@@ -465,13 +465,13 @@ a { color: inherit; }
   border-top: none;
 }
 
-/* 桌面：照片在左约 45%，正文在右并且自己再分两栏 */
+/* Desktop: photo on the left at roughly 45%, body on the right splitting into two columns of its own */
 @media (min-width: 900px) {
   .about__top {
-    /* 照片栏收到约原来的 1/3 宽，图跟着等比缩小 */
-    /* 照片栏放大到和右边文字块高度接近。
-       图不裁切，所以高度 = 宽度 ÷ 1.5（原图比例），
-       严格等高做不到 —— 用 align-items: center 把差值均分到上下。 */
+    /* Photo column pulled in to about 1/3 of its former width; the image scales down with it */
+    /* Photo column enlarged until its height is close to the text block on the right.
+       The image isn't cropped, so height = width ÷ 1.5 (the source ratio), and
+       exactly equal heights are impossible — align-items: center splits the difference top and bottom. */
     grid-template-columns: clamp(300px, 34vw, 520px) 1fr;
     gap: var(--s-6);
     align-items: center;
@@ -479,9 +479,9 @@ a { color: inherit; }
 
 }
 
-/* 正文自动分栏：auto-fit + minmax 让列数随内容块数量和可用宽度自己决定。
-   现在只有一段，它会独占整行；以后拆成两三段，就自动变成两三栏。
-   加 max-width 是因为单段独占整行时行会太长 —— 超过 70 个字符就容易串行。 */
+/* The bio columns itself: auto-fit + minmax lets the column count decide itself from the number of blocks and the width available.
+   There is only one block right now, so it takes the whole row; split it into two or three later and it becomes two or three columns.
+   max-width is here because a single block across the whole row makes the measure too long — past 70 characters the eye starts losing its line. */
 .about__bio { max-width: 50ch; }
 
 @media (min-width: 1000px) {
@@ -508,8 +508,8 @@ a { color: inherit; }
 
 
 
-/* ⑨ PLAY 页 --------------------------------------------------
-   瀑布流画廊。素材不裁切，所以每张高度各不相同。
+/* ⑨ PLAY PAGE ------------------------------------------------
+   A masonry gallery. Nothing is cropped, so every item has a different height.
    ------------------------------------------------------------ */
 .page-play { padding-top: var(--s-6); }
 
@@ -526,12 +526,12 @@ a { color: inherit; }
   margin-bottom: var(--s-5);
 }
 
-/* CSS 多列（multi-column）就是最省事的瀑布流：
-   浏览器把内容按列灌进去，每一项保持自己的原始高度，
-   不需要 JS，也不需要给图片规定统一比例。
-   代价是阅读顺序是"先灌满第一列再第二列"，
-   所以最新的那一项在左上角，不是横着排第一。
-   对画廊来说这个顺序完全可以接受。 */
+/* CSS multi-column is the least effortful masonry there is:
+   the browser pours the content in column by column, each item keeps its own natural height,
+   no JS is needed and no uniform ratio has to be imposed on the images.
+   The cost is that the reading order is "fill the first column, then the second",
+   so the newest item ends up top-left rather than first along the row.
+   For a gallery that order is perfectly acceptable. */
 .play__grid {
   columns: 1;
   column-gap: var(--s-3);
@@ -540,14 +540,14 @@ a { color: inherit; }
 @media (min-width: 700px)  { .play__grid { columns: 2; } }
 @media (min-width: 1100px) { .play__grid { columns: 3; } }
 
-/* break-inside: avoid —— 禁止一项被拆到两列里。
-   没有这行，一张图可能上半截在左列、下半截在右列。 */
+/* break-inside: avoid — forbids an item being split across two columns.
+   Without this line, an image could end up with its top half in the left column and its bottom half in the right. */
 .play__item {
   break-inside: avoid;
   margin-bottom: var(--s-3);
 }
 
-/* 不裁切：宽度撑满列，高度按原图比例自己算 */
+/* No cropping: the width fills the column and the height works itself out from the source ratio */
 .play__item img,
 .play__item video {
   width: 100%;
@@ -561,17 +561,17 @@ a { color: inherit; }
 }
 
 
-/* ⑩ 响应式 ---------------------------------------------------
-   Mobile-first：上面写的是手机版，这里往大屏"加"东西。
-   反过来写（先桌面再 max-width 缩小）需要不断撤销样式，代码会更乱。
+/* ⑩ RESPONSIVE -----------------------------------------------
+   Mobile-first: everything above is the phone version, and here we "add" things for larger screens.
+   Writing it the other way round (desktop first, then shrinking with max-width) means constantly undoing styles, which gets messier.
    ------------------------------------------------------------ */
  
-/* 平板及以上：项目变两列 */
+/* Tablet and up: projects go to two columns */
 @media (min-width: 768px) {
   .projects__grid { grid-template-columns: repeat(2, 1fr); }
 }
  
-/* 桌面：字号和留白再放大一档 */
+/* Desktop: type sizes and whitespace go up one more step */
 @media (min-width: 1100px) {
   :root {
     --t-xl: 2rem;
@@ -579,13 +579,13 @@ a { color: inherit; }
 }
  
  
-/* ⑪ 无障碍 ---------------------------------------------------
-   有些人（前庭功能障碍、偏头痛、晕动症）在系统里开了"减弱动态效果"。
-   尊重这个设置是 WCAG 要求，不是可选的礼貌。
+/* ⑪ ACCESSIBILITY --------------------------------------------
+   Some people (vestibular disorders, migraine, motion sickness) switch on "reduce motion" in their system settings.
+   Respecting that setting is a WCAG requirement, not optional politeness.
    ------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
-  /* 关掉平滑滚动。script.js 里也读了同一个设置，
-     首屏的硬切换在这种模式下整个不启用。 */
+  /* Turn off smooth scrolling. script.js reads the same setting, and
+     the hard intro switch is not enabled at all in this mode. */
   html { scroll-behavior: auto; }
 
   *,

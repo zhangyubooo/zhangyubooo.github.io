@@ -30,15 +30,15 @@
   <h1 class="play__heading">Play</h1>
 
   <!--
-    瀑布流画廊。图片和视频都不裁切，保持原始比例。
-    最新的放最上面 —— 新的 <figure> 粘在下面这行的下方。
+    Masonry gallery. Images and videos are never cropped; original ratios are kept.
+    Newest on top — a new <figure> goes directly below the marker line.
   -->
   <div class="play__grid">
 
-    <!-- ▼▼▼ 新素材加在这一行下面 ▼▼▼ -->
+    <!-- ▼▼▼ Add new material below this line ▼▼▼ -->
 
-    <!-- 这条 68 秒，比其他素材长得多，所以加了 preload="none"：
-         页面加载时只下 poster 那张图，等 script.js 滚进视口调 play() 才开始缓冲。 -->
+    <!-- This one runs 68s, far longer than anything else here, hence preload="none":
+         on load only the poster is fetched; buffering starts when script.js calls play(). -->
     <figure class="play__item">
       <video src="videos/play-light-study.mp4"
              poster="images/play-light-study-poster.jpg"
@@ -91,18 +91,18 @@
     </figure>
 
     <!--
-      ══ 模板 ══
-      图片：
+      ══ Templates ══
+      Image:
       <figure class="play__item">
-        <img src="images/play-xxx.jpg" loading="lazy" alt="描述画面里是什么">
+        <img src="images/play-xxx.jpg" loading="lazy" alt="describe what is in the picture">
       </figure>
 
-      视频（data-autoplay：滚进视口才播，script.js 负责）：
+      Video (data-autoplay: plays only once in view; script.js handles it):
       <figure class="play__item">
         <video src="videos/play-xxx.mp4"
                poster="images/play-xxx-poster.jpg"
                muted loop playsinline data-autoplay
-               aria-label="描述视频里发生了什么"></video>
+               aria-label="describe what happens in the video"></video>
       </figure>
     -->
 

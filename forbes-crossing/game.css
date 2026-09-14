@@ -1,8 +1,8 @@
 /* ============================================================
    Forbes Crossing — game.css
 
-   刻意和主站 style.css 用同一套语言：Inter、纯黑白灰、一个强调色。
-   游戏是作品集的一部分，不是另开的一个世界。
+   Deliberately the same language as the main site's style.css: Inter, black, white,
+   grey, one accent. The game is part of the portfolio, not a world of its own.
    ============================================================ */
 
 :root {
@@ -10,7 +10,7 @@
   --c-text:   #111111;
   --c-muted:  #666666;
   --c-line:   #e5e5e5;
-  --c-accent: #c8102e;          /* 唯一的强调色。CMU 红 */
+  --c-accent: #c8102e;          /* The only accent colour. CMU red */
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -19,20 +19,20 @@
 html, body {
   margin: 0;
   height: 100%;
-  overflow: hidden;             /* 游戏页不滚动。方向键要留给游戏用 */
+  overflow: hidden;             /* The game page does not scroll. Arrow keys belong to the game */
   background: var(--c-bg);
   color: var(--c-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  overscroll-behavior: none;    /* 移动端下拉刷新会打断游戏 */
+  overscroll-behavior: none;    /* Pull-to-refresh on mobile would interrupt the game */
 }
 
-/* ---------- 舞台 ---------- */
+/* ---------- Stage ---------- */
 .stage {
   position: relative;
   width: 100%;
   height: 100%;
-  /* 触屏上禁掉浏览器自己的手势，滑动才能被 JS 完整拿到 */
+  /* Disable the browser's own touch gestures so JS receives the whole swipe */
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
@@ -45,7 +45,7 @@ canvas {
   height: 100%;
 }
 
-/* ---------- 返回链接 ---------- */
+/* ---------- Back link ---------- */
 .back {
   position: fixed;
   top: 1.25rem;
@@ -55,7 +55,7 @@ canvas {
   font-weight: 500;
   color: var(--c-muted);
   text-decoration: none;
-  mix-blend-mode: multiply;     /* 压在浅色画面上不会糊成一团 */
+  mix-blend-mode: multiply;     /* Stays legible over the light artwork underneath */
 }
 .back:hover { color: var(--c-text); }
 
@@ -66,7 +66,7 @@ canvas {
   right: 1.25rem;
   z-index: 5;
   text-align: right;
-  pointer-events: none;         /* HUD 不该吃掉点击 */
+  pointer-events: none;         /* The HUD should not swallow clicks */
 }
 
 .hud__score {
@@ -74,7 +74,7 @@ canvas {
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;   /* 数字等宽，跳分时不会左右抖 */
+  font-variant-numeric: tabular-nums;   /* Monospaced digits, so the score does not jitter */
 }
 
 .hud__meta {
@@ -90,7 +90,7 @@ canvas {
 .hud__meta b { color: var(--c-text); font-weight: 600; }
 .hud__coffee b { color: var(--c-accent); }
 
-/* ---------- 静音开关 ---------- */
+/* ---------- Mute toggle ---------- */
 .sound {
   position: fixed;
   bottom: 1.25rem;
@@ -107,7 +107,7 @@ canvas {
 }
 .sound[data-muted="true"] { color: var(--c-line); }
 
-/* ---------- 面板（开始 / 结束） ---------- */
+/* ---------- Panels (start / end) ---------- */
 .panel {
   position: fixed;
   inset: 0;
@@ -119,7 +119,7 @@ canvas {
   gap: 0.35rem;
   padding: 2rem 1.5rem;
   text-align: center;
-  /* 半透明白：盖住画面但还看得见底下在动 */
+  /* Translucent white: covers the scene but you can still see it moving underneath */
   background: rgba(255,255,255,0.92);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
@@ -135,7 +135,7 @@ canvas {
   color: var(--c-muted);
 }
 .panel--over .panel__eyebrow { color: var(--c-accent); }
-/* 赢的时候同一块面板，但抬头行不能是红的 —— 红色在这一屏里的意思是"你死了" */
+/* Same panel on a win, but the heading must not be red — on this screen red means "you died" */
 .panel--over[data-win="true"] .panel__eyebrow { color: var(--c-text); }
 
 .panel__title {
@@ -203,15 +203,15 @@ kbd {
 
 .panel__hint { margin: 0.9rem 0 0; font-size: 0.75rem; color: var(--c-muted); }
 
-/* ---------- 触屏 ---------- */
-/* 没有精确指针的设备（手机、平板）才显示滑动提示，藏掉键盘提示 */
+/* ---------- Touch ---------- */
+/* Only devices without a precise pointer (phones, tablets) get the swipe hint; the keyboard hint is hidden */
 @media (hover: none) and (pointer: coarse) {
   .keys li:first-child { display: none; }
   .keys__touch { display: block; }
   .panel__hint { display: none; }
 }
 
-/* ---------- 无障碍 ---------- */
+/* ---------- Accessibility ---------- */
 :focus-visible { outline: 2px solid var(--c-text); outline-offset: 3px; }
 
 @media (prefers-reduced-motion: reduce) {
