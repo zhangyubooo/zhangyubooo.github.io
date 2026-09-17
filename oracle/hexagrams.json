@@ -1,0 +1,1602 @@
+[
+ {
+  "n": 1,
+  "lines": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "glyph": "䷀",
+  "cn": "乾",
+  "pinyin": "Qián",
+  "en": "The Creative",
+  "judgment": "元亨利貞。",
+  "reading": "Pure initiative. The situation is yours to start; nothing is waiting for permission.",
+  "lower": {
+   "cn": "乾",
+   "en": "Heaven"
+  },
+  "upper": {
+   "cn": "乾",
+   "en": "Heaven"
+  }
+ },
+ {
+  "n": 2,
+  "lines": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "glyph": "䷁",
+  "cn": "坤",
+  "pinyin": "Kūn",
+  "en": "The Receptive",
+  "judgment": "元亨，利牝馬之貞。",
+  "reading": "Carry rather than lead. Strength here looks like patience and capacity.",
+  "lower": {
+   "cn": "坤",
+   "en": "Earth"
+  },
+  "upper": {
+   "cn": "坤",
+   "en": "Earth"
+  }
+ },
+ {
+  "n": 3,
+  "lines": [
+   1,
+   0,
+   0,
+   0,
+   1,
+   0
+  ],
+  "glyph": "䷂",
+  "cn": "屯",
+  "pinyin": "Zhūn",
+  "en": "Difficulty at the Beginning",
+  "judgment": "元亨利貞，勿用有攸往。",
+  "reading": "The tangle at the start is normal, not a verdict. Do not push forward yet.",
+  "lower": {
+   "cn": "震",
+   "en": "Thunder"
+  },
+  "upper": {
+   "cn": "坎",
+   "en": "Water"
+  }
+ },
+ {
+  "n": 4,
+  "lines": [
+   0,
+   1,
+   0,
+   0,
+   0,
+   1
+  ],
+  "glyph": "䷃",
+  "cn": "蒙",
+  "pinyin": "Méng",
+  "en": "Youthful Folly",
+  "judgment": "亨。匪我求童蒙，童蒙求我。",
+  "reading": "You do not know enough yet, and that is fine. Ask; do not pretend.",
+  "lower": {
+   "cn": "坎",
+   "en": "Water"
+  },
+  "upper": {
+   "cn": "艮",
+   "en": "Mountain"
+  }
+ },
+ {
+  "n": 5,
+  "lines": [
+   1,
+   1,
+   1,
+   0,
+   1,
+   0
+  ],
+  "glyph": "䷄",
+  "cn": "需",
+  "pinyin": "Xū",
+  "en": "Waiting",
+  "judgment": "有孚，光亨，貞吉。",
+  "reading": "Waiting is the action. The conditions are not ready, and forcing them costs more.",
+  "lower": {
+   "cn": "乾",
+   "en": "Heaven"
+  },
+  "upper": {
+   "cn": "坎",
+   "en": "Water"
+  }
+ },
+ {
+  "n": 6,
+  "lines": [
+   0,
+   1,
+   0,
+   1,
+   1,
+   1
+  ],
+  "glyph": "䷅",
+  "cn": "訟",
+  "pinyin": "Sòng",
+  "en": "Conflict",
+  "judgment": "有孚窒惕，中吉終凶。",
+  "reading": "A dispute you can win is still a dispute you pay for. Stop halfway.",
+  "lower": {
+   "cn": "坎",
+   "en": "Water"
+  },
+  "upper": {
+   "cn": "乾",
+   "en": "Heaven"
+  }
+ },
+ {
+  "n": 7,
+  "lines": [
+   0,
+   1,
+   0,
+   0,
+   0,
+   0
+  ],
+  "glyph": "䷆",
+  "cn": "師",
+  "pinyin": "Shī",
+  "en": "The Army",
+  "judgment": "貞，丈人吉，无咎。",
+  "reading": "This needs organisation, not enthusiasm. Someone has to be accountable.",
+  "lower": {
+   "cn": "坎",
+   "en": "Water"
+  },
+  "upper": {
+   "cn": "坤",
+   "en": "Earth"
+  }
+ },
+ {
+  "n": 8,
+  "lines": [
+   0,
+   0,
+   0,
+   0,
+   1,
+   0
+  ],
+  "glyph": "䷇",
+  "cn": "比",
+  "pinyin": "Bǐ",
+  "en": "Holding Together",
+  "judgment": "吉。原筮元永貞，无咎。",
+  "reading": "Alliance is available. Decide early whether you are in, rather than drifting in.",
+  "lower": {
+   "cn": "坤",
+   "en": "Earth"
+  },
+  "upper": {
+   "cn": "坎",
+   "en": "Water"
+  }
+ },
+ {
+  "n": 9,
+  "lines": [
+   1,
+   1,
+   1,
+   0,
+   1,
+   1
+  ],
+  "glyph": "䷈",
+  "cn": "小畜",
+  "pinyin": "Xiǎo Chù",
+  "en": "The Taming Power of the Small",
+  "judgment": "亨。密雲不雨。",
+  "reading": "Clouds, no rain. Small accumulations only - the large move is not yet possible.",
+  "lower": {
+   "cn": "乾",
+   "en": "Heaven"
+  },
+  "upper": {
+   "cn": "巽",
+   "en": "Wind"
+  }
+ },
+ {
+  "n": 10,
+  "lines": [
+   1,
+   1,
+   0,
+   1,
+   1,
+   1
+  ],
+  "glyph": "䷉",
+  "cn": "履",
+  "pinyin": "Lǚ",
+  "en": "Treading",
+  "judgment": "履虎尾，不咥人，亨。",
+  "reading": "You are closer to danger than you think, and conduct is what keeps you safe.",
+  "lower": {
+   "cn": "兌",
+   "en": "Lake"
+  },
+  "upper": {
+   "cn": "乾",
+   "en": "Heaven"
+  }
+ },
+ {
+  "n": 11,
+  "lines": [
+   1,
+   1,
+   1,
+   0,
+   0,
+   0
+  ],
+  "glyph": "䷊",
+  "cn": "泰",
+  "pinyin": "Tài",
+  "en": "Peace",
+  "judgment": "小往大來，吉亨。",
+  "reading": "Things are moving in the right direction. Use the opening; it is not permanent.",
+  "lower": {
+   "cn": "乾",
+   "en": "Heaven"
+  },
+  "upper": {
+   "cn": "坤",
+   "en": "Earth"
+  }
+ },
+ {
+  "n": 12,
+  "lines": [
+   0,
+   0,
+   0,
+   1,
+   1,
+   1
+  ],
+  "glyph": "䷋",
+  "cn": "否",
+  "pinyin": "Pǐ",
+  "en": "Standstill",
+  "judgment": "否之匪人，不利君子貞。",
+  "reading": "Communication has stopped. Withdraw rather than argue with a closed door.",
+  "lower": {
+   "cn": "坤",
+   "en": "Earth"
+  },
+  "upper": {
+   "cn": "乾",
+   "en": "Heaven"
+  }
+ },
+ {
+  "n": 13,
+  "lines": [
+   1,
+   0,
+   1,
+   1,
+   1,
+   1
+  ],
+  "glyph": "䷌",
+  "cn": "同人",
+  "pinyin": "Tóng Rén",
+  "en": "Fellowship with Others",
+  "judgment": "同人于野，亨。",
+  "reading": "Find the people who share the aim. Do it in the open, not in a private clique.",
+  "lower": {
+   "cn": "離",
+   "en": "Fire"
+  },
+  "upper": {
+   "cn": "乾",
+   "en": "Heaven"
+  }
+ },
+ {
+  "n": 14,
+  "lines": [
+   1,
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "glyph": "䷍",
+  "cn": "大有",
+  "pinyin": "Dà Yǒu",
+  "en": "Possession in Great Measure",
+  "judgment": "元亨。",
+  "reading": "You have more than you are using. The problem is distribution, not scarcity.",
+  "lower": {
+   "cn": "乾",
+   "en": "Heaven"
+  },
+  "upper": {
+   "cn": "離",
+   "en": "Fire"
+  }
+ },
+ {
+  "n": 15,
+  "lines": [
+   0,
+   0,
+   1,
+   0,
+   0,
+   0
+  ],
+  "glyph": "䷎",
+  "cn": "謙",
+  "pinyin": "Qiān",
+  "en": "Modesty",
+  "judgment": "亨，君子有終。",
+  "reading": "Claim less than you could. It is the one position nobody attacks.",
+  "lower": {
+   "cn": "艮",
+   "en": "Mountain"
+  },
+  "upper": {
+   "cn": "坤",
+   "en": "Earth"
+  }
+ },
+ {
+  "n": 16,
+  "lines": [
+   0,
+   0,
+   0,
+   1,
+   0,
+   0
+  ],
+  "glyph": "䷏",
+  "cn": "豫",
+  "pinyin": "Yù",
+  "en": "Enthusiasm",
+  "judgment": "利建侯行師。",
+  "reading": "Energy is gathering and wants a direction. Give it one before it scatters.",
+  "lower": {
+   "cn": "坤",
+   "en": "Earth"
+  },
+  "upper": {
+   "cn": "震",
+   "en": "Thunder"
+  }
+ },
+ {
+  "n": 17,
+  "lines": [
+   1,
+   0,
+   0,
+   1,
+   1,
+   0
+  ],
+  "glyph": "䷐",
+  "cn": "隨",
+  "pinyin": "Suí",
+  "en": "Following",
+  "judgment": "元亨利貞，无咎。",
+  "reading": "Adapt to what is actually happening. Leading here means going second, well.",
+  "lower": {
+   "cn": "震",
+   "en": "Thunder"
+  },
+  "upper": {
+   "cn": "兌",
+   "en": "Lake"
+  }
+ },
+ {
+  "n": 18,
+  "lines": [
+   0,
+   1,
+   1,
+   0,
+   0,
+   1
+  ],
+  "glyph": "䷑",
+  "cn": "蠱",
+  "pinyin": "Gǔ",
+  "en": "Work on What Has Been Spoiled",
+  "judgment": "元亨，利涉大川。",
+  "reading": "Something was neglected and has gone bad quietly. Repair beats blame.",
+  "lower": {
+   "cn": "巽",
+   "en": "Wind"
+  },
+  "upper": {
+   "cn": "艮",
+   "en": "Mountain"
+  }
+ },
+ {
+  "n": 19,
+  "lines": [
+   1,
+   1,
+   0,
+   0,
+   0,
+   0
+  ],
+  "glyph": "䷒",
+  "cn": "臨",
+  "pinyin": "Lín",
+  "en": "Approach",
+  "judgment": "元亨利貞。至于八月有凶。",
+  "reading": "An opening is approaching. Its window is shorter than it feels.",
+  "lower": {
+   "cn": "兌",
+   "en": "Lake"
+  },
+  "upper": {
+   "cn": "坤",
+   "en": "Earth"
+  }
+ },
+ {
+  "n": 20,
+  "lines": [
+   0,
+   0,
+   0,
+   0,
+   1,
+   1
+  ],
+  "glyph": "䷓",
+  "cn": "觀",
+  "pinyin": "Guān",
+  "en": "Contemplation",
+  "judgment": "盥而不薦，有孚顒若。",
+  "reading": "Watch before you act. You are also being watched more than you realise.",
+  "lower": {
+   "cn": "坤",
+   "en": "Earth"
+  },
+  "upper": {
+   "cn": "巽",
+   "en": "Wind"
+  }
+ },
+ {
+  "n": 21,
+  "lines": [
+   1,
+   0,
+   0,
+   1,
+   0,
+   1
+  ],
+  "glyph": "䷔",
+  "cn": "噬嗑",
+  "pinyin": "Shì Kè",
+  "en": "Biting Through",
+  "judgment": "亨，利用獄。",
+  "reading": "There is an obstruction that will not dissolve on its own. Name it directly.",
+  "lower": {
+   "cn": "震",
+   "en": "Thunder"
+  },
+  "upper": {
+   "cn": "離",
+   "en": "Fire"
+  }
+ },
+ {
+  "n": 22,
+  "lines": [
+   1,
+   0,
+   1,
+   0,
+   0,
+   1
+  ],
+  "glyph": "䷕",
+  "cn": "賁",
+  "pinyin": "Bì",
+  "en": "Grace",
+  "judgment": "亨，小利有攸往。",
+  "reading": "Form matters here, but only as form. Do not mistake presentation for substance.",
+  "lower": {
+   "cn": "離",
+   "en": "Fire"
+  },
+  "upper": {
+   "cn": "艮",
+   "en": "Mountain"
+  }
+ },
+ {
+  "n": 23,
+  "lines": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ],
+  "glyph": "䷖",
+  "cn": "剝",
+  "pinyin": "Bō",
+  "en": "Splitting Apart",
+  "judgment": "不利有攸往。",
+  "reading": "Something is coming apart and should be allowed to. Protect the core, drop the rest.",
+  "lower": {
+   "cn": "坤",
+   "en": "Earth"
+  },
+  "upper": {
+   "cn": "艮",
+   "en": "Mountain"
+  }
+ },
+ {
+  "n": 24,
+  "lines": [
+   1,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "glyph": "䷗",
+  "cn": "復",
+  "pinyin": "Fù",
+  "en": "Return",
+  "judgment": "亨。出入无疾，朋來无咎。",
+  "reading": "The turning point has already happened, quietly. Begin again small.",
+  "lower": {
+   "cn": "震",
+   "en": "Thunder"
+  },
+  "upper": {
+   "cn": "坤",
+   "en": "Earth"
+  }
+ },
+ {
+  "n": 25,
+  "lines": [
+   1,
+   0,
+   0,
+   1,
+   1,
+   1
+  ],
+  "glyph": "䷘",
+  "cn": "无妄",
+  "pinyin": "Wú Wàng",
+  "en": "Innocence",
+  "judgment": "元亨利貞。其匪正有眚。",
+  "reading": "Act from the straightforward motive. Calculation will backfire here.",
+  "lower": {
+   "cn": "震",
+   "en": "Thunder"
+  },
+  "upper": {
+   "cn": "乾",
+   "en": "Heaven"
+  }
+ },
+ {
+  "n": 26,
+  "lines": [
+   1,
+   1,
+   1,
+   0,
+   0,
+   1
+  ],
+  "glyph": "䷙",
+  "cn": "大畜",
+  "pinyin": "Dà Chù",
+  "en": "The Taming Power of the Great",
+  "judgment": "利貞，不家食吉。",
+  "reading": "Hold the force back so it accumulates. Restraint is building something.",
+  "lower": {
+   "cn": "乾",
+   "en": "Heaven"
+  },
+  "upper": {
+   "cn": "艮",
+   "en": "Mountain"
+  }
+ },
+ {
+  "n": 27,
+  "lines": [
+   1,
+   0,
+   0,
+   0,
+   0,
+   1
+  ],
+  "glyph": "䷚",
+  "cn": "頤",
+  "pinyin": "Yí",
+  "en": "The Corners of the Mouth",
+  "judgment": "貞吉。觀頤，自求口實。",
+  "reading": "Watch what you are feeding yourself - attention, company, information.",
+  "lower": {
+   "cn": "震",
+   "en": "Thunder"
+  },
+  "upper": {
+   "cn": "艮",
+   "en": "Mountain"
+  }
+ },
+ {
+  "n": 28,
+  "lines": [
+   0,
+   1,
+   1,
+   1,
+   1,
+   0
+  ],
+  "glyph": "䷛",
+  "cn": "大過",
+  "pinyin": "Dà Guò",
+  "en": "Preponderance of the Great",
+  "judgment": "棟橈，利有攸往，亨。",
+  "reading": "The load exceeds the structure. Something must be set down before it breaks.",
+  "lower": {
+   "cn": "巽",
+   "en": "Wind"
+  },
+  "upper": {
+   "cn": "兌",
+   "en": "Lake"
+  }
+ },
+ {
+  "n": 29,
+  "lines": [
+   0,
+   1,
+   0,
+   0,
+   1,
+   0
+  ],
+  "glyph": "䷜",
+  "cn": "坎",
+  "pinyin": "Kǎn",
+  "en": "The Abysmal",
+  "judgment": "習坎，有孚，維心亨。",
+  "reading": "Danger repeating. You get through by being consistent, not clever.",
+  "lower": {
+   "cn": "坎",
+   "en": "Water"
+  },
+  "upper": {
+   "cn": "坎",
+   "en": "Water"
+  }
+ },
+ {
+  "n": 30,
+  "lines": [
+   1,
+   0,
+   1,
+   1,
+   0,
+   1
+  ],
+  "glyph": "䷝",
+  "cn": "離",
+  "pinyin": "Lí",
+  "en": "The Clinging",
+  "judgment": "利貞，亨。畜牝牛吉。",
+  "reading": "Light depends on what it burns. Clarity here is borrowed, so tend the source.",
+  "lower": {
+   "cn": "離",
+   "en": "Fire"
+  },
+  "upper": {
+   "cn": "離",
+   "en": "Fire"
+  }
+ },
+ {
+  "n": 31,
+  "lines": [
+   0,
+   0,
+   1,
+   1,
+   1,
+   0
+  ],
+  "glyph": "䷞",
+  "cn": "咸",
+  "pinyin": "Xián",
+  "en": "Influence",
+  "judgment": "亨，利貞，取女吉。",
+  "reading": "Mutual attraction, still unspoken. Respond rather than strategise.",
+  "lower": {
+   "cn": "艮",
+   "en": "Mountain"
+  },
+  "upper": {
+   "cn": "兌",
+   "en": "Lake"
+  }
+ },
+ {
+  "n": 32,
+  "lines": [
+   0,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "glyph": "䷟",
+  "cn": "恆",
+  "pinyin": "Héng",
+  "en": "Duration",
+  "judgment": "亨，无咎，利貞，利有攸往。",
+  "reading": "Endurance, not intensity. The question is what you can keep doing.",
+  "lower": {
+   "cn": "巽",
+   "en": "Wind"
+  },
+  "upper": {
+   "cn": "震",
+   "en": "Thunder"
+  }
+ },
+ {
+  "n": 33,
+  "lines": [
+   0,
+   0,
+   1,
+   1,
+   1,
+   1
+  ],
+  "glyph": "䷠",
+  "cn": "遯",
+  "pinyin": "Dùn",
+  "en": "Retreat",
+  "judgment": "亨，小利貞。",
+  "reading": "Withdrawing now is strategy, not defeat. Leave before you are forced to.",
+  "lower": {
+   "cn": "艮",
+   "en": "Mountain"
+  },
+  "upper": {
+   "cn": "乾",
+   "en": "Heaven"
+  }
+ },
+ {
+  "n": 34,
+  "lines": [
+   1,
+   1,
+   1,
+   1,
+   0,
+   0
+  ],
+  "glyph": "䷡",
+  "cn": "大壯",
+  "pinyin": "Dà Zhuàng",
+  "en": "The Power of the Great",
+  "judgment": "利貞。",
+  "reading": "You have real force available. Force without a reason becomes a mistake.",
+  "lower": {
+   "cn": "乾",
+   "en": "Heaven"
+  },
+  "upper": {
+   "cn": "震",
+   "en": "Thunder"
+  }
+ },
+ {
+  "n": 35,
+  "lines": [
+   0,
+   0,
+   0,
+   1,
+   0,
+   1
+  ],
+  "glyph": "䷢",
+  "cn": "晉",
+  "pinyin": "Jìn",
+  "en": "Progress",
+  "judgment": "康侯用錫馬蕃庶。",
+  "reading": "Advancement is visible and sanctioned. Move openly, at the pace offered.",
+  "lower": {
+   "cn": "坤",
+   "en": "Earth"
+  },
+  "upper": {
+   "cn": "離",
+   "en": "Fire"
+  }
+ },
+ {
+  "n": 36,
+  "lines": [
+   1,
+   0,
+   1,
+   0,
+   0,
+   0
+  ],
+  "glyph": "䷣",
+  "cn": "明夷",
+  "pinyin": "Míng Yí",
+  "en": "Darkening of the Light",
+  "judgment": "利艱貞。",
+  "reading": "The environment does not reward being seen clearly. Keep your own light lit inwardly.",
+  "lower": {
+   "cn": "離",
+   "en": "Fire"
+  },
+  "upper": {
+   "cn": "坤",
+   "en": "Earth"
+  }
+ },
+ {
+  "n": 37,
+  "lines": [
+   1,
+   0,
+   1,
+   0,
+   1,
+   1
+  ],
+  "glyph": "䷤",
+  "cn": "家人",
+  "pinyin": "Jiā Rén",
+  "en": "The Family",
+  "judgment": "利女貞。",
+  "reading": "The small unit is what needs order. Fix the inside before addressing the outside.",
+  "lower": {
+   "cn": "離",
+   "en": "Fire"
+  },
+  "upper": {
+   "cn": "巽",
+   "en": "Wind"
+  }
+ },
+ {
+  "n": 38,
+  "lines": [
+   1,
+   1,
+   0,
+   1,
+   0,
+   1
+  ],
+  "glyph": "䷥",
+  "cn": "睽",
+  "pinyin": "Kuí",
+  "en": "Opposition",
+  "judgment": "小事吉。",
+  "reading": "You are pulling in different directions. Agree on small things; leave the large alone.",
+  "lower": {
+   "cn": "兌",
+   "en": "Lake"
+  },
+  "upper": {
+   "cn": "離",
+   "en": "Fire"
+  }
+ },
+ {
+  "n": 39,
+  "lines": [
+   0,
+   0,
+   1,
+   0,
+   1,
+   0
+  ],
+  "glyph": "䷦",
+  "cn": "蹇",
+  "pinyin": "Jiǎn",
+  "en": "Obstruction",
+  "judgment": "利西南，不利東北。",
+  "reading": "The way ahead is blocked. Turning aside is not the same as giving up.",
+  "lower": {
+   "cn": "艮",
+   "en": "Mountain"
+  },
+  "upper": {
+   "cn": "坎",
+   "en": "Water"
+  }
+ },
+ {
+  "n": 40,
+  "lines": [
+   0,
+   1,
+   0,
+   1,
+   0,
+   0
+  ],
+  "glyph": "䷧",
+  "cn": "解",
+  "pinyin": "Xiè",
+  "en": "Deliverance",
+  "judgment": "利西南。无所往，其來復吉。",
+  "reading": "The tension has broken. Do not immediately fill the space with new tension.",
+  "lower": {
+   "cn": "坎",
+   "en": "Water"
+  },
+  "upper": {
+   "cn": "震",
+   "en": "Thunder"
+  }
+ },
+ {
+  "n": 41,
+  "lines": [
+   1,
+   1,
+   0,
+   0,
+   0,
+   1
+  ],
+  "glyph": "䷨",
+  "cn": "損",
+  "pinyin": "Sǔn",
+  "en": "Decrease",
+  "judgment": "有孚，元吉，无咎。",
+  "reading": "Give something up deliberately. Chosen loss is different from suffered loss.",
+  "lower": {
+   "cn": "兌",
+   "en": "Lake"
+  },
+  "upper": {
+   "cn": "艮",
+   "en": "Mountain"
+  }
+ },
+ {
+  "n": 42,
+  "lines": [
+   1,
+   0,
+   0,
+   0,
+   1,
+   1
+  ],
+  "glyph": "䷩",
+  "cn": "益",
+  "pinyin": "Yì",
+  "en": "Increase",
+  "judgment": "利有攸往，利涉大川。",
+  "reading": "A window where effort compounds. Spend it outward, not on yourself.",
+  "lower": {
+   "cn": "震",
+   "en": "Thunder"
+  },
+  "upper": {
+   "cn": "巽",
+   "en": "Wind"
+  }
+ },
+ {
+  "n": 43,
+  "lines": [
+   1,
+   1,
+   1,
+   1,
+   1,
+   0
+  ],
+  "glyph": "䷪",
+  "cn": "夬",
+  "pinyin": "Guài",
+  "en": "Break-through",
+  "judgment": "揚于王庭，孚號有厲。",
+  "reading": "The thing must be said out loud. Say it plainly and without contempt.",
+  "lower": {
+   "cn": "乾",
+   "en": "Heaven"
+  },
+  "upper": {
+   "cn": "兌",
+   "en": "Lake"
+  }
+ },
+ {
+  "n": 44,
+  "lines": [
+   0,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "glyph": "䷫",
+  "cn": "姤",
+  "pinyin": "Gòu",
+  "en": "Coming to Meet",
+  "judgment": "女壯，勿用取女。",
+  "reading": "Something small has entered that will not stay small. Notice it now.",
+  "lower": {
+   "cn": "巽",
+   "en": "Wind"
+  },
+  "upper": {
+   "cn": "乾",
+   "en": "Heaven"
+  }
+ },
+ {
+  "n": 45,
+  "lines": [
+   0,
+   0,
+   0,
+   1,
+   1,
+   0
+  ],
+  "glyph": "䷬",
+  "cn": "萃",
+  "pinyin": "Cuì",
+  "en": "Gathering Together",
+  "judgment": "亨。王假有廟。",
+  "reading": "People are assembling. Gatherings need a centre or they become a crowd.",
+  "lower": {
+   "cn": "坤",
+   "en": "Earth"
+  },
+  "upper": {
+   "cn": "兌",
+   "en": "Lake"
+  }
+ },
+ {
+  "n": 46,
+  "lines": [
+   0,
+   1,
+   1,
+   0,
+   0,
+   0
+  ],
+  "glyph": "䷭",
+  "cn": "升",
+  "pinyin": "Shēng",
+  "en": "Pushing Upward",
+  "judgment": "元亨，用見大人，勿恤。",
+  "reading": "Growth by accumulation, step by step. It will not feel dramatic.",
+  "lower": {
+   "cn": "巽",
+   "en": "Wind"
+  },
+  "upper": {
+   "cn": "坤",
+   "en": "Earth"
+  }
+ },
+ {
+  "n": 47,
+  "lines": [
+   0,
+   1,
+   0,
+   1,
+   1,
+   0
+  ],
+  "glyph": "䷮",
+  "cn": "困",
+  "pinyin": "Kùn",
+  "en": "Oppression",
+  "judgment": "亨，貞，大人吉，无咎。",
+  "reading": "Constrained on all sides. Words carry no weight now; only conduct does.",
+  "lower": {
+   "cn": "坎",
+   "en": "Water"
+  },
+  "upper": {
+   "cn": "兌",
+   "en": "Lake"
+  }
+ },
+ {
+  "n": 48,
+  "lines": [
+   0,
+   1,
+   1,
+   0,
+   1,
+   0
+  ],
+  "glyph": "䷯",
+  "cn": "井",
+  "pinyin": "Jǐng",
+  "en": "The Well",
+  "judgment": "改邑不改井，无喪无得。",
+  "reading": "The source is still there and still works. What needs repair is the access.",
+  "lower": {
+   "cn": "巽",
+   "en": "Wind"
+  },
+  "upper": {
+   "cn": "坎",
+   "en": "Water"
+  }
+ },
+ {
+  "n": 49,
+  "lines": [
+   1,
+   0,
+   1,
+   1,
+   1,
+   0
+  ],
+  "glyph": "䷰",
+  "cn": "革",
+  "pinyin": "Gé",
+  "en": "Revolution",
+  "judgment": "巳日乃孚，元亨利貞。",
+  "reading": "The old arrangement has lost its reason to exist. Change it on a stated day.",
+  "lower": {
+   "cn": "離",
+   "en": "Fire"
+  },
+  "upper": {
+   "cn": "兌",
+   "en": "Lake"
+  }
+ },
+ {
+  "n": 50,
+  "lines": [
+   0,
+   1,
+   1,
+   1,
+   0,
+   1
+  ],
+  "glyph": "䷱",
+  "cn": "鼎",
+  "pinyin": "Dǐng",
+  "en": "The Cauldron",
+  "judgment": "元吉，亨。",
+  "reading": "Raw material, transformed by a process. Build the vessel, not just the ambition.",
+  "lower": {
+   "cn": "巽",
+   "en": "Wind"
+  },
+  "upper": {
+   "cn": "離",
+   "en": "Fire"
+  }
+ },
+ {
+  "n": 51,
+  "lines": [
+   1,
+   0,
+   0,
+   1,
+   0,
+   0
+  ],
+  "glyph": "䷲",
+  "cn": "震",
+  "pinyin": "Zhèn",
+  "en": "The Arousing",
+  "judgment": "亨。震來虩虩，笑言啞啞。",
+  "reading": "Shock arrives. The fright passes; what you do in the first minute matters.",
+  "lower": {
+   "cn": "震",
+   "en": "Thunder"
+  },
+  "upper": {
+   "cn": "震",
+   "en": "Thunder"
+  }
+ },
+ {
+  "n": 52,
+  "lines": [
+   0,
+   0,
+   1,
+   0,
+   0,
+   1
+  ],
+  "glyph": "䷳",
+  "cn": "艮",
+  "pinyin": "Gèn",
+  "en": "Keeping Still",
+  "judgment": "艮其背，不獲其身。",
+  "reading": "Stop. Not paused, not waiting for a signal - actually stop and be still.",
+  "lower": {
+   "cn": "艮",
+   "en": "Mountain"
+  },
+  "upper": {
+   "cn": "艮",
+   "en": "Mountain"
+  }
+ },
+ {
+  "n": 53,
+  "lines": [
+   0,
+   0,
+   1,
+   0,
+   1,
+   1
+  ],
+  "glyph": "䷴",
+  "cn": "漸",
+  "pinyin": "Jiàn",
+  "en": "Development",
+  "judgment": "女歸吉，利貞。",
+  "reading": "Gradual, in the correct order. Skipping a stage undoes the ones before it.",
+  "lower": {
+   "cn": "艮",
+   "en": "Mountain"
+  },
+  "upper": {
+   "cn": "巽",
+   "en": "Wind"
+  }
+ },
+ {
+  "n": 54,
+  "lines": [
+   1,
+   1,
+   0,
+   1,
+   0,
+   0
+  ],
+  "glyph": "䷵",
+  "cn": "歸妹",
+  "pinyin": "Guī Mèi",
+  "en": "The Marrying Maiden",
+  "judgment": "征凶，无攸利。",
+  "reading": "You are entering on someone else's terms. Know that before you agree.",
+  "lower": {
+   "cn": "兌",
+   "en": "Lake"
+  },
+  "upper": {
+   "cn": "震",
+   "en": "Thunder"
+  }
+ },
+ {
+  "n": 55,
+  "lines": [
+   1,
+   0,
+   1,
+   1,
+   0,
+   0
+  ],
+  "glyph": "䷶",
+  "cn": "豐",
+  "pinyin": "Fēng",
+  "en": "Abundance",
+  "judgment": "亨，王假之，勿憂。",
+  "reading": "Peak. Enjoy it without pretending it is a plateau.",
+  "lower": {
+   "cn": "離",
+   "en": "Fire"
+  },
+  "upper": {
+   "cn": "震",
+   "en": "Thunder"
+  }
+ },
+ {
+  "n": 56,
+  "lines": [
+   0,
+   0,
+   1,
+   1,
+   0,
+   1
+  ],
+  "glyph": "䷷",
+  "cn": "旅",
+  "pinyin": "Lǚ",
+  "en": "The Wanderer",
+  "judgment": "小亨，旅貞吉。",
+  "reading": "You are a guest here, not a resident. Travel light and behave well.",
+  "lower": {
+   "cn": "艮",
+   "en": "Mountain"
+  },
+  "upper": {
+   "cn": "離",
+   "en": "Fire"
+  }
+ },
+ {
+  "n": 57,
+  "lines": [
+   0,
+   1,
+   1,
+   0,
+   1,
+   1
+  ],
+  "glyph": "䷸",
+  "cn": "巽",
+  "pinyin": "Xùn",
+  "en": "The Gentle",
+  "judgment": "小亨，利有攸往。",
+  "reading": "Persistent, low-pressure influence. Repetition works where argument does not.",
+  "lower": {
+   "cn": "巽",
+   "en": "Wind"
+  },
+  "upper": {
+   "cn": "巽",
+   "en": "Wind"
+  }
+ },
+ {
+  "n": 58,
+  "lines": [
+   1,
+   1,
+   0,
+   1,
+   1,
+   0
+  ],
+  "glyph": "䷹",
+  "cn": "兌",
+  "pinyin": "Duì",
+  "en": "The Joyous",
+  "judgment": "亨，利貞。",
+  "reading": "Open exchange, genuinely enjoyed. Keep it honest or it curdles into flattery.",
+  "lower": {
+   "cn": "兌",
+   "en": "Lake"
+  },
+  "upper": {
+   "cn": "兌",
+   "en": "Lake"
+  }
+ },
+ {
+  "n": 59,
+  "lines": [
+   0,
+   1,
+   0,
+   0,
+   1,
+   1
+  ],
+  "glyph": "䷺",
+  "cn": "渙",
+  "pinyin": "Huàn",
+  "en": "Dispersion",
+  "judgment": "亨。王假有廟，利涉大川。",
+  "reading": "Rigidity is dissolving. Let the hard thing break up before rebuilding.",
+  "lower": {
+   "cn": "坎",
+   "en": "Water"
+  },
+  "upper": {
+   "cn": "巽",
+   "en": "Wind"
+  }
+ },
+ {
+  "n": 60,
+  "lines": [
+   1,
+   1,
+   0,
+   0,
+   1,
+   0
+  ],
+  "glyph": "䷻",
+  "cn": "節",
+  "pinyin": "Jié",
+  "en": "Limitation",
+  "judgment": "亨。苦節不可貞。",
+  "reading": "Set a limit and keep it. But a limit that hurts to hold is the wrong limit.",
+  "lower": {
+   "cn": "兌",
+   "en": "Lake"
+  },
+  "upper": {
+   "cn": "坎",
+   "en": "Water"
+  }
+ },
+ {
+  "n": 61,
+  "lines": [
+   1,
+   1,
+   0,
+   0,
+   1,
+   1
+  ],
+  "glyph": "䷼",
+  "cn": "中孚",
+  "pinyin": "Zhōng Fú",
+  "en": "Inner Truth",
+  "judgment": "豚魚吉，利涉大川。",
+  "reading": "Sincerity reaches further than technique here, including to people unlike you.",
+  "lower": {
+   "cn": "兌",
+   "en": "Lake"
+  },
+  "upper": {
+   "cn": "巽",
+   "en": "Wind"
+  }
+ },
+ {
+  "n": 62,
+  "lines": [
+   0,
+   0,
+   1,
+   1,
+   0,
+   0
+  ],
+  "glyph": "䷽",
+  "cn": "小過",
+  "pinyin": "Xiǎo Guò",
+  "en": "Preponderance of the Small",
+  "judgment": "亨，利貞。可小事，不可大事。",
+  "reading": "This is a season for small correct acts. The grand gesture will miss.",
+  "lower": {
+   "cn": "艮",
+   "en": "Mountain"
+  },
+  "upper": {
+   "cn": "震",
+   "en": "Thunder"
+  }
+ },
+ {
+  "n": 63,
+  "lines": [
+   1,
+   0,
+   1,
+   0,
+   1,
+   0
+  ],
+  "glyph": "䷾",
+  "cn": "既濟",
+  "pinyin": "Jì Jì",
+  "en": "After Completion",
+  "judgment": "亨小，利貞。初吉終亂。",
+  "reading": "It is finished, and that is exactly when things start to slip. Maintain.",
+  "lower": {
+   "cn": "離",
+   "en": "Fire"
+  },
+  "upper": {
+   "cn": "坎",
+   "en": "Water"
+  }
+ },
+ {
+  "n": 64,
+  "lines": [
+   0,
+   1,
+   0,
+   1,
+   0,
+   1
+  ],
+  "glyph": "䷿",
+  "cn": "未濟",
+  "pinyin": "Wèi Jì",
+  "en": "Before Completion",
+  "judgment": "亨。小狐汔濟，濡其尾。",
+  "reading": "Almost there, and the last stretch is where it is lost. Do not relax yet.",
+  "lower": {
+   "cn": "坎",
+   "en": "Water"
+  },
+  "upper": {
+   "cn": "離",
+   "en": "Fire"
+  }
+ }
+]

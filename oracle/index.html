@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Oracle — an I Ching cast from live planetary data, by Yubo Zhang</title>
+  <meta name="description" content="World Oracle by Yubo Zhang: ask a question and an I Ching hexagram is cast — not from a random number, but from the state of the planet right now. Live seismic, solar and atmospheric readings.">
+  <link rel="canonical" href="https://zhangyubooo.github.io/oracle/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="oracle.css">
+</head>
+
+<body>
+
+<!-- Way back to the main site. Same pattern as forbes-crossing/ — a project is
+     part of the portfolio, never a dead end. -->
+<a class="back" href="../index.html">← Yubo Zhang</a>
+
+<main class="oracle">
+
+  <!-- ==========================================================
+       ① ASK
+       The whole first screen is one question and one field. Everything
+       else stays hidden until it has something true to show.
+       ========================================================== -->
+  <section class="ask" id="ask">
+    <h1 class="ask__title">World&nbsp;Oracle</h1>
+
+    <p class="ask__lede">
+      Ask one thing. The answer is an I&nbsp;Ching hexagram — but it is not cast
+      from a random number. It is cast from the state of the planet at the
+      moment you ask.
+    </p>
+
+    <form class="ask__form" id="form" novalidate>
+      <label class="visually-hidden" for="question">Your question</label>
+      <input class="ask__input"
+             id="question"
+             type="text"
+             maxlength="140"
+             autocomplete="off"
+             spellcheck="false"
+             placeholder="Ask one thing…">
+      <button class="ask__submit" id="submit" type="submit">Cast</button>
+    </form>
+
+    <!-- role="alert" so a screen reader announces the problem straight away -->
+    <p class="ask__error" id="error" role="alert" hidden></p>
+  </section>
+
+
+  <!-- ==========================================================
+       ② READING THE WORLD
+       Three live sources. Each one appears only once it has actually
+       returned, showing its real numbers. A source that fails says so —
+       it is never quietly replaced.
+       ========================================================== -->
+  <section class="world" id="world" hidden>
+    <p class="section-label">Reading the world</p>
+    <ul class="world__list" id="worldList"></ul>
+  </section>
+
+
+  <!-- ==========================================================
+       ③ THE CAST
+       Six lines, built bottom to top, the direction the I Ching reads.
+       ========================================================== -->
+  <section class="cast" id="cast" hidden>
+    <p class="section-label">The cast</p>
+    <div class="hexagram" id="hexagram" role="img" aria-label="Hexagram being cast"></div>
+  </section>
+
+
+  <!-- ==========================================================
+       ④ THE READING
+       aria-live so the result is announced when it arrives, rather than
+       silently appearing for anyone using a screen reader.
+       ========================================================== -->
+  <section class="result" id="result" hidden aria-live="polite">
+
+    <div class="reading" id="primary">
+      <p class="reading__index"><span id="pNum"></span></p>
+      <h2 class="reading__name">
+        <span class="reading__cn" id="pCn"></span>
+        <span class="reading__en" id="pEn"></span>
+      </h2>
+      <p class="reading__trigrams" id="pTrigrams"></p>
+      <p class="reading__judgment" id="pJudgment"></p>
+      <p class="reading__modern" id="pReading"></p>
+    </div>
+
+    <!-- Only rendered when the cast produced changing lines. In the I Ching a
+         changing line is the whole point: the situation is already turning into
+         something else. -->
+    <div class="reading reading--relating" id="relating" hidden>
+      <p class="section-label">Changing into</p>
+      <p class="reading__index"><span id="rNum"></span></p>
+      <h2 class="reading__name">
+        <span class="reading__cn" id="rCn"></span>
+        <span class="reading__en" id="rEn"></span>
+      </h2>
+      <p class="reading__modern" id="rReading"></p>
+    </div>
+
+    <p class="result__again">
+      Ask the same thing tomorrow and the cast will differ — because the
+      world will have moved, not because a die was rolled.
+    </p>
+
+    <button class="result__reset" id="reset" type="button">Ask something else</button>
+  </section>
+
+
+  <!-- ==========================================================
+       ⑤ PROVENANCE
+       Every divination tool is a black box. This one opens.
+       Here is exactly which numbers produced exactly which lines.
+       ========================================================== -->
+  <details class="trace" id="trace" hidden>
+    <summary class="trace__summary">Where this came from</summary>
+    <div class="trace__body">
+      <p class="trace__note">
+        The six lines were not drawn from <code>Math.random()</code>. Three live
+        readings were fetched, reduced to a single 32-bit seed together with the
+        text of the question, and that seed was expanded into six three-coin
+        throws. The same question, asked while the world is in the same state,
+        gives the same hexagram.
+      </p>
+      <dl class="trace__list" id="traceList"></dl>
+      <p class="trace__seed">Seed <code id="traceSeed"></code></p>
+    </div>
+  </details>
+
+</main>
+
+<script src="oracle.js"></script>
+</body>
+</html>

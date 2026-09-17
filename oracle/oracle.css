@@ -1,0 +1,443 @@
+/* ============================================================
+   World Oracle — oracle.css
+
+   Deliberately the same language as the main site's style.css: Inter, black,
+   white, grey, nothing else. No accent colour at all here — the hexagram is
+   six black bars on white, and that is the entire visual system. A project is
+   part of the portfolio, not a world of its own.
+
+   Structure: ① Tokens ② Reset & base ③ Back link ④ Ask ⑤ World readings
+              ⑥ Hexagram ⑦ Reading ⑧ Provenance ⑨ Responsive ⑩ Motion
+
+   AI disclosure: Claude wrote this file and then walked me through it section
+   by section; the timing values, the copy and the final proportions are mine
+   after tuning in the browser. See prompt_log.md
+   ============================================================ */
+
+
+/* ① TOKENS ---------------------------------------------------
+   Copied from the main site's style.css rather than imported, for the same
+   reason forbes-crossing/game.css keeps its own copy: this page must still
+   render correctly if it is ever opened on its own, and the set it needs is
+   small. Change a value in style.css and change it here too.
+   ------------------------------------------------------------ */
+:root {
+  --c-bg:    #ffffff;
+  --c-text:  #111111;
+  --c-muted: #666666;   /* 5.7:1 on white, passes WCAG AA */
+  --c-line:  #e5e5e5;
+  --c-fill:  #f2f2f2;
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+
+  --t-xs:      0.8125rem;   /* 13px  labels, provenance */
+  --t-sm:      0.9375rem;   /* 15px  secondary text */
+  --t-base:    1.0625rem;   /* 17px  body */
+  --t-lg:      1.375rem;    /* 22px  hexagram english name */
+  --t-display: clamp(1.75rem, 2.6vw, 2.5rem);
+
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 1rem;
+  --s-4: 1.5rem;
+  --s-5: 2.5rem;
+  --s-6: 4rem;
+  --s-7: 6rem;
+
+  --gutter: clamp(1rem, 2vw, 2rem);
+  --measure: 34rem;         /* Reading width. Long lines are the main thing that
+                               makes a text-heavy page feel unreadable. */
+
+  /* Hexagram geometry. One place, so the whole figure scales together. */
+  --line-h:   0.875rem;     /* 14px  thickness of one yao */
+  --line-w:   17rem;        /* full width of a yang line */
+  --line-gap: 0.75rem;      /* vertical space between lines */
+  --yin-gap:  0.15;         /* the broken line's gap, as a fraction of the width */
+}
+
+
+/* ② RESET & BASE --------------------------------------------*/
+*, *::before, *::after { box-sizing: border-box; }
+
+body, h1, h2, p, ul, dl, dd, dt { margin: 0; padding: 0; }
+ul { list-style: none; }
+
+body {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-size: var(--t-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Same helper as the main site: removed visually, still read by screen
+   readers and search engines. Not display:none, which would delete it from
+   the accessibility tree entirely. */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-text);
+  outline-offset: 3px;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+/* The small grey caps that label each stage of the ritual. */
+.section-label {
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  margin-bottom: var(--s-3);
+}
+
+
+/* ③ BACK LINK ------------------------------------------------*/
+.back {
+  position: fixed;
+  top: var(--gutter);
+  left: var(--gutter);
+  z-index: 10;
+  font-size: var(--t-sm);
+  color: var(--c-muted);
+  text-decoration: none;
+  background: var(--c-bg);   /* so it stays legible if content scrolls under it */
+  padding: var(--s-1) 0;
+}
+.back:hover { color: var(--c-text); }
+
+
+/* ④ ASK ------------------------------------------------------
+   The first screen is nearly empty on purpose. A question you are about to
+   ask an oracle deserves a page with nothing else competing for attention.
+   ------------------------------------------------------------ */
+.oracle {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: var(--s-7) var(--gutter) var(--s-7);
+}
+
+.ask { margin-bottom: var(--s-6); }
+
+.ask__title {
+  font-size: var(--t-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: var(--s-3);
+}
+
+.ask__lede {
+  color: var(--c-muted);
+  margin-bottom: var(--s-5);
+}
+
+/* The field and the button share one bottom rule, so they read as a single
+   object rather than two controls sitting next to each other. */
+.ask__form {
+  display: flex;
+  align-items: stretch;
+  gap: var(--s-3);
+  border-bottom: 1px solid var(--c-text);
+  padding-bottom: var(--s-2);
+}
+
+.ask__input {
+  flex: 1 1 auto;
+  min-width: 0;              /* lets the flex item actually shrink on narrow screens */
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  padding: var(--s-2) 0;
+}
+.ask__input::placeholder { color: var(--c-muted); }
+.ask__input:focus { outline: none; }          /* the shared rule below is the focus cue */
+.ask__form:focus-within { border-bottom-color: var(--c-text); }
+
+.ask__submit {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-weight: 500;
+  color: var(--c-text);
+  cursor: pointer;
+  padding: var(--s-2) 0;
+}
+.ask__submit:hover { color: var(--c-muted); }
+.ask__submit[disabled] { color: var(--c-line); cursor: default; }
+
+.ask__error {
+  margin-top: var(--s-3);
+  font-size: var(--t-sm);
+  color: var(--c-text);
+}
+/* A short rule to the left, instead of a red colour. The palette has no red,
+   and an error does not need one to be noticed. */
+.ask__error::before {
+  content: "";
+  display: inline-block;
+  width: 1.25rem;
+  border-top: 1px solid var(--c-text);
+  vertical-align: 0.35em;
+  margin-right: var(--s-2);
+}
+
+
+/* ⑤ WORLD READINGS -------------------------------------------*/
+.world { margin-bottom: var(--s-6); }
+
+.world__list {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.world__item {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: var(--s-3);
+  align-items: baseline;
+  font-size: var(--t-sm);
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--s-3);
+  /* Each source fades in as it actually returns, so the page reports reality
+     rather than performing a fake loading sequence. */
+  animation: rise 0.5s ease both;
+}
+
+.world__name { color: var(--c-muted); }
+
+.world__values { display: grid; gap: var(--s-1); }
+
+.world__value {
+  font-variant-numeric: tabular-nums;   /* figures line up column-wise */
+}
+.world__value b { font-weight: 500; }
+
+/* A source that could not be reached. It is stated, not hidden — the whole
+   claim of this piece is that the numbers are real, so a missing one has to
+   be visible. */
+.world__item--failed .world__values { color: var(--c-muted); }
+
+
+/* ⑥ HEXAGRAM -------------------------------------------------
+   Six lines. column-reverse is doing real work here: it means the DOM order
+   is bottom-to-top, the same order the I Ching is read and cast in, so the
+   code that builds the figure can append line 1 first and mean it.
+   ------------------------------------------------------------ */
+.cast { margin-bottom: var(--s-6); }
+
+.hexagram {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--line-gap);
+  align-items: flex-start;
+  min-height: calc(6 * (var(--line-h) + var(--line-gap)));
+}
+
+.yao {
+  position: relative;
+  width: var(--line-w);
+  max-width: 100%;
+  height: var(--line-h);
+  animation: yao-in 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* A yang line is one solid bar. */
+.yao--yang { background: var(--c-text); }
+
+/* A yin line is the same bar with the middle removed. Built with a gradient
+   rather than two elements, so one rule describes both halves and the gap
+   stays proportional at every size. */
+.yao--yin {
+  background: linear-gradient(
+    to right,
+    var(--c-text) 0 calc(50% - var(--line-h)),
+    transparent  calc(50% - var(--line-h)) calc(50% + var(--line-h)),
+    var(--c-text) calc(50% + var(--line-h)) 100%
+  );
+}
+
+/* A changing line — the 6 and the 9, the ones that turn into their opposite.
+   Marked with a hollow ring set outside the figure, so the six bars stay a
+   clean stack and the annotation lives in the margin. */
+.yao--changing::after {
+  content: "";
+  position: absolute;
+  left: calc(100% + var(--s-3));
+  top: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: -0.25rem;
+  border: 1px solid var(--c-text);
+  border-radius: 50%;
+}
+
+
+/* ⑦ READING --------------------------------------------------*/
+.result { margin-bottom: var(--s-6); }
+
+.reading { margin-bottom: var(--s-5); }
+
+.reading--relating {
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--s-4);
+}
+
+.reading__index {
+  font-size: var(--t-xs);
+  color: var(--c-muted);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--s-2);
+}
+
+.reading__name {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-bottom: var(--s-2);
+}
+
+/* The Chinese name is the one place the page lets type get large. It is the
+   only character set on the page that is not Inter, and that difference is
+   the whole typographic event. */
+.reading__cn {
+  font-size: var(--t-display);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.reading__en {
+  font-size: var(--t-lg);
+  font-weight: 400;
+  color: var(--c-muted);
+}
+
+.reading__trigrams {
+  font-size: var(--t-xs);
+  color: var(--c-muted);
+  margin-bottom: var(--s-4);
+}
+
+/* The classical judgment. Indented and ruled, the way a quotation is set. */
+.reading__judgment {
+  border-left: 1px solid var(--c-line);
+  padding-left: var(--s-3);
+  margin-bottom: var(--s-4);
+  color: var(--c-muted);
+}
+
+.reading__modern { max-width: 30rem; }
+
+.result__again {
+  font-size: var(--t-sm);
+  color: var(--c-muted);
+  max-width: 28rem;
+  margin-bottom: var(--s-4);
+}
+
+.result__reset {
+  border: 0;
+  border-bottom: 1px solid var(--c-text);
+  background: transparent;
+  font: inherit;
+  font-size: var(--t-sm);
+  color: var(--c-text);
+  cursor: pointer;
+  padding: 0 0 var(--s-1);
+}
+.result__reset:hover { color: var(--c-muted); border-bottom-color: var(--c-muted); }
+
+
+/* ⑧ PROVENANCE ----------------------------------------------*/
+.trace {
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--s-4);
+  font-size: var(--t-sm);
+}
+
+.trace__summary {
+  cursor: pointer;
+  color: var(--c-muted);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.trace__summary:hover { color: var(--c-text); }
+
+.trace__body { padding-top: var(--s-4); }
+
+.trace__note {
+  color: var(--c-muted);
+  margin-bottom: var(--s-4);
+  max-width: 30rem;
+}
+
+.trace__list {
+  display: grid;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+  font-variant-numeric: tabular-nums;
+}
+.trace__list dt {
+  font-size: var(--t-xs);
+  color: var(--c-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.trace__list dd { margin: 0 0 var(--s-2); }
+
+.trace__seed { color: var(--c-muted); }
+
+
+/* ⑨ RESPONSIVE ----------------------------------------------*/
+@media (max-width: 34rem) {
+  :root {
+    --line-w: 100%;
+    --s-7: 4rem;
+  }
+  /* Stack the label above its values instead of squeezing a 9rem column. */
+  .world__item { grid-template-columns: 1fr; gap: var(--s-1); }
+
+  /* The changing-line ring has no margin to live in on a narrow screen,
+     so it moves inside the figure's right end. */
+  .yao--changing::after { left: auto; right: calc(-1 * var(--s-4)); }
+}
+
+
+/* ⑩ MOTION ---------------------------------------------------
+   The staggered build of the six lines IS the piece — it is what makes this
+   a ritual rather than a results page. But motion is not optional-feeling
+   for everyone, so anyone who has asked their system for less gets the
+   finished figure with no animation at all.
+   ------------------------------------------------------------ */
+@keyframes yao-in {
+  from { opacity: 0; transform: translateY(0.5rem) scaleX(0.82); }
+  to   { opacity: 1; transform: translateY(0)      scaleX(1); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(0.4rem); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yao, .world__item { animation: none; }
+  html { scroll-behavior: auto; }
+}
