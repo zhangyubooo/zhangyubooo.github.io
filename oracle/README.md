@@ -138,14 +138,46 @@ python3 tools/build_hexagrams.py     # standard library only, no pip install
 
 | Test | Behaviour |
 |---|---|
-| Empty question | Inline message, focus returns to the field. No request is made. |
-| Wi-Fi off | All three sources report "could not be reached" within 8s; no hexagram is cast; the message explains why. |
-| One source down | That source is listed as unavailable and excluded from the seed; the cast proceeds on the other two. |
+| Empty question | Inline message, focus returns to the field. **No request is made at all** (verified by recording network traffic). |
+| Wi-Fi off | All three sources report "could not be reached" within 8s; **no hexagram is drawn**; the form comes back with the question still in it. |
+| One source down | That column says why it could not be reached and stays on screen saying it for the rest of the reading; it is excluded from the seed and the cast proceeds on the other two. |
 | A source returns 200 but with unexpected fields | Treated as a failure (`no usable fields in response`) rather than seeding the cast with an empty array. |
+| One source much slower than the others | Its row sits visibly in a `reading…` state while the others fill. There is no blank screen at any point. |
 | Opened over `file://` | Explicit message pointing at the README, and the Cast button is disabled. |
 | Button pressed repeatedly mid-cast | Ignored — the button disables for the duration of a cast. |
 | A quiet hour with zero earthquakes | Not an error: a count of zero is itself a reading of the world. |
-| `prefers-reduced-motion` | The staggered build is skipped; the finished figure appears at once. |
+| 390 / 768 / 1280px wide | No horizontal overflow at any of them, and the fixed back-link never lands on top of the reading (it rejoins the normal flow below 48rem). |
+| `prefers-reduced-motion` | The staggered build is skipped and the scrolling switches from smooth to instant; the finished figure appears at once. |
+
+### How the page manages attention
+
+A first version of this page put the question in a field at the top, the
+readings and the six lines in the middle, and the answer at the bottom under
+the hexagram's number, romanisation and trigrams. Three things were wrong with
+it, and all three were about attention rather than code:
+
+1. **Nothing to look at while the sources were in flight.** The three rows were
+   only drawn once all three requests had returned, so a slow source meant up
+   to eight seconds of blank page. Now all three rows are drawn the instant the
+   button is pressed and each fills itself when its own source answers.
+2. **The six lines built below the fold.** On a laptop the one part of the page
+   worth watching was off-screen. The first fix was to fold the three readings
+   away once the cast began, which bought the height but gave up the evidence —
+   and the readings *are* the evidence for everything this page claims. So they
+   were laid out abreast instead: three columns rather than three stacked rows,
+   154px instead of about 280px, nothing hidden. With the intro collapsed and
+   the page anchored on the question, the question sits at 28px and the answer
+   ends at 762px of an 820px window — one screen, measured, not estimated.
+3. **The hexagram's name was louder than the answer.** The Chinese name was set
+   at 40px and the sentence written to the visitor at 17px, below the classical
+   judgment. The order is now name → answer → rule → apparatus. Everything
+   above the rule is addressed to you; everything below it is reference.
+
+The third one matters most, because the interface cannot help interpret. The
+I Ching never answers a question directly, and nothing here generates text —
+so the only bridge between a question and an image is **where they sit on the
+page relative to each other**. Putting them in the same frame *is* the design
+work.
 
 ---
 

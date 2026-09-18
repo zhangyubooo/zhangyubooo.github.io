@@ -30,10 +30,10 @@
 
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 
-  --t-xs:      0.8125rem;   /* 13px  labels, provenance */
+  --t-xs:      0.8125rem;   /* 13px  labels, apparatus, provenance */
   --t-sm:      0.9375rem;   /* 15px  secondary text */
   --t-base:    1.0625rem;   /* 17px  body */
-  --t-lg:      1.375rem;    /* 22px  hexagram english name */
+  --t-answer:  1.375rem;    /* 22px  THE ANSWER — the one line addressed to you */
   --t-display: clamp(1.75rem, 2.6vw, 2.5rem);
 
   --s-1: 0.25rem;
@@ -52,14 +52,13 @@
   --line-h:   0.875rem;     /* 14px  thickness of one yao */
   --line-w:   17rem;        /* full width of a yang line */
   --line-gap: 0.75rem;      /* vertical space between lines */
-  --yin-gap:  0.15;         /* the broken line's gap, as a fraction of the width */
 }
 
 
 /* ② RESET & BASE --------------------------------------------*/
 *, *::before, *::after { box-sizing: border-box; }
 
-body, h1, h2, p, ul, dl, dd, dt { margin: 0; padding: 0; }
+body, h1, h2, p, ul, dl, dd, dt, figure, blockquote { margin: 0; padding: 0; }
 ul { list-style: none; }
 
 body {
@@ -119,6 +118,20 @@ code {
 }
 .back:hover { color: var(--c-text); }
 
+/* Fixed position only works while there is empty margin to the left of the
+   text column to sit in. Once the column reaches the edge of the screen there
+   is none, and a fixed link ends up printed on top of the reading as soon as
+   the page scrolls — so below this width it rejoins the normal flow. */
+@media (max-width: 48rem) {
+  .back {
+    position: static;
+    display: inline-block;
+    margin: var(--s-4) var(--gutter) 0;
+    padding: 0;
+  }
+  .oracle { padding-top: var(--s-5); }
+}
+
 
 /* ④ ASK ------------------------------------------------------
    The first screen is nearly empty on purpose. A question you are about to
@@ -127,7 +140,9 @@ code {
 .oracle {
   max-width: var(--measure);
   margin: 0 auto;
-  padding: var(--s-7) var(--gutter) var(--s-7);
+  /* Generous bottom padding so the last stage can still be scrolled to the
+     middle of the screen rather than being pinned to the bottom edge. */
+  padding: var(--s-7) var(--gutter) 60vh;
 }
 
 .ask { margin-bottom: var(--s-6); }
@@ -166,7 +181,6 @@ code {
 }
 .ask__input::placeholder { color: var(--c-muted); }
 .ask__input:focus { outline: none; }          /* the shared rule below is the focus cue */
-.ask__form:focus-within { border-bottom-color: var(--c-text); }
 
 .ask__submit {
   flex: 0 0 auto;
@@ -180,6 +194,41 @@ code {
 }
 .ask__submit:hover { color: var(--c-muted); }
 .ask__submit[disabled] { color: var(--c-line); cursor: default; }
+
+/* --- the question, once a cast has started ---
+   The title, the explanation and the form all step aside; what is left is the
+   visitor's own sentence, which then travels down the page and is still on
+   screen when the reading arrives. */
+.oracle.is-casting .ask__lede,
+.oracle.is-casting .ask__form { display: none; }
+
+.oracle.is-casting .ask__title {
+  font-size: var(--t-base);
+  font-weight: 500;
+  color: var(--c-muted);
+  margin-bottom: var(--s-5);
+}
+
+.asked { animation: rise 0.5s ease both; }
+
+.asked__label {
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  margin-bottom: var(--s-2);
+}
+
+/* Quotation marks come from CSS, so the text node stays exactly what the
+   visitor typed — nothing is inserted into their words. */
+.asked__text {
+  font-size: var(--t-answer);
+  line-height: 1.45;
+  text-wrap: balance;
+}
+.asked__text::before { content: "\201C"; }
+.asked__text::after  { content: "\201D"; }
 
 .ask__error {
   margin-top: var(--s-3);
@@ -201,37 +250,56 @@ code {
 /* ⑤ WORLD READINGS -------------------------------------------*/
 .world { margin-bottom: var(--s-6); }
 
+/* Three abreast under one rule. Stacked rows cost roughly 280px of height;
+   these columns cost about 110px for the same information, and that
+   difference is what keeps the question, the figure and the answer together
+   on one screen without hiding any of the evidence. */
 .world__list {
   display: grid;
-  gap: var(--s-3);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-4);
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--s-3);
 }
 
 .world__item {
-  display: grid;
-  grid-template-columns: 9rem 1fr;
-  gap: var(--s-3);
-  align-items: baseline;
-  font-size: var(--t-sm);
-  border-top: 1px solid var(--c-line);
-  padding-top: var(--s-3);
-  /* Each source fades in as it actually returns, so the page reports reality
-     rather than performing a fake loading sequence. */
-  animation: rise 0.5s ease both;
+  font-size: var(--t-xs);
+  line-height: 1.65;
 }
 
-.world__name { color: var(--c-muted); }
+.world__name {
+  display: block;
+  color: var(--c-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: var(--s-2);
+}
 
-.world__values { display: grid; gap: var(--s-1); }
+.world__values { display: block; }
 
+/* Figure first in black, its label after it in grey. Reading down a column
+   you get the numbers; the words are there when you want to know what they
+   are. tabular-nums keeps the figures aligned between the three columns. */
 .world__value {
-  font-variant-numeric: tabular-nums;   /* figures line up column-wise */
+  display: block;
+  color: var(--c-muted);
+  font-variant-numeric: tabular-nums;
+  animation: rise 0.45s ease both;
 }
-.world__value b { font-weight: 500; }
+.world__value b {
+  font-weight: 500;
+  color: var(--c-text);
+}
+
+/* Pending. All three columns exist from the instant the button is pressed,
+   so there is never a blank stretch while a slow source is in flight — and a
+   source that is taking its time is visibly taking its time. */
+.world__item--pending .world__value { color: var(--c-line); animation: none; }
 
 /* A source that could not be reached. It is stated, not hidden — the whole
    claim of this piece is that the numbers are real, so a missing one has to
-   be visible. */
-.world__item--failed .world__values { color: var(--c-muted); }
+   be visible, and it stays visible for the rest of the reading. */
+.world__item--failed .world__value { color: var(--c-muted); }
 
 
 /* ⑥ HEXAGRAM -------------------------------------------------
@@ -288,30 +356,17 @@ code {
 }
 
 
-/* ⑦ READING --------------------------------------------------*/
+/* ⑦ READING --------------------------------------------------
+   The hierarchy here is the whole point of this section, and it is the
+   reverse of how the data is shaped. What the visitor gets first is the
+   name and then the sentence written to them. The catalogue information —
+   number, romanisation, trigrams, the classical judgment — is real and worth
+   having, but it is reference, so it sits below a rule in small grey type.
+   Before this ordering, the hexagram's NAME was louder than the answer.
+   ------------------------------------------------------------ */
 .result { margin-bottom: var(--s-6); }
 
-.reading { margin-bottom: var(--s-5); }
-
-.reading--relating {
-  border-top: 1px solid var(--c-line);
-  padding-top: var(--s-4);
-}
-
-.reading__index {
-  font-size: var(--t-xs);
-  color: var(--c-muted);
-  font-variant-numeric: tabular-nums;
-  margin-bottom: var(--s-2);
-}
-
-.reading__name {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: var(--s-3);
-  margin-bottom: var(--s-2);
-}
+.reading { margin-bottom: var(--s-6); }
 
 /* The Chinese name is the one place the page lets type get large. It is the
    only character set on the page that is not Inter, and that difference is
@@ -320,31 +375,48 @@ code {
   font-size: var(--t-display);
   font-weight: 500;
   line-height: 1.1;
+  margin-bottom: var(--s-4);
 }
 
-.reading__en {
-  font-size: var(--t-lg);
-  font-weight: 400;
-  color: var(--c-muted);
+/* THE ANSWER. Given its own air on all four sides and a narrower measure than
+   the rest of the page, so that nothing is beside it while it is being read. */
+.reading__answer {
+  font-size: var(--t-answer);
+  line-height: 1.5;
+  max-width: 26rem;
+  text-wrap: pretty;
+  margin-bottom: var(--s-6);
 }
 
-.reading__trigrams {
+/* The rule that divides "addressed to you" from "reference material". */
+.apparatus {
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--s-3);
   font-size: var(--t-xs);
-  color: var(--c-muted);
-  margin-bottom: var(--s-4);
-}
-
-/* The classical judgment. Indented and ruled, the way a quotation is set. */
-.reading__judgment {
-  border-left: 1px solid var(--c-line);
-  padding-left: var(--s-3);
-  margin-bottom: var(--s-4);
+  line-height: 1.7;
   color: var(--c-muted);
 }
+.apparatus__meta { font-variant-numeric: tabular-nums; }
 
-.reading__modern { max-width: 30rem; }
+/* The classical judgment, set at the reading size rather than the label size —
+   it is three thousand year old text, not metadata. */
+.apparatus__judgment {
+  font-size: var(--t-sm);
+  margin-top: var(--s-2);
+}
+
+.reading--relating { margin-bottom: var(--s-5); }
+
+/* Lower case and conversational on purpose: this is a sentence continuing from
+   the reading above it, not a new section heading. */
+.relating__lede {
+  color: var(--c-muted);
+  margin-bottom: var(--s-3);
+}
 
 .result__again {
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--s-4);
   font-size: var(--t-sm);
   color: var(--c-muted);
   max-width: 28rem;
@@ -391,7 +463,6 @@ code {
 
 .trace__list {
   display: grid;
-  gap: var(--s-2);
   margin-bottom: var(--s-4);
   font-variant-numeric: tabular-nums;
 }
@@ -401,7 +472,7 @@ code {
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
-.trace__list dd { margin: 0 0 var(--s-2); }
+.trace__list dd { margin: 0 0 var(--s-3); word-break: break-word; }
 
 .trace__seed { color: var(--c-muted); }
 
@@ -409,15 +480,25 @@ code {
 /* ⑨ RESPONSIVE ----------------------------------------------*/
 @media (max-width: 34rem) {
   :root {
-    --line-w: 100%;
+    /* Not 100%: the changing-line ring lives in the margin to the right of a
+       yao, so the bar has to stop short of the container or the ring pushes
+       the document wider than the screen and the whole page scrolls sideways. */
+    --line-w: calc(100% - 1.75rem);
     --s-7: 4rem;
   }
-  /* Stack the label above its values instead of squeezing a 9rem column. */
-  .world__item { grid-template-columns: 1fr; gap: var(--s-1); }
-
-  /* The changing-line ring has no margin to live in on a narrow screen,
-     so it moves inside the figure's right end. */
-  .yao--changing::after { left: auto; right: calc(-1 * var(--s-4)); }
+  /* Three columns inside 390px would be three very narrow ones. On a phone
+     the page scrolls anyway, so the readings go back to a single column with
+     a rule between each — the height they cost is no longer the constraint. */
+  .world__list {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .world__item {
+    border-top: 1px solid var(--c-line);
+    padding: var(--s-3) 0;
+  }
 }
 
 
@@ -425,7 +506,8 @@ code {
    The staggered build of the six lines IS the piece — it is what makes this
    a ritual rather than a results page. But motion is not optional-feeling
    for everyone, so anyone who has asked their system for less gets the
-   finished figure with no animation at all.
+   finished figure with no animation at all. The JS reads the same preference
+   and switches its scrolling from smooth to instant.
    ------------------------------------------------------------ */
 @keyframes yao-in {
   from { opacity: 0; transform: translateY(0.5rem) scaleX(0.82); }
@@ -438,6 +520,6 @@ code {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .yao, .world__item { animation: none; }
+  .yao, .world__value, .asked { animation: none; }
   html { scroll-behavior: auto; }
 }

@@ -18,7 +18,10 @@
      part of the portfolio, never a dead end. -->
 <a class="back" href="../index.html">← Yubo Zhang</a>
 
-<main class="oracle">
+<!-- .oracle gains .is-casting for the whole length of a reading. That one class
+     collapses the intro and the form, so the question stops being a control and
+     becomes a line of text that travels down the page with its answer. -->
+<main class="oracle" id="oracle">
 
   <!-- ==========================================================
        ① ASK
@@ -46,6 +49,14 @@
       <button class="ask__submit" id="submit" type="submit">Cast</button>
     </form>
 
+    <!-- What the form becomes once a cast starts. The visitor's own wording,
+         quoted, so that when the reading arrives the question is still on
+         screen next to it rather than a thousand pixels above. -->
+    <figure class="asked" id="asked" hidden>
+      <figcaption class="asked__label">You asked</figcaption>
+      <blockquote class="asked__text" id="askedText"></blockquote>
+    </figure>
+
     <!-- role="alert" so a screen reader announces the problem straight away -->
     <p class="ask__error" id="error" role="alert" hidden></p>
   </section>
@@ -53,12 +64,20 @@
 
   <!-- ==========================================================
        ② READING THE WORLD
-       Three live sources. Each one appears only once it has actually
-       returned, showing its real numbers. A source that fails says so —
-       it is never quietly replaced.
+       Three live sources. All three rows are drawn the instant the button
+       is pressed, in a fixed order, each in a pending state; every row then
+       fills itself the moment its own source answers. A source that fails
+       says so in its own row — it is never quietly replaced.
        ========================================================== -->
   <section class="world" id="world" hidden>
     <p class="section-label">Reading the world</p>
+
+    <!-- Three columns side by side, not three stacked rows. The readings are
+         the evidence for the whole claim of this page, so they stay on screen
+         in full for the rest of the reading — but laid out abreast they take
+         a third of the height, which is what lets the question, the figure
+         and the answer share one screen. Three simultaneous readings of the
+         world shown simultaneously is also simply the truer picture. -->
     <ul class="world__list" id="worldList"></ul>
   </section>
 
@@ -75,33 +94,39 @@
 
   <!-- ==========================================================
        ④ THE READING
+       Order is deliberate and is the opposite of how the data is shaped:
+       the name, then THE ANSWER, then — below a rule — the apparatus for
+       anyone who wants it. The line is the divide between what is addressed
+       to you and what is reference material.
+
        aria-live so the result is announced when it arrives, rather than
        silently appearing for anyone using a screen reader.
        ========================================================== -->
   <section class="result" id="result" hidden aria-live="polite">
 
     <div class="reading" id="primary">
-      <p class="reading__index"><span id="pNum"></span></p>
-      <h2 class="reading__name">
-        <span class="reading__cn" id="pCn"></span>
-        <span class="reading__en" id="pEn"></span>
-      </h2>
-      <p class="reading__trigrams" id="pTrigrams"></p>
-      <p class="reading__judgment" id="pJudgment"></p>
-      <p class="reading__modern" id="pReading"></p>
+      <h2 class="reading__cn" id="pCn"></h2>
+
+      <!-- The answer. One short paragraph, nothing competing with it. -->
+      <p class="reading__answer" id="pReading"></p>
+
+      <div class="apparatus">
+        <p class="apparatus__meta" id="pMeta"></p>
+        <p class="apparatus__meta" id="pTrigrams"></p>
+        <p class="apparatus__judgment" id="pJudgment"></p>
+      </div>
     </div>
 
-    <!-- Only rendered when the cast produced changing lines. In the I Ching a
-         changing line is the whole point: the situation is already turning into
-         something else. -->
+    <!-- Only rendered when the cast produced changing lines. For a lot of
+         questions this is the real answer: not "you are here" but "you are
+         here and it is already becoming that". -->
     <div class="reading reading--relating" id="relating" hidden>
-      <p class="section-label">Changing into</p>
-      <p class="reading__index"><span id="rNum"></span></p>
-      <h2 class="reading__name">
-        <span class="reading__cn" id="rCn"></span>
-        <span class="reading__en" id="rEn"></span>
-      </h2>
-      <p class="reading__modern" id="rReading"></p>
+      <p class="relating__lede">and it is already turning into</p>
+      <h2 class="reading__cn" id="rCn"></h2>
+      <p class="reading__answer" id="rReading"></p>
+      <div class="apparatus">
+        <p class="apparatus__meta" id="rMeta"></p>
+      </div>
     </div>
 
     <p class="result__again">

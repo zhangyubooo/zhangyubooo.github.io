@@ -27,12 +27,11 @@
     // fixed place means the page works for a visitor who declines location.
     lat: 40.4443,
     lng: -79.9436,
-    placeName: "Pittsburgh, PA",
 
     netTimeout: 8000,      // ms before a source is called unreachable
-    sourceStagger: 450,    // ms between one source appearing and the next
+    sourceStagger: 450,    // ms floor between one source filling and the next
     lineDelay: 700,        // ms between one yao and the next — the heartbeat
-    revealDelay: 900,      // ms after the sixth yao before the name appears
+    revealDelay: 900,      // ms after the sixth yao before the reading appears
 
     maxQuestion: 140
   };
@@ -42,6 +41,26 @@
 
   const $ = (id) => document.getElementById(id);
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const reduceMotion = () =>
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Bring a stage into view as it happens.
+     Without this the page simply grows downwards, and on a laptop the six
+     lines build below the fold — which means the visitor misses the one part
+     of this page that is worth watching. Anyone who has asked their system
+     for less motion gets an instant jump instead of a glide. */
+  function focusStage(el, block) {
+    if (!el || !el.scrollIntoView) return;
+    try {
+      el.scrollIntoView({
+        behavior: reduceMotion() ? "auto" : "smooth",
+        block: block || "center"
+      });
+    } catch (e) {
+      el.scrollIntoView();          // very old browsers: the options form throws
+    }
+  }
 
   /* FNV-1a, 32-bit. A hash, not a cipher: the job is only to fold an
      arbitrary string and a pile of floats down to one well-mixed integer so
@@ -109,8 +128,12 @@
      Each source returns the same shape so the rest of the code never has to
      know which API it came from:
 
-       { ok: true,  name, values: [Number], display: [{ label, value }] }
-       { ok: false, name, error: "..." }
+       { ok: true,  values: [Number], display: [{ v: "figure", l: "label" }] }
+       { ok: false, error: "..." }
+
+     In `display`, `v` is the figure and `l` the word for it; either may be
+     empty. They are rendered figure-first so a column reads as numbers with
+     the words available beside them.
 
      `values` feeds the seed. `display` is what the visitor reads.
      All three are keyless — no API key exists in this repo, because none is
@@ -121,7 +144,6 @@
   /* Seismic. USGS publishes every earthquake of the last hour as GeoJSON,
      refreshed continuously. The most recent event is the reading. */
   async function readSeismic() {
-    const name = "Seismic";
     try {
       const data = await fetchJSON(
         "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
@@ -131,9 +153,9 @@
         // A genuinely quiet hour is possible and is not an error — the count
         // itself is still a reading of the world.
         return {
-          ok: true, name,
+          ok: true,
           values: [0, data.metadata ? data.metadata.count : 0],
-          display: [{ label: "No recorded quake in the past hour", value: "" }]
+          display: [{ v: "0", l: "quakes in the past hour" }]
         };
       }
       const f = features[0];
@@ -144,16 +166,18 @@
       const depth = isNum(c[2]) ? c[2] : 0;
 
       return {
-        ok: true, name,
+        ok: true,
         values: [mag, depth, c[0], c[1], p.time || 0, features.length],
         display: [
-          { label: "M" + mag.toFixed(1) + " · " + (p.place || "unknown location"), value: "" },
-          { label: "depth", value: depth.toFixed(1) + " km" },
-          { label: "in the past hour", value: features.length + " events" }
+          { v: "M" + mag.toFixed(1), l: "" },
+          { v: "", l: p.place || "unknown location" },
+          { v: depth.toFixed(1) + " km", l: "deep" },
+          { v: String(features.length),
+            l: (features.length === 1 ? "event" : "events") + " this hour" }
         ]
       };
     } catch (err) {
-      return { ok: false, name, error: describe(err) };
+      return { ok: false, error: describe(err) };
     }
   }
 
@@ -162,7 +186,6 @@
      than the seismic feed, and that is the intent: a cast should be made of
      both the fast world and the slow one. */
   async function readSolar() {
-    const name = "Solar & lunar";
     try {
       const data = await fetchJSON(
         "https://api.sunrisesunset.io/json?lat=" + CONFIG.lat + "&lng=" + CONFIG.lng
@@ -178,27 +201,30 @@
 
       if (dayLen !== null) {
         values.push(dayLen);
-        display.push({ label: "day length", value: r.day_length });
+        display.push({ v: r.day_length, l: "of daylight" });
       }
       if (noon !== null) {
         values.push(noon);
-        display.push({ label: "solar noon", value: r.solar_noon });
+        display.push({ v: r.solar_noon, l: "solar noon" });
       }
       if (isFinite(moonIllum)) {
+        // Full precision goes into the seed; the display is rounded, because
+        // two decimal places of moonlight is noise to read and the provenance
+        // panel carries the exact figure anyway.
         values.push(moonIllum);
-        display.push({ label: "moon illumination", value: moonIllum + "%" });
+        display.push({ v: moonIllum.toFixed(1) + "%", l: "moon lit" });
       }
       if (r.moon_phase) {
-        display.push({ label: "moon phase", value: String(r.moon_phase) });
+        display.push({ v: "", l: String(r.moon_phase) });
       }
 
       // If the response arrived but contained nothing usable, that is a
       // failure — better to say so than to seed the cast with an empty array.
       if (!values.length) throw new Error("no usable fields in response");
 
-      return { ok: true, name, values, display };
+      return { ok: true, values, display };
     } catch (err) {
-      return { ok: false, name, error: describe(err) };
+      return { ok: false, error: describe(err) };
     }
   }
 
@@ -206,7 +232,6 @@
      Pressure is the interesting one — it is the number a barometer has been
      used to read the near future with for three hundred years. */
   async function readAtmospheric() {
-    const name = "Atmospheric";
     try {
       const url =
         "https://api.open-meteo.com/v1/forecast" +
@@ -217,11 +242,11 @@
       const c = (data && data.current) || {};
 
       const fields = [
-        ["pressure_msl", "pressure", " hPa"],
-        ["cloud_cover", "cloud cover", "%"],
-        ["wind_direction_10m", "wind from", "°"],
-        ["wind_speed_10m", "wind speed", " km/h"],
-        ["temperature_2m", "temperature", " °C"]
+        ["pressure_msl", " hPa", "pressure"],
+        ["cloud_cover", "%", "cloud"],
+        ["wind_direction_10m", "°", "wind from"],
+        ["wind_speed_10m", " km/h", "wind"],
+        ["temperature_2m", " °C", ""]
       ];
 
       const values = [];
@@ -230,14 +255,14 @@
         const v = c[f[0]];
         if (isNum(v)) {
           values.push(v);
-          display.push({ label: f[1], value: v + f[2] });
+          display.push({ v: v + f[1], l: f[2] });
         }
       });
 
       if (!values.length) throw new Error("no usable fields in response");
-      return { ok: true, name, values, display };
+      return { ok: true, values, display };
     } catch (err) {
-      return { ok: false, name, error: describe(err) };
+      return { ok: false, error: describe(err) };
     }
   }
 
@@ -250,7 +275,13 @@
     return (err && err.message) || "unknown error";
   }
 
-  const SOURCES = [readSeismic, readSolar, readAtmospheric];
+  /* Name and reader together, so the three rows can be drawn in a fixed
+     order before any of them has answered. */
+  const SOURCE_DEFS = [
+    { name: "Seismic", read: readSeismic },
+    { name: "Solar & lunar", read: readSolar },
+    { name: "Atmospheric", read: readAtmospheric }
+  ];
 
 
   /* ④ CASTING ENGINE -----------------------------------------*/
@@ -325,6 +356,7 @@
      ---------------------------------------------------------- */
 
   const els = {};
+  const rows = [];          // the three world-reading rows, by index
   let busy = false;
 
   async function run(question) {
@@ -333,24 +365,50 @@
     hideError();
     resetStages();
 
+    // The form steps aside and the question becomes a quoted line that will
+    // travel down the page with its answer.
+    els.askedText.textContent = question;
+    els.asked.hidden = false;
+    els.oracle.classList.add("is-casting");
+
     // --- Stage 1: read the world ---
     els.world.hidden = false;
 
-    // All three go out at once — no reason to make the visitor wait for them
-    // in series — but they are REVEALED one at a time, in a fixed order, so
-    // the sequence reads the same every time regardless of which is fastest.
-    const results = await Promise.all(SOURCES.map((fn) => fn()));
+    // All three rows are drawn immediately, in a fixed order, in a pending
+    // state. Then all three requests go out at once and each row fills the
+    // moment its OWN source answers — so there is never a blank stretch while
+    // the slowest one is still in flight. The i * stagger floor only stops
+    // three fast replies from landing in the same frame.
+    SOURCE_DEFS.forEach(function (def, i) {
+      rows[i] = makeRow(def.name);
+      els.worldList.appendChild(rows[i].el);
+    });
+    // No scroll here. Collapsing the intro has already pulled everything up,
+    // and scrolling now would push the visitor's own question off the top —
+    // which is exactly what this revision exists to prevent.
 
-    for (const r of results) {
-      renderSource(r);
-      await sleep(CONFIG.sourceStagger);
-    }
+    const results = await Promise.all(
+      SOURCE_DEFS.map(function (def, i) {
+        return Promise.all([def.read(), sleep(i * CONFIG.sourceStagger)])
+          .then(function (pair) {
+            fillRow(i, pair[0]);
+            return pair[0];
+          });
+      })
+    );
+
+    await sleep(CONFIG.sourceStagger);
 
     const live = results.filter((r) => r.ok);
 
     // The one refusal in the piece. With nothing live, a cast would be a
     // random number wearing a costume — so there is no cast.
     if (!live.length) {
+      // Put the form back rather than showing an empty reading block: the
+      // three failed rows stay on screen as the evidence, the question is
+      // still in the field, and pressing Cast again is the obvious next move.
+      els.oracle.classList.remove("is-casting");
+      els.asked.hidden = true;
       showError(
         "The world is unreachable right now, so there is nothing to cast from. " +
         "No hexagram has been drawn — this page will not substitute a random " +
@@ -366,6 +424,12 @@
     const lines = castLines(seed);
 
     els.cast.hidden = false;
+    // Anchor on the QUESTION, not on the figure. The hexagram box already
+    // reserves its full six-line height, so putting the question at the top
+    // of the viewport keeps question → figure → answer in one frame for the
+    // rest of the reading, which is the whole point of this arrangement.
+    focusStage(els.asked, "start");
+
     for (let i = 0; i < 6; i++) {
       els.hexagram.appendChild(renderYao(lines[i]));
       await sleep(CONFIG.lineDelay);
@@ -391,6 +455,10 @@
     els.result.hidden = false;
     renderTrace(results, lines, seed);
     els.trace.hidden = false;
+    // Deliberately no scroll here: the page was already anchored on the
+    // question before the lines were drawn, and jumping to the reading at
+    // this moment would throw away the figure the visitor just watched
+    // being built.
 
     finish();
   }
@@ -401,6 +469,7 @@
   }
 
   function resetStages() {
+    rows.length = 0;
     els.worldList.innerHTML = "";
     els.hexagram.innerHTML = "";
     els.traceList.innerHTML = "";
@@ -414,42 +483,56 @@
 
   /* ---- rendering ---- */
 
-  function renderSource(r) {
+  /* A row starts as a name and the word "reading…", and keeps its place in
+     the list whatever happens to it afterwards. */
+  function makeRow(name) {
     const li = document.createElement("li");
-    li.className = "world__item" + (r.ok ? "" : " world__item--failed");
+    li.className = "world__item world__item--pending";
 
-    const name = document.createElement("span");
-    name.className = "world__name";
-    name.textContent = r.name;
+    const label = document.createElement("span");
+    label.className = "world__name";
+    label.textContent = name;
 
-    const vals = document.createElement("span");
-    vals.className = "world__values";
+    const values = document.createElement("span");
+    values.className = "world__values";
 
-    if (r.ok) {
-      r.display.forEach(function (d) {
-        const line = document.createElement("span");
-        line.className = "world__value";
-        if (d.value) {
-          line.innerHTML = "";
-          line.appendChild(document.createTextNode(d.label + " "));
-          const b = document.createElement("b");
-          b.textContent = d.value;
-          line.appendChild(b);
-        } else {
-          line.textContent = d.label;
-        }
-        vals.appendChild(line);
-      });
-    } else {
+    const pending = document.createElement("span");
+    pending.className = "world__value";
+    pending.textContent = "reading…";
+    values.appendChild(pending);
+
+    li.appendChild(label);
+    li.appendChild(values);
+    return { el: li, values: values };
+  }
+
+  function fillRow(i, result) {
+    const row = rows[i];
+    if (!row) return;
+    row.values.innerHTML = "";
+    row.el.className = "world__item" + (result.ok ? "" : " world__item--failed");
+
+    if (!result.ok) {
       const line = document.createElement("span");
       line.className = "world__value";
-      line.textContent = r.error + " — this source is not part of the cast";
-      vals.appendChild(line);
+      line.textContent = result.error + " — this source is not part of the cast";
+      row.values.appendChild(line);
+      return;
     }
 
-    li.appendChild(name);
-    li.appendChild(vals);
-    els.worldList.appendChild(li);
+    result.display.forEach(function (d) {
+      const line = document.createElement("span");
+      line.className = "world__value";
+      if (d.v) {
+        const b = document.createElement("b");
+        b.textContent = d.v;
+        line.appendChild(b);
+      }
+      if (d.l) {
+        line.appendChild(document.createTextNode((d.v ? " " : "") + d.l));
+      }
+      row.values.appendChild(line);
+    });
   }
 
   function renderYao(line) {
@@ -466,14 +549,14 @@
   }
 
   function renderPrimary(h) {
-    els.pNum.textContent = "Hexagram " + h.n + "  " + h.glyph;
     els.pCn.textContent = h.cn;
-    els.pEn.textContent = h.pinyin + " · " + h.en;
+    els.pReading.textContent = h.reading;
+    els.pMeta.textContent =
+      "Hexagram " + h.n + " " + h.glyph + " · " + h.pinyin + " · " + h.en;
     els.pTrigrams.textContent =
-      h.lower.en + " below, " + h.upper.en + " above  ·  " +
+      h.lower.en + " below, " + h.upper.en + " above · " +
       h.lower.cn + "下 " + h.upper.cn + "上";
     els.pJudgment.textContent = h.judgment;
-    els.pReading.textContent = h.reading;
     els.hexagram.setAttribute(
       "aria-label",
       "Hexagram " + h.n + ", " + h.cn + ", " + h.en
@@ -481,17 +564,17 @@
   }
 
   function renderRelating(h) {
-    els.rNum.textContent = "Hexagram " + h.n + "  " + h.glyph;
     els.rCn.textContent = h.cn;
-    els.rEn.textContent = h.pinyin + " · " + h.en;
     els.rReading.textContent = h.reading;
+    els.rMeta.textContent =
+      "Hexagram " + h.n + " " + h.glyph + " · " + h.pinyin + " · " + h.en;
     els.relating.hidden = false;
   }
 
   function renderTrace(results, lines, seed) {
-    results.forEach(function (r) {
+    results.forEach(function (r, i) {
       const dt = document.createElement("dt");
-      dt.textContent = r.name;
+      dt.textContent = SOURCE_DEFS[i].name;
       const dd = document.createElement("dd");
       dd.textContent = r.ok
         ? r.values.map((v) => Number(v).toFixed(4)).join(", ")
@@ -518,6 +601,7 @@
   function showError(msg) {
     els.error.textContent = msg;
     els.error.hidden = false;
+    focusStage(els.error, "center");
   }
   function hideError() {
     els.error.hidden = true;
@@ -529,10 +613,11 @@
 
   function init() {
     [
-      "form", "question", "submit", "error",
+      "oracle", "form", "question", "submit", "error",
+      "asked", "askedText",
       "world", "worldList", "cast", "hexagram",
-      "result", "primary", "pNum", "pCn", "pEn", "pTrigrams", "pJudgment", "pReading",
-      "relating", "rNum", "rCn", "rEn", "rReading",
+      "result", "primary", "pCn", "pReading", "pMeta", "pTrigrams", "pJudgment",
+      "relating", "rCn", "rReading", "rMeta",
       "reset", "trace", "traceList", "traceSeed"
     ].forEach((id) => { els[id] = $(id); });
 
@@ -562,9 +647,11 @@
     els.reset.addEventListener("click", function () {
       resetStages();
       hideError();
+      els.asked.hidden = true;
+      els.oracle.classList.remove("is-casting");
       els.question.value = "";
+      window.scrollTo({ top: 0, behavior: reduceMotion() ? "auto" : "smooth" });
       els.question.focus();
-      window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
     // The data file is fetched, not inlined, so the 64 hexagrams stay editable

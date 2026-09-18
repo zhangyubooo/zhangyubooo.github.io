@@ -2,7 +2,7 @@
 Generate hexagrams.json for the Oracle project.
 
 Why generate instead of hand-writing the JSON:
-each hexagram's six lines are NOT arbitrary data - they are fully determined by
+each hexagram's six lines are NOT arbitrary data — they are fully determined by
 which two trigrams sit on the bottom and top. Typing 64 x 6 binary digits by hand
 is how you get one silently wrong hexagram that nobody notices for months.
 Here the binary is DERIVED, and then checked (64 unique patterns, all 64 possible
@@ -47,7 +47,7 @@ KING_WEN = [
     (8,  "KUN",  "KAN",  "比",   "Bǐ",        "Holding Together",
      "吉。原筮元永貞，无咎。", "Alliance is available. Decide early whether you are in, rather than drifting in."),
     (9,  "QIAN", "XUN",  "小畜", "Xiǎo Chù",  "The Taming Power of the Small",
-     "亨。密雲不雨。", "Clouds, no rain. Small accumulations only - the large move is not yet possible."),
+     "亨。密雲不雨。", "Clouds, no rain. Small accumulations only — the large move is not yet possible."),
     (10, "DUI",  "QIAN", "履",   "Lǚ",        "Treading",
      "履虎尾，不咥人，亨。", "You are closer to danger than you think, and conduct is what keeps you safe."),
     (11, "QIAN", "KUN",  "泰",   "Tài",       "Peace",
@@ -83,7 +83,7 @@ KING_WEN = [
     (26, "QIAN", "GEN",  "大畜", "Dà Chù",    "The Taming Power of the Great",
      "利貞，不家食吉。", "Hold the force back so it accumulates. Restraint is building something."),
     (27, "ZHEN", "GEN",  "頤",   "Yí",        "The Corners of the Mouth",
-     "貞吉。觀頤，自求口實。", "Watch what you are feeding yourself - attention, company, information."),
+     "貞吉。觀頤，自求口實。", "Watch what you are feeding yourself — attention, company, information."),
     (28, "XUN",  "DUI",  "大過", "Dà Guò",    "Preponderance of the Great",
      "棟橈，利有攸往，亨。", "The load exceeds the structure. Something must be set down before it breaks."),
     (29, "KAN",  "KAN",  "坎",   "Kǎn",       "The Abysmal",
@@ -133,7 +133,7 @@ KING_WEN = [
     (51, "ZHEN", "ZHEN", "震",   "Zhèn",      "The Arousing",
      "亨。震來虩虩，笑言啞啞。", "Shock arrives. The fright passes; what you do in the first minute matters."),
     (52, "GEN",  "GEN",  "艮",   "Gèn",       "Keeping Still",
-     "艮其背，不獲其身。", "Stop. Not paused, not waiting for a signal - actually stop and be still."),
+     "艮其背，不獲其身。", "Stop. Not paused, not waiting for a signal — actually stop and be still."),
     (53, "GEN",  "XUN",  "漸",   "Jiàn",      "Development",
      "女歸吉，利貞。", "Gradual, in the correct order. Skipping a stage undoes the ones before it."),
     (54, "DUI",  "ZHEN", "歸妹", "Guī Mèi",   "The Marrying Maiden",
