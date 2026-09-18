@@ -6,6 +6,14 @@
    six black bars on white, and that is the entire visual system. A project is
    part of the portfolio, not a world of its own.
 
+   The whole page is a centred composition — one column down the middle of the
+   screen, every element symmetric about it, at every width. A hexagram is a
+   symmetrical figure and this is a page you stand in front of rather than read
+   through, so a centre axis is the honest arrangement. The cost is real and
+   accepted: centred text has a ragged left edge, so every multi-line block here
+   is kept to a short measure and given `text-wrap: balance`, which evens the
+   line lengths out instead of leaving one orphan word on the last line.
+
    Structure: ① Tokens ② Reset & base ③ Back link ④ Ask ⑤ World readings
               ⑥ Hexagram ⑦ Reading ⑧ Provenance ⑨ Responsive ⑩ Motion
 
@@ -52,6 +60,9 @@
   --line-h:   0.875rem;     /* 14px  thickness of one yao */
   --line-w:   17rem;        /* full width of a yang line */
   --line-gap: 0.75rem;      /* vertical space between lines */
+  --ring-gutter: 1.75rem;   /* room each side of the figure, so the changing-line
+                               ring has somewhere to sit without pulling the
+                               bars off the centre axis */
 }
 
 
@@ -125,8 +136,9 @@ code {
 @media (max-width: 48rem) {
   .back {
     position: static;
-    display: inline-block;
-    margin: var(--s-4) var(--gutter) 0;
+    display: block;
+    text-align: center;
+    margin: var(--s-4) 0 0;
     padding: 0;
   }
   .oracle { padding-top: var(--s-5); }
@@ -140,6 +152,9 @@ code {
 .oracle {
   max-width: var(--measure);
   margin: 0 auto;
+  text-align: center;        /* the axis. Everything below either inherits this
+                                or is re-centred explicitly where it is a flex
+                                or grid container and would not. */
   /* Generous bottom padding so the last stage can still be scrolled to the
      middle of the screen rather than being pinned to the bottom edge. */
   padding: var(--s-7) var(--gutter) 60vh;
@@ -165,7 +180,12 @@ code {
 .ask__form {
   display: flex;
   align-items: stretch;
+  justify-content: center;
   gap: var(--s-3);
+  /* Narrower than the column so the field reads as one object on the axis
+     rather than a rule stretched across the whole page. */
+  max-width: 24rem;
+  margin: 0 auto;
   border-bottom: 1px solid var(--c-text);
   padding-bottom: var(--s-2);
 }
@@ -178,6 +198,7 @@ code {
   font: inherit;
   color: inherit;
   padding: var(--s-2) 0;
+  text-align: center;        /* the typed question grows out from the axis */
 }
 .ask__input::placeholder { color: var(--c-muted); }
 .ask__input:focus { outline: none; }          /* the shared rule below is the focus cue */
@@ -225,6 +246,8 @@ code {
 .asked__text {
   font-size: var(--t-answer);
   line-height: 1.45;
+  max-width: 28rem;
+  margin-inline: auto;
   text-wrap: balance;
 }
 .asked__text::before { content: "\201C"; }
@@ -235,15 +258,20 @@ code {
   font-size: var(--t-sm);
   color: var(--c-text);
 }
-/* A short rule to the left, instead of a red colour. The palette has no red,
-   and an error does not need one to be noticed. */
+/* A short rule instead of a red colour — the palette has no red, and an error
+   does not need one to be noticed. On the centre axis it sits above the text
+   rather than beside it, so the message itself stays symmetrical. */
+.ask__error {
+  max-width: 28rem;
+  margin-inline: auto;
+  text-wrap: balance;
+}
 .ask__error::before {
   content: "";
-  display: inline-block;
+  display: block;
   width: 1.25rem;
+  margin: 0 auto var(--s-2);
   border-top: 1px solid var(--c-text);
-  vertical-align: 0.35em;
-  margin-right: var(--s-2);
 }
 
 
@@ -277,9 +305,10 @@ code {
 
 .world__values { display: block; }
 
-/* Figure first in black, its label after it in grey. Reading down a column
-   you get the numbers; the words are there when you want to know what they
-   are. tabular-nums keeps the figures aligned between the three columns. */
+/* Figure first in black, its label after it in grey. Centred, the three
+   columns read as three short stacks either side of the middle one rather than
+   as a table — tabular-nums no longer buys column alignment, but it still keeps
+   digits from jittering as a value updates. */
 .world__value {
   display: block;
   color: var(--c-muted);
@@ -313,7 +342,10 @@ code {
   display: flex;
   flex-direction: column-reverse;
   gap: var(--line-gap);
-  align-items: flex-start;
+  align-items: center;
+  /* Equal gutters both sides. Without the left one the bars would sit on the
+     axis but the ring would push the whole figure visually to the left. */
+  padding: 0 var(--ring-gutter);
   min-height: calc(6 * (var(--line-h) + var(--line-gap)));
 }
 
@@ -341,12 +373,18 @@ code {
 }
 
 /* A changing line — the 6 and the 9, the ones that turn into their opposite.
-   Marked with a hollow ring set outside the figure, so the six bars stay a
-   clean stack and the annotation lives in the margin. */
+   Marked with hollow rings in the margin, so the six bars stay a clean stack
+   and the annotation stays outside them.
+
+   There are two rings, one each side, and that is not decoration: a single
+   ring on the right is a weight hanging off one end, and on a centre axis the
+   eye reads the whole figure as sitting left of true even when it measures
+   dead centre. A pair keeps the line symmetrical about the same axis as
+   everything else on the page. */
+.yao--changing::before,
 .yao--changing::after {
   content: "";
   position: absolute;
-  left: calc(100% + var(--s-3));
   top: 50%;
   width: 0.5rem;
   height: 0.5rem;
@@ -354,6 +392,8 @@ code {
   border: 1px solid var(--c-text);
   border-radius: 50%;
 }
+.yao--changing::before { right: calc(100% + var(--s-3)); }
+.yao--changing::after  { left:  calc(100% + var(--s-3)); }
 
 
 /* ⑦ READING --------------------------------------------------
@@ -368,15 +408,16 @@ code {
 
 .reading { margin-bottom: var(--s-6); }
 
-/* Name row: the Chinese name and its English one on the same baseline. The
-   English used to sit below the rule with the catalogue numbers, where it was
-   the only line of that block anyone could actually use — so it moved up here
-   and the numbers stayed down there. */
+/* The Chinese name and its English one, stacked rather than side by side.
+   Side by side they centre as a ROW, which puts a two-character name well left
+   of the axis whenever its English name is long — the row is centred and the
+   focal character is not. Stacked, the character itself sits on the axis and
+   the English hangs beneath it. */
 .reading__name {
   display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: var(--s-3);
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-1);
   margin-bottom: var(--s-4);
 }
 
@@ -401,8 +442,10 @@ code {
   font-size: var(--t-answer);
   line-height: 1.5;
   max-width: 26rem;
-  text-wrap: pretty;
-  margin-bottom: var(--s-6);
+  /* balance, not pretty: on a centre axis the thing that looks wrong is one
+     short last line, and balance evens the lines instead of only fixing widows. */
+  text-wrap: balance;
+  margin: 0 auto var(--s-6);
 }
 
 /* The rule that divides "addressed to you" from "reference material". */
@@ -421,6 +464,8 @@ code {
   line-height: 1.7;
   color: var(--c-text);
   max-width: 28rem;
+  margin-inline: auto;
+  text-wrap: balance;
 }
 
 /* The working behind it: the classical phrase the sentence renders, and the
@@ -481,23 +526,24 @@ code {
   font-size: var(--t-sm);
   color: var(--c-muted);
   max-width: 30rem;
-  margin-bottom: var(--s-3);
+  margin: 0 auto var(--s-4);
+  text-wrap: balance;
 }
 
-.lines__list { display: grid; gap: var(--s-2); }
+.lines__list { display: grid; gap: var(--s-4); }
 
-.lines__item {
-  display: grid;
-  grid-template-columns: 3.5rem 1fr;
-  gap: var(--s-3);
-  align-items: baseline;
-}
+/* The position label used to sit in a 3.5rem column to the left of its text.
+   On the axis it goes above instead — a heading for its line rather than a
+   gutter note beside it. */
+.lines__item { display: block; }
 
 /* 初九, 六二 — the position's name. Grey, because it is the address, not the
    message. */
 .lines__pos {
+  display: block;
   font-size: var(--t-xs);
   color: var(--c-muted);
+  margin-bottom: var(--s-1);
 }
 
 /* Full black and at reading size: this is the text the cast selected, not
@@ -524,7 +570,8 @@ code {
   font-size: var(--t-sm);
   color: var(--c-muted);
   max-width: 28rem;
-  margin-bottom: var(--s-4);
+  margin: 0 auto var(--s-4);
+  text-wrap: balance;
 }
 
 .result__reset {
@@ -561,8 +608,9 @@ code {
 
 .trace__note {
   color: var(--c-muted);
-  margin-bottom: var(--s-4);
+  margin: 0 auto var(--s-4);
   max-width: 30rem;
+  text-wrap: balance;
 }
 
 .trace__list {
@@ -576,7 +624,11 @@ code {
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
-.trace__list dd { margin: 0 0 var(--s-3); word-break: break-word; }
+.trace__list dd {
+  margin: 0 auto var(--s-3);
+  max-width: 30rem;
+  word-break: break-word;
+}
 
 .trace__seed { color: var(--c-muted); }
 
@@ -584,12 +636,14 @@ code {
 /* ⑨ RESPONSIVE ----------------------------------------------*/
 @media (max-width: 34rem) {
   :root {
-    /* Not 100%: the changing-line ring lives in the margin to the right of a
-       yao, so the bar has to stop short of the container or the ring pushes
-       the document wider than the screen and the whole page scrolls sideways. */
-    --line-w: calc(100% - 1.75rem);
+    /* Twice the gutter, not once: on the axis the bar has to clear the ring on
+       the right AND leave the same space on the left, or the figure is centred
+       in its box but visibly off-centre on the page. */
+    --line-w: calc(100% - (2 * var(--ring-gutter)));
     --s-7: 4rem;
   }
+  /* The figure's own padding is already inside --line-w at this width. */
+  .hexagram { padding: 0; }
   /* Three columns inside 390px would be three very narrow ones. On a phone
      the page scrolls anyway, so the readings go back to a single column with
      a rule between each — the height they cost is no longer the constraint. */
