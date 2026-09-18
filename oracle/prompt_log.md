@@ -5,13 +5,17 @@ local repo folder.
 
 This is not the whole transcript. These are the exchanges that actually changed
 what got built — mostly the ones where the answer I got was wrong and had to be
-pushed on.
+pushed on. I work with Claude in Chinese, so the prompts below are translations
+of what I actually typed.
 
 ---
 
 ### 1. Opening the search — and immediately hitting a trap
 
-> *"翻译这份作业，并说说有什么 API 适合做这个，以及项目方向，要用免费 API，项目里尽量不要用消耗 AI token 的，然后尽量是可以让人实时交互不是那种每天的"*
+> *"What APIs would suit this assignment, and what project directions? It has
+> to be a free API, ideally nothing that burns AI tokens, and ideally something
+> people can interact with in real time rather than data that only updates once
+> a day."*
 
 Useful output: a distinction I used for the rest of the project — the
 assignment allows two ways of "not returning the same data every time",
@@ -27,7 +31,8 @@ finds, and it fails the assignment on two counts.
 
 ### 2. Rejecting the obvious version
 
-> *"我挺喜欢那个选颜色然后有藏品筛选，但是除了馆藏，还可以调啥"*
+> *"I like the one where you pick a colour and it filters a museum collection —
+> but besides collections, what else could the colour drive?"*
 
 This produced the most useful conceptual note in the whole conversation:
 colour → artwork is **tautological**. The user picks blue and gets blue
@@ -43,7 +48,7 @@ I kept that test and applied it to everything afterwards.
 When I was pitched an Iconify project — "search a word, see how 200 icon sets
 each draw it" — I pushed back:
 
-> *"把这个详细说说？这怎么就是设计工具了"*
+> *"Say more about this. In what sense is that a design tool?"*
 
 The answer conceded the point: as described it was **a search results page,
 not a tool**, and Iconify's own site already does it better. Out of that came
@@ -60,7 +65,7 @@ instead of just a pretty animation.
 
 ### 4. The pivot
 
-> *"有没有那种答案之书的 api"*
+> *"Is there an API like the Book of Answers?"*
 
 The honest answer was that Advice Slip, yesno.wtf and friends all fail the
 assignment: **random selection from a fixed pool is not live data and is not
@@ -97,7 +102,8 @@ must be unpredictable.
 
 ### 6. Correctness, not vibes
 
-> *"生成 hexagrams.json：用上下卦组合推导二进制以避免手抄错误"*
+> *"Generate hexagrams.json by deriving the binary from the upper and lower
+> trigram combinations, so there is no chance of a transcription error."*
 
 Each hexagram's six lines are fully determined by its two trigrams, so the
 binary is derived rather than typed, and then checked — 64 unique patterns,
@@ -141,7 +147,8 @@ the sixty-four readings.*
 
 ### 8. The line statements — and refusing to type them from memory
 
-> *"有没有免费的 llm api 可以对用户问的问题以及起卦出来的东西做一个连接，给一个更直观的答案"*
+> *"Is there a free LLM API that could connect the user's question to the
+> hexagram that came up, and give a more direct answer?"*
 
 The answer I got was no — not because free ones don't exist (Pollinations runs
 without a key), but because adding one would have contradicted the thing this
@@ -159,13 +166,24 @@ century for which one applies.
 
 Then the part I care about most:
 
-> *"我不会凭记忆打 384 条古文。"*
+> *"I am not going to type 384 lines of classical Chinese from memory."*
 
 384 lines of classical Chinese is exactly what comes out looking plausible and
 being wrong. They were fetched from Chinese Wikisource instead, and checked
-against the trigram-derived binary through the 九 / 六 in their own position
-names — two independent sources agreeing on 384 values.
+against the trigram-derived binary through the line-position names themselves —
+every line statement is labelled with the word for *nine* or the word for
+*six*, which mean a yang line and a yin line respectively, so the classical
+text encodes the same six bits the generator derives independently from the
+trigram table. Two sources agreeing on 384 values is a far stronger guarantee
+than either one alone, and the build refuses to write its output if a single
+label disagrees.
 
-The validator immediately earned itself: 否 uses `，` where every other chapter
-uses `：`, and hexagram 32 is filed under 恒 rather than 恆. Neither would have
-been noticed by reading.
+The validator earned itself immediately, on two faults no amount of proofreading
+would have caught:
+
+- **Hexagram 12** separates each position label from its text with a full-width
+  comma, where every other chapter in the book uses a full-width colon — so the
+  parser silently produced six empty strings for it.
+- **Hexagram 32's** Wikisource page is filed under a variant form of its name,
+  not the form in my own character table, so the URL built from that table
+  returned a 404 for that one hexagram.
