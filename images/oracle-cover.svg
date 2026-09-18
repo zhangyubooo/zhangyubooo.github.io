@@ -1,121 +1,160 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600"
-     role="img" aria-labelledby="t d" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTowMmNmZGViMC03MDE0LTQ4Y2ItOWQ4Mi1mMWMyZjhjNDBjYzMAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaIcFuR5sbD9BukJ/nlGdwhcAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo1NGUzMmEwZS0zZTUwLTQ0MmQtYWRmYi04ZTJkM2IwNTExZGRscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoKET85FkpVSTIiraJ8dYEngAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggyUZZhVIY4xB9tF2WXuzHX3pbZaaar7S9p2YanLk04l6kZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaJFgH0RftIOKJ/lCbYnS1yIAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCDue12plITdrD6j94cmlJKjd/V3DC4mfP76UhxJROaWhWRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBi8Zmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjAyY2ZkZWIwLTcwMTQtNDhjYi05ZDgyLWYxYzJmOGM0MGNjMy9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjI1YzE1ZjBiLWFhODktNDNhMC05NzIyLTNiZDE2YzVjOTRkNXJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCDJRlmFUhjjEH20XZZe7MdfeltlppqvtL2nZhqcuTTiXqJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggg3PgvucgBEj7TPKNTmu3C6yYdkYDay/1ofZsX0wIvtiiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggywqIb1FlgdD9IYmwsgA/7WDqYeRUKKLUpz62CQNic6x0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQEizvSSwnXuQKKKqJR/SSkVWWsPsirAfESecj38/pXsRYMUQShM77+ZPj1C0TvR9PUMojvV16s0QubS6amD5RTk=</c2pa:manifest></metadata>
+     role="img" aria-labelledby="t d" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTo0MGNkMDQyZS00NjYxLTRlN2YtODZhMi01ZDY0Yzk3OGY4N2IAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaKEHjT48JI353iZlykB29ZEAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDozYWEyOTkwMy04ZWE5LTQ3MzUtOTFiMy0zYzIxOWRjY2M5ZmVscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNohxz0s1eKM6gJtYoHUlAxswAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFgghTQ5HpTlNWl3EmY9PaGzuFDCkyA8LtTiv9EqcvhFQ/GkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaCf3qz9/SPX8C9kUR+23XTcAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCDWUx/z7KbhhAcYK5DK7AQNWIhuGr90reV4HkqMryKWWGRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBi8Zmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjQwY2QwNDJlLTQ2NjEtNGU3Zi04NmEyLTVkNjRjOTc4Zjg3Yi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjkzYzFiMTQ2LTVmYWMtNDllMi04MzBhLWNiYjdlMjg4Y2Y1MHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCCFNDkelOU1aXcSZj09obO4UMKTIDwu1OK/0Spy+EVD8aJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggRNF5HyuyzVei+xmihnv9bfXvdY1/+rcF3Kwvf9lDCVOiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggBDDDdt9YXZfPcvjs4mSuLelUphrRFCfcIltVdyXLQfV0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQL6p1a3LM5rfLWJMrHPTSSgatjw9V9BHhqUaDRZrt3tfmJ/R0YC7eaN8euwTXpYUhubGisk3fw463Bt1o94/JnY=</c2pa:manifest></metadata>
   <title id="t">World Oracle</title>
-  <desc id="d">Hexagram 61, Zhong Fu — six horizontal bars hanging from a thread at the top of
-    the frame, drifting slowly from side to side, the lower ones travelling further and lagging
-    behind the ones above them.</desc>
+  <desc id="d">Hexagram 61, Zhong Fu. Six horizontal bars grow outward from the centre one at a
+    time, from the bottom of the figure upward, the way a hexagram is cast. A thread then ties the
+    finished figure to the top of the frame and it sways gently before clearing and casting again.</desc>
 
   <style>
     /* ------------------------------------------------------------------
-       The figure hangs. 卦 and 挂 are the same sound, and in the older
-       sense the same idea — something suspended, hung up to be read.
+       Two motions, and the order they happen in is the point:
 
-       Two things make a hanging object read as hanging: it DRIFTS, and it
-       TILTS. A first version got both at once by rotating every bar about
-       a single far-away pivot, which is what a pendulum really does — but
-       it welds the two together. Enough drift to notice came with enough
-       tilt to make the hexagram look crooked, and a hexagram that looks
-       crooked just looks badly drawn.
+         cast   — six bars grow out from the centre, bottom to top, which
+                  is the direction a hexagram is built in
+         hang   — the finished figure is tied off at the top edge and
+                  drifts, because 卦 and 挂 are the same sound and, in the
+                  older sense, the same idea: something hung up to be read
 
-       So they are separated. Drift is generous and grows downward, the way
-       it does on a mobile. Tilt is almost nothing, the same for every bar,
-       and its only job is to stop the motion reading as a horizontal slide.
+       The bars arrive 700ms apart. That is not a number picked to look
+       right — it is `lineDelay` out of oracle.js, the interval the real
+       page builds a cast at. The cover runs the product's own heartbeat.
+
+       The two animations sit on two nested groups because they both drive
+       `transform` and would otherwise overwrite each other. They also run
+       at different lengths (10s and 11s) so they never lock into a visible
+       pattern.
        ------------------------------------------------------------------ */
 
-    .bar {
+    .grow {                       /* the cast: opacity + scaleX */
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: 10s ease-out infinite;   /* ease-out on the growth; the
+                                             held segments have nothing to ease */
+    }
+    .bar {                        /* the hang: drift + a touch of tilt */
       transform-box: fill-box;
       transform-origin: center;
       animation: sway 11s ease-in-out infinite;
     }
 
-    /* The settle owns translateY, the sway owns translateX and rotate — two
-       animations on one element would fight over `transform`, so they live on
-       two nested groups. */
-    .hang {
-      transform-box: fill-box;
-      animation: settle 0.9s cubic-bezier(0.22, 1.2, 0.36, 1) both;
+    /* One keyframe set per line rather than one set plus six delays: a delay
+       would offset each bar's whole cycle, so they would stop clearing and
+       rebuilding together. The stagger has to live inside the timeline. */
+    .l1 .grow { animation-name: cast1; }   /* bottom — first */
+    .l2 .grow { animation-name: cast2; }
+    .l3 .grow { animation-name: cast3; }
+    .l4 .grow { animation-name: cast4; }
+    .l5 .grow { animation-name: cast5; }
+    .l6 .grow { animation-name: cast6; }   /* top — last */
+
+    /* 0.06 rather than 0: a bar scaled to nothing has no width to grow from,
+       and the first frame of the growth reads as a hard pop. */
+    @keyframes cast1 {
+      0%              { opacity: 0; transform: scaleX(0.06); }
+      5.5%, 80%       { opacity: 1; transform: scaleX(1); }
+      88%, 100%       { opacity: 0; transform: scaleX(0.06); }
+    }
+    @keyframes cast2 {
+      0%, 7%          { opacity: 0; transform: scaleX(0.06); }
+      12.5%, 80%      { opacity: 1; transform: scaleX(1); }
+      88%, 100%       { opacity: 0; transform: scaleX(0.06); }
+    }
+    @keyframes cast3 {
+      0%, 14%         { opacity: 0; transform: scaleX(0.06); }
+      19.5%, 80%      { opacity: 1; transform: scaleX(1); }
+      88%, 100%       { opacity: 0; transform: scaleX(0.06); }
+    }
+    @keyframes cast4 {
+      0%, 21%         { opacity: 0; transform: scaleX(0.06); }
+      26.5%, 80%      { opacity: 1; transform: scaleX(1); }
+      88%, 100%       { opacity: 0; transform: scaleX(0.06); }
+    }
+    @keyframes cast5 {
+      0%, 28%         { opacity: 0; transform: scaleX(0.06); }
+      33.5%, 80%      { opacity: 1; transform: scaleX(1); }
+      88%, 100%       { opacity: 0; transform: scaleX(0.06); }
+    }
+    @keyframes cast6 {
+      0%, 35%         { opacity: 0; transform: scaleX(0.06); }
+      40.5%, 80%      { opacity: 1; transform: scaleX(1); }
+      88%, 100%       { opacity: 0; transform: scaleX(0.06); }
     }
 
+    /* The thread arrives with the top bar — the moment the finished figure
+       gets hung up. Before that there is nothing yet to hang. */
+    .thread {
+      transform-box: view-box;
+      transform-origin: 450px 0px;
+      animation: knot 11s ease-in-out infinite, tie 10s linear infinite;
+    }
+    @keyframes tie {
+      0%, 35%    { opacity: 0; }
+      40.5%, 80% { opacity: 1; }
+      88%, 100%  { opacity: 0; }
+    }
+
+    /* Drift grows downward: the further from the knot, the wider the arc.
+       Tilt stays tiny and equal — its only job is to keep the motion from
+       reading as a flat sideways slide. A first version got both out of one
+       rotation about a distant pivot, which is what a pendulum really does,
+       but it welded them together: enough drift to see came with enough tilt
+       to make the hexagram look crooked. */
     @keyframes sway {
-      0%, 100% { transform: translateX(calc(-1 * var(--amp))) rotate(calc(-1 * var(--tilt, 0.28deg))); }
-      50%      { transform: translateX(var(--amp))            rotate(var(--tilt, 0.28deg)); }
+      0%, 100% { transform: translateX(calc(-1 * var(--amp))) rotate(-0.28deg); }
+      50%      { transform: translateX(var(--amp))            rotate( 0.28deg); }
+    }
+    @keyframes knot {
+      0%, 100% { transform: rotate(-1.02deg); }   /* atan(3/169) — carries the */
+      50%      { transform: rotate( 1.02deg); }   /* thread's end to bar 6      */
     }
 
-    @keyframes settle {
-      from { transform: translateY(-16px); opacity: 0; }
-      to   { transform: translateY(0);     opacity: 1; }
-    }
-
-    /* Drift grows downward: the further a thing hangs from the knot, the
-       wider the arc it travels. The delays are negative so every bar is
-       already mid-swing on the first frame, each at a different point —
-       nothing waits its turn and nothing starts in unison. The settle
-       delays run the other way, bottom bar first, because that is the
-       order a hexagram is cast in. */
-    .l6 { --amp: 3px; }   .l6 .bar { animation-delay: -0.0s; }  .l6 .hang { animation-delay: 0.50s; }
-    .l5 { --amp: 4px; }   .l5 .bar { animation-delay: -0.4s; }  .l5 .hang { animation-delay: 0.40s; }
-    .l4 { --amp: 5px; }   .l4 .bar { animation-delay: -0.8s; }  .l4 .hang { animation-delay: 0.30s; }
-    .l3 { --amp: 6px; }   .l3 .bar { animation-delay: -1.2s; }  .l3 .hang { animation-delay: 0.20s; }
-    .l2 { --amp: 7px; }   .l2 .bar { animation-delay: -1.6s; }  .l2 .hang { animation-delay: 0.10s; }
-    .l1 { --amp: 8px; }   .l1 .bar { animation-delay: -2.0s; }  .l1 .hang { animation-delay: 0.00s; }
+    .l6 { --amp: 3px; }  .l6 .bar { animation-delay: -0.0s; }
+    .l5 { --amp: 4px; }  .l5 .bar { animation-delay: -0.4s; }
+    .l4 { --amp: 5px; }  .l4 .bar { animation-delay: -0.8s; }
+    .l3 { --amp: 6px; }  .l3 .bar { animation-delay: -1.2s; }
+    .l2 { --amp: 7px; }  .l2 .bar { animation-delay: -1.6s; }
+    .l1 { --amp: 8px; }  .l1 .bar { animation-delay: -2.0s; }
 
     /* The two halves of a broken line are two hanging things, not one thing
-       with a hole in it. The right half trails the left by a fraction, so the
-       gap between them opens and closes very slightly. */
-    .half-r .bar { animation-delay: -0.2s; }
+       with a hole in it, so the right half trails and the gap breathes. */
     .l5 .half-r .bar { animation-delay: -0.6s; }
     .l4 .half-r .bar { animation-delay: -1.0s; }
     .l3 .half-r .bar { animation-delay: -1.4s; }
     .l2 .half-r .bar { animation-delay: -1.8s; }
     .l1 .half-r .bar { animation-delay: -2.2s; }
 
-    /* The thread is tied at the top edge, so it cannot drift — it pivots at
-       the knot instead, through exactly the angle that carries its lower end
-       to where the first bar has drifted to: atan(3 / 169) ≈ 1.02°. That is
-       the whole reason the thread and the bar never come apart. */
-    .thread {
-      transform-box: view-box;
-      transform-origin: 450px 0px;
-      animation: knot 11s ease-in-out infinite;
-    }
-    @keyframes knot {
-      0%, 100% { transform: rotate(-1.02deg); }
-      50%      { transform: rotate( 1.02deg); }
-    }
-
-    /* Anyone who has asked their system for less motion gets the figure hung
-       and still. */
+    /* Anyone who has asked their system for less motion gets the finished
+       figure, hung and still. */
     @media (prefers-reduced-motion: reduce) {
-      .bar, .hang, .thread { animation: none; }
+      .grow, .bar, .thread { animation: none; }
     }
   </style>
 
   <rect width="900" height="600" fill="#ffffff"/>
 
-  <!-- The thread, from the top edge down to the first bar. -->
   <g class="thread">
     <rect x="449.6" y="0" width="0.8" height="170" fill="#e5e5e5"/>
   </g>
 
   <g fill="#111111">
     <!-- Hexagram 61 中孚 · solid, solid, broken, broken, solid, solid.
-         Drawn top to bottom; the classes count the other way, because the
-         lines of a hexagram are numbered from the bottom up. -->
+         Drawn top to bottom; the classes count bottom to top, because that is
+         how the lines of a hexagram are numbered and cast. -->
 
-    <g class="l6"><g class="hang"><g class="bar"><rect x="250" y="169" width="400" height="22"/></g></g></g>
-    <g class="l5"><g class="hang"><g class="bar"><rect x="250" y="217" width="400" height="22"/></g></g></g>
+    <g class="l6"><g class="grow"><g class="bar"><rect x="250" y="169" width="400" height="22"/></g></g></g>
+    <g class="l5"><g class="grow"><g class="bar"><rect x="250" y="217" width="400" height="22"/></g></g></g>
 
     <g class="l4">
-      <g class="hang"><g class="bar"><rect x="250" y="265" width="178" height="22"/></g></g>
-      <g class="half-r"><g class="hang"><g class="bar"><rect x="472" y="265" width="178" height="22"/></g></g></g>
+      <g class="grow"><g class="bar"><rect x="250" y="265" width="178" height="22"/></g></g>
+      <g class="half-r"><g class="grow"><g class="bar"><rect x="472" y="265" width="178" height="22"/></g></g></g>
     </g>
 
     <g class="l3">
-      <g class="hang"><g class="bar"><rect x="250" y="313" width="178" height="22"/></g></g>
-      <g class="half-r"><g class="hang"><g class="bar"><rect x="472" y="313" width="178" height="22"/></g></g></g>
+      <g class="grow"><g class="bar"><rect x="250" y="313" width="178" height="22"/></g></g>
+      <g class="half-r"><g class="grow"><g class="bar"><rect x="472" y="313" width="178" height="22"/></g></g></g>
     </g>
 
-    <g class="l2"><g class="hang"><g class="bar"><rect x="250" y="361" width="400" height="22"/></g></g></g>
-    <g class="l1"><g class="hang"><g class="bar"><rect x="250" y="409" width="400" height="22"/></g></g></g>
+    <g class="l2"><g class="grow"><g class="bar"><rect x="250" y="361" width="400" height="22"/></g></g></g>
+    <g class="l1"><g class="grow"><g class="bar"><rect x="250" y="409" width="400" height="22"/></g></g></g>
   </g>
 </svg>
