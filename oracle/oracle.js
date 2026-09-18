@@ -614,15 +614,27 @@
     return div;
   }
 
+  /* The identifier line, as a link to the chapter the text was taken from.
+     Wikisource is both the honest provenance and the useful "more" — the page
+     there carries the judgment, all six line statements and the commentaries. */
+  function setSource(anchor, h) {
+    anchor.textContent = "Hexagram " + h.n + " · " + h.pinyin + " · 周易/" + h.cn + " ↗";
+    anchor.href = h.src;
+  }
+
   function renderPrimary(h) {
     els.pCn.textContent = h.cn;
+    els.pEn.textContent = h.en;
     els.pReading.textContent = h.reading;
-    els.pMeta.textContent =
-      "Hexagram " + h.n + " " + h.glyph + " · " + h.pinyin + " · " + h.en;
+    // Two lines: the image read out in plain English, then the classical
+    // phrase it renders and the trigram notation it came from. The first
+    // explains, the second shows the working.
+    els.pImage.textContent = h.image.en;
     els.pTrigrams.textContent =
-      h.lower.en + " below, " + h.upper.en + " above · " +
-      h.lower.cn + "下 " + h.upper.cn + "上";
+      h.image.cn + " · " + h.lower.cn + "下 " + h.upper.cn + "上 · " +
+      h.lower.en + " below, " + h.upper.en + " above";
     els.pJudgment.textContent = h.judgment;
+    setSource(els.pSource, h);
     els.hexagram.setAttribute(
       "aria-label",
       "Hexagram " + h.n + ", " + h.cn + ", " + h.en
@@ -631,10 +643,10 @@
 
   function renderRelating(h) {
     els.rCn.textContent = h.cn;
+    els.rEn.textContent = h.en;
     els.rReading.textContent = h.reading;
-    els.rMeta.textContent =
-      "Hexagram " + h.n + " " + h.glyph + " · " + h.pinyin + " · " + h.en;
     els.rJudgment.textContent = h.judgment;
+    setSource(els.rSource, h);
     els.relating.hidden = false;
   }
 
@@ -712,8 +724,8 @@
       "oracle", "form", "question", "submit", "error",
       "asked", "askedText",
       "world", "worldList", "cast", "hexagram",
-      "result", "primary", "pCn", "pReading", "pMeta", "pTrigrams", "pJudgment",
-      "relating", "rCn", "rReading", "rMeta", "rJudgment",
+      "result", "primary", "pCn", "pEn", "pReading", "pImage", "pTrigrams", "pJudgment", "pSource",
+      "relating", "rCn", "rEn", "rReading", "rJudgment", "rSource",
       "lines", "linesRule", "linesList",
       "reset", "trace", "traceList", "traceSeed"
     ].forEach((id) => { els[id] = $(id); });

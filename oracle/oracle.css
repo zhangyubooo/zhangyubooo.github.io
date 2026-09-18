@@ -368,6 +368,18 @@ code {
 
 .reading { margin-bottom: var(--s-6); }
 
+/* Name row: the Chinese name and its English one on the same baseline. The
+   English used to sit below the rule with the catalogue numbers, where it was
+   the only line of that block anyone could actually use — so it moved up here
+   and the numbers stayed down there. */
+.reading__name {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-bottom: var(--s-4);
+}
+
 /* The Chinese name is the one place the page lets type get large. It is the
    only character set on the page that is not Inter, and that difference is
    the whole typographic event. */
@@ -375,7 +387,12 @@ code {
   font-size: var(--t-display);
   font-weight: 500;
   line-height: 1.1;
-  margin-bottom: var(--s-4);
+}
+
+.reading__en {
+  font-size: var(--t-answer);
+  font-weight: 400;
+  color: var(--c-muted);
 }
 
 /* THE ANSWER. Given its own air on all four sides and a narrower measure than
@@ -396,13 +413,47 @@ code {
   line-height: 1.7;
   color: var(--c-muted);
 }
-.apparatus__meta { font-variant-numeric: tabular-nums; }
+/* Why the figure means what it means, read out in one sentence. This is the
+   only line in the apparatus that explains rather than identifies, so it comes
+   first and is the one line set in full black. */
+.apparatus__image {
+  font-size: var(--t-sm);
+  line-height: 1.7;
+  color: var(--c-text);
+  max-width: 28rem;
+}
+
+/* The working behind it: the classical phrase the sentence renders, and the
+   trigram pair it came from. Kept because the sentence above is a reading and
+   a reader is entitled to see what it is a reading OF. */
+.apparatus__trigrams {
+  margin-top: var(--s-2);
+  font-size: var(--t-xs);
+  color: var(--c-muted);
+}
 
 /* The classical judgment, set at the reading size rather than the label size —
    it is three thousand year old text, not metadata. */
 .apparatus__judgment {
   font-size: var(--t-sm);
   margin-top: var(--s-2);
+}
+
+/* The identifier, demoted to last and made into the page's one outbound link.
+   A hexagram number and a romanisation exist to look something up with, so
+   here they actually do. */
+.apparatus__source {
+  margin-top: var(--s-3);
+  font-variant-numeric: tabular-nums;
+}
+.apparatus__source a {
+  color: var(--c-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--c-line);
+}
+.apparatus__source a:hover {
+  color: var(--c-text);
+  border-bottom-color: var(--c-text);
 }
 
 /* The line statements. Given their own block rather than folded into the

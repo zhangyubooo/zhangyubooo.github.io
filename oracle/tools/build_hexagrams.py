@@ -187,11 +187,21 @@ def build():
             "reading": reading,
             "lower": {"cn": lo["cn"], "en": lo["en"]},
             "upper": {"cn": up["cn"], "en": up["en"]},
+            # Where this hexagram's text actually came from. The page shows it
+            # as the one outbound link, so "look it up" is a thing a visitor
+            # can do rather than a number they have to copy somewhere.
+            "src": WIKISOURCE_BASE + WIKISOURCE_ALIAS.get(cn, cn),
         })
     return out
 
 
 YAO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "yao_source.json")
+
+# Chinese Wikisource files hexagram 32 under a variant character. This is the
+# only one that differs from the name used everywhere else in this file, and it
+# cost a round of debugging to find, so it is recorded rather than remembered.
+WIKISOURCE_ALIAS = {"恆": "恒"}
+WIKISOURCE_BASE = "https://zh.wikisource.org/wiki/周易/"
 
 POSITIONS = ["初", "二", "三", "四", "五", "上"]
 
@@ -249,6 +259,44 @@ def attach_yao(data):
     return data
 
 
+IMAGE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "image_source.json")
+
+# A one-line reading of each hexagram's image — why these two trigrams mean
+# what they mean. Each is a rendering of the 大象 phrase in image_source.json
+# (fetched from the same Wikisource chapters as the line texts), not an
+# invention. The English is mine; the image it renders is not.
+IMAGES_EN = {1: 'Heaven doubled, and heaven never rests — force with nothing to soften it.', 2: 'Earth upon earth — it carries everything and asserts nothing.', 3: 'Cloud and thunder, a storm that has not broken into rain — charge with no outlet yet.', 4: 'A spring surfacing at the foot of a mountain — water with no channel, going nowhere until it is given one.', 5: 'Cloud massed high in the sky — the rain is coming, and nothing you do brings it sooner.', 6: 'Heaven turning one way and water running the other — each going where it must, and past the other.', 7: 'Water held underground — enormous force, useful only once it is organised.', 8: 'Water lying on open ground — it runs to the low places and gathers there; things join where they touch.', 9: 'Wind crossing the open sky — it moves things, but only a little, and not yet down here.', 10: 'Heaven above, a lake below — a long way between them, and conduct is what keeps you upright on such ground.', 11: 'Heaven below and earth above, each moving toward the other — things are meeting.', 12: 'Heaven rising, earth sinking — each going its own way; nothing is meeting.', 13: 'Fire under an open sky — flame climbs toward it; like finds like.', 14: 'Fire high in the sky — it lights everything at once, and everything is visible.', 15: 'A mountain buried inside the earth — great height keeping itself level with the ground.', 16: 'Thunder breaking out of the ground — stored energy released all at once.', 17: 'Thunder lying down inside a lake — the strong thing taking the shape of what holds it.', 18: 'Wind caught beneath a mountain — air that cannot move goes stale.', 19: 'Ground standing directly over water — close enough to look into; something is drawing near.', 20: 'Wind travelling across open country — it touches everything and settles nowhere.', 21: 'Thunder and lightning together — the shock that cuts through whatever was in the way.', 22: 'Fire at the foot of a mountain — light that shows the shape of things without changing them.', 23: 'A mountain wearing down onto the plain — the top is going, grain by grain.', 24: 'Thunder still underground — the turn has already happened, and nothing shows yet.', 25: 'Thunder rolling under an open sky — everything acting straight out of its nature, nothing calculated.', 26: 'Heaven held inside a mountain — vast force deliberately contained, and accumulating while it waits.', 27: 'Thunder under a still mountain — the shape above, the movement below; a mouth, and what goes into it.', 28: 'A lake risen over the treetops — the load has passed what the structure can carry.', 29: 'Water arriving and arriving, one pit and then the next — danger that repeats.', 30: 'Light doubled — brilliant, and burning only as long as it has something to hold on to.', 31: 'A lake held in a mountain top — the solid thing hollowed to receive; felt before it is spoken.', 32: 'Thunder and wind, which never arrive apart — a pairing that lasts because each renews the other.', 33: 'A mountain under a withdrawing sky — heaven pulls upward, out of reach.', 34: 'Thunder at the very top of the sky — as loud as force gets, and still only noise unless it is aimed.', 35: 'The sun clearing the horizon — rising in the open, at the pace the day allows.', 36: 'The sun gone down into the ground — the light still exists; it is just nowhere it can be seen.', 37: 'Wind coming off a fire — the hearth inside, its draught spreading out; what is ordered within is what reaches beyond.', 38: 'Fire rising while water sinks — sharing one place and moving apart.', 39: 'Water running down a mountainside — every way forward is steep and wet at once.', 40: 'Thunder and rain finally breaking — the pressure that had built is being let go.', 41: 'A lake cut into the foot of a mountain — the hollow is what was taken away, and it is what holds the water.', 42: 'Wind and thunder amplifying each other — a window where effort returns more than it costs.', 43: 'Water piled up as high as the sky — it cannot be held any longer; the thing has to break.', 44: 'Wind under an open sky — it reaches everywhere, and it arrived without being invited.', 45: 'Water gathered on flat ground — things collect wherever there is somewhere to collect.', 46: 'A tree pushing up through soil — growth you never catch happening, only having happened.', 47: 'A lake bed with the water gone — the whole shape of provision, and nothing in it.', 48: 'Water drawn up through wood — the well itself never moves; only the drawing does.', 49: 'Fire burning inside water — two things that cannot both remain; one of them gives.', 50: 'Fire under wood, under a vessel — raw material becoming something else by being held and cooked.', 51: 'Thunder, and then thunder again — the shock, and the second shock that tells you what you are made of.', 52: 'Mountain against mountain — stillness that is not waiting for anything.', 53: 'A tree growing on a mountainside — years of it, and not one stage skipped.', 54: 'Thunder above a lake — the water moves because the thunder does; you are entering on terms set elsewhere.', 55: 'Thunder and lightning arriving together — the fullest the sky gets, and the sun is already past noon.', 56: 'A fire on a mountainside — it burns where it lands and then moves on; nothing here belongs to it.', 57: 'Wind after wind — no single gust does anything; the repetition does.', 58: 'Two lakes touching, each feeding the other — exchange that keeps both of them full.', 59: 'Wind across the surface of water — what had set solid breaks up and disperses.', 60: 'Water above a lake with a rim — a container is only useful because it stops somewhere.', 61: 'Wind moving over water — the surface answers something that never touches it.', 62: 'Thunder heard on a mountain top — loud, and small against what it is standing on.', 63: 'Water set over fire — everything in its right place, which is exactly when it starts to boil over.', 64: 'Fire above water — the two have not met yet; the work is almost, and not, done.'}
+
+
+def attach_image(data):
+    """Merge the image phrase and its reading, checking nothing is missing."""
+    with open(IMAGE_PATH, encoding="utf-8") as f:
+        source = json.load(f)
+
+    problems = []
+    for h in data:
+        cn = source.get(str(h["n"]))
+        en = IMAGES_EN.get(h["n"])
+        if not cn:
+            problems.append(f"hexagram {h['n']} {h['cn']}: no 大象 phrase")
+        if not en:
+            problems.append(f"hexagram {h['n']} {h['cn']}: no English reading of the image")
+        if cn and en:
+            h["image"] = {"cn": cn, "en": en}
+
+    extra = sorted(set(IMAGES_EN) - {h["n"] for h in data})
+    if extra:
+        problems.append(f"English images for hexagrams that do not exist: {extra}")
+
+    if problems:
+        for p in problems:
+            print("  FAIL:", p)
+        sys.exit("image validation failed — not writing output")
+
+    print(f"validated: {len(data)} images, classical phrase and reading present for every hexagram")
+    return data
+
+
 def validate(data):
     """Fail loudly rather than shipping a silently wrong hexagram."""
     assert len(data) == 64, f"expected 64 hexagrams, got {len(data)}"
@@ -284,6 +332,7 @@ if __name__ == "__main__":
     data = build()
     validate(data)
     attach_yao(data)
+    attach_image(data)
     with open(OUT_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
     print("wrote " + OUT_PATH)

@@ -136,6 +136,27 @@ with `，` where every other chapter uses `：`, and hexagram 32 lives at
 `周易/恒` rather than `周易/恆`. Both were caught by the validator rather than by
 reading, which is the entire argument for having one.
 
+### Why the figure means what it means
+
+Under the reading sits one sentence explaining the hexagram's **image** — what
+its two trigrams make together. 蠱 is 巽下艮上, wind below a mountain: *air that
+cannot move goes stale*, which is why the hexagram is about decay. 家人 is 離下巽上,
+wind coming off a fire: *the hearth inside, its draught spreading out*.
+
+These are not invented. Each one renders the hexagram's 大象 — the classical
+statement of exactly this, fetched from the same Wikisource chapters as the line
+texts and kept in `tools/image_source.json`. The English is mine; the image it
+renders is not, and both are shown, so a reader can see what the sentence is a
+reading *of*:
+
+```
+Wind caught beneath a mountain — air that cannot move goes stale.
+山下有風 · 巽下 艮上 · Wind below, Mountain above
+```
+
+This is the one line in the apparatus that explains rather than identifies,
+which is why it comes first and is the only line there set in full black.
+
 **Staging note.** The line texts currently sit *below* the rule, with the
 apparatus, because they exist here only as classical Chinese and putting text
 most visitors cannot read in the position reserved for the answer would be
@@ -235,6 +256,21 @@ it, and all three were about attention rather than code:
    at 40px and the sentence written to the visitor at 17px, below the classical
    judgment. The order is now name → answer → rule → apparatus. Everything
    above the rule is addressed to you; everything below it is reference.
+
+4. **The apparatus was mostly decoration.** Under the hexagram sat
+   `Hexagram 37 ䷤ · Jiā Rén · The Family`, the trigram pair, and the classical
+   judgment. Audited line by line, that block gave a reader who already knows
+   the I Ching three useful things and a reader who does not exactly one — and
+   almost every visitor is the second kind. So it was cut to the three questions
+   a reader actually has at that moment: **why does it mean this** (the trigram
+   pair, first and set darker), **is this from somewhere** (the classical text),
+   and **how do I look it up** (the number and romanisation, demoted to last and
+   turned into the page's one outbound link, to the Wikisource chapter the text
+   came from). The duplicate Unicode glyph went, since the figure above it is
+   already that. The English name went *up*, beside the Chinese one, because it
+   was the only line of the block carrying meaning rather than an identifier.
+   The relating hexagram keeps only its judgment and its link: the same
+   apparatus twice reads as noise.
 
 The third one matters most, because the interface cannot help interpret. The
 I Ching never answers a question directly, and nothing here generates text —

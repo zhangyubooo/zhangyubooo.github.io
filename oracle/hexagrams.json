@@ -23,6 +23,7 @@
    "cn": "乾",
    "en": "Heaven"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/乾",
   "yao": [
    {
     "label": "初九",
@@ -52,6 +53,10 @@
   "yong": {
    "label": "用九",
    "text": "見羣龍无首，吉。"
+  },
+  "image": {
+   "cn": "天行健",
+   "en": "Heaven doubled, and heaven never rests — force with nothing to soften it."
   }
  },
  {
@@ -78,6 +83,7 @@
    "cn": "坤",
    "en": "Earth"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/坤",
   "yao": [
    {
     "label": "初六",
@@ -107,6 +113,10 @@
   "yong": {
    "label": "用六",
    "text": "利永貞。"
+  },
+  "image": {
+   "cn": "地勢",
+   "en": "Earth upon earth — it carries everything and asserts nothing."
   }
  },
  {
@@ -133,6 +143,7 @@
    "cn": "坎",
    "en": "Water"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/屯",
   "yao": [
    {
     "label": "初九",
@@ -158,7 +169,11 @@
     "label": "上六",
     "text": "乘馬班如，泣血漣如。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "雲雷",
+   "en": "Cloud and thunder, a storm that has not broken into rain — charge with no outlet yet."
+  }
  },
  {
   "n": 4,
@@ -184,6 +199,7 @@
    "cn": "艮",
    "en": "Mountain"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/蒙",
   "yao": [
    {
     "label": "初六",
@@ -209,7 +225,11 @@
     "label": "上九",
     "text": "擊蒙，不利為寇，利禦寇。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山下出泉",
+   "en": "A spring surfacing at the foot of a mountain — water with no channel, going nowhere until it is given one."
+  }
  },
  {
   "n": 5,
@@ -235,6 +255,7 @@
    "cn": "坎",
    "en": "Water"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/需",
   "yao": [
    {
     "label": "初九",
@@ -260,7 +281,11 @@
     "label": "上六",
     "text": "入于穴，有不速之客三人來，敬之終吉。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "雲上於天",
+   "en": "Cloud massed high in the sky — the rain is coming, and nothing you do brings it sooner."
+  }
  },
  {
   "n": 6,
@@ -286,6 +311,7 @@
    "cn": "乾",
    "en": "Heaven"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/訟",
   "yao": [
    {
     "label": "初六",
@@ -311,7 +337,11 @@
     "label": "上九",
     "text": "或錫之鞶帶，終朝三褫之。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "天與水違行",
+   "en": "Heaven turning one way and water running the other — each going where it must, and past the other."
+  }
  },
  {
   "n": 7,
@@ -337,6 +367,7 @@
    "cn": "坤",
    "en": "Earth"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/師",
   "yao": [
    {
     "label": "初六",
@@ -362,7 +393,11 @@
     "label": "上六",
     "text": "大君有命，開國承家，小人勿用。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "地中有水",
+   "en": "Water held underground — enormous force, useful only once it is organised."
+  }
  },
  {
   "n": 8,
@@ -388,6 +423,7 @@
    "cn": "坎",
    "en": "Water"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/比",
   "yao": [
    {
     "label": "初六",
@@ -413,7 +449,11 @@
     "label": "上六",
     "text": "比之无首，凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "地上有水",
+   "en": "Water lying on open ground — it runs to the low places and gathers there; things join where they touch."
+  }
  },
  {
   "n": 9,
@@ -439,6 +479,7 @@
    "cn": "巽",
    "en": "Wind"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/小畜",
   "yao": [
    {
     "label": "初九",
@@ -464,7 +505,11 @@
     "label": "上九",
     "text": "既雨既處，尚德載，婦貞厲，月幾望，君子征凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "風行天上",
+   "en": "Wind crossing the open sky — it moves things, but only a little, and not yet down here."
+  }
  },
  {
   "n": 10,
@@ -490,6 +535,7 @@
    "cn": "乾",
    "en": "Heaven"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/履",
   "yao": [
    {
     "label": "初九",
@@ -515,7 +561,11 @@
     "label": "上九",
     "text": "視履考祥，其旋元吉。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "上天下澤",
+   "en": "Heaven above, a lake below — a long way between them, and conduct is what keeps you upright on such ground."
+  }
  },
  {
   "n": 11,
@@ -541,6 +591,7 @@
    "cn": "坤",
    "en": "Earth"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/泰",
   "yao": [
    {
     "label": "初九",
@@ -566,7 +617,11 @@
     "label": "上六",
     "text": "城復于隍，勿用師，自邑告命，貞吝。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "天地交",
+   "en": "Heaven below and earth above, each moving toward the other — things are meeting."
+  }
  },
  {
   "n": 12,
@@ -592,6 +647,7 @@
    "cn": "乾",
    "en": "Heaven"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/否",
   "yao": [
    {
     "label": "初六",
@@ -617,7 +673,11 @@
     "label": "上九",
     "text": "傾否，先否後喜。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "天地不交",
+   "en": "Heaven rising, earth sinking — each going its own way; nothing is meeting."
+  }
  },
  {
   "n": 13,
@@ -643,6 +703,7 @@
    "cn": "乾",
    "en": "Heaven"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/同人",
   "yao": [
    {
     "label": "初九",
@@ -668,7 +729,11 @@
     "label": "上九",
     "text": "同人于郊，無悔。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "天與火",
+   "en": "Fire under an open sky — flame climbs toward it; like finds like."
+  }
  },
  {
   "n": 14,
@@ -694,6 +759,7 @@
    "cn": "離",
    "en": "Fire"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/大有",
   "yao": [
    {
     "label": "初九",
@@ -719,7 +785,11 @@
     "label": "上九",
     "text": "自天佑之，吉无不利。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "火在天上",
+   "en": "Fire high in the sky — it lights everything at once, and everything is visible."
+  }
  },
  {
   "n": 15,
@@ -745,6 +815,7 @@
    "cn": "坤",
    "en": "Earth"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/謙",
   "yao": [
    {
     "label": "初六",
@@ -770,7 +841,11 @@
     "label": "上六",
     "text": "鳴謙，利用行師，征邑國。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "地中有山",
+   "en": "A mountain buried inside the earth — great height keeping itself level with the ground."
+  }
  },
  {
   "n": 16,
@@ -796,6 +871,7 @@
    "cn": "震",
    "en": "Thunder"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/豫",
   "yao": [
    {
     "label": "初六",
@@ -821,7 +897,11 @@
     "label": "上六",
     "text": "冥豫，成有渝，无咎。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "雷出地奮",
+   "en": "Thunder breaking out of the ground — stored energy released all at once."
+  }
  },
  {
   "n": 17,
@@ -847,6 +927,7 @@
    "cn": "兌",
    "en": "Lake"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/隨",
   "yao": [
    {
     "label": "初九",
@@ -872,7 +953,11 @@
     "label": "上六",
     "text": "拘系之，乃從維之。王用亨于西山。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "澤中有雷",
+   "en": "Thunder lying down inside a lake — the strong thing taking the shape of what holds it."
+  }
  },
  {
   "n": 18,
@@ -898,6 +983,7 @@
    "cn": "艮",
    "en": "Mountain"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/蠱",
   "yao": [
    {
     "label": "初六",
@@ -923,7 +1009,11 @@
     "label": "上九",
     "text": "不事王侯，高尚其事。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山下有風",
+   "en": "Wind caught beneath a mountain — air that cannot move goes stale."
+  }
  },
  {
   "n": 19,
@@ -949,6 +1039,7 @@
    "cn": "坤",
    "en": "Earth"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/臨",
   "yao": [
    {
     "label": "初九",
@@ -974,7 +1065,11 @@
     "label": "上六",
     "text": "敦臨，吉无咎。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "澤上有地",
+   "en": "Ground standing directly over water — close enough to look into; something is drawing near."
+  }
  },
  {
   "n": 20,
@@ -1000,6 +1095,7 @@
    "cn": "巽",
    "en": "Wind"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/觀",
   "yao": [
    {
     "label": "初六",
@@ -1025,7 +1121,11 @@
     "label": "上九",
     "text": "觀其生，君子无咎。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "風行地上",
+   "en": "Wind travelling across open country — it touches everything and settles nowhere."
+  }
  },
  {
   "n": 21,
@@ -1051,6 +1151,7 @@
    "cn": "離",
    "en": "Fire"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/噬嗑",
   "yao": [
    {
     "label": "初九",
@@ -1076,7 +1177,11 @@
     "label": "上九",
     "text": "何校滅耳，凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "雷電",
+   "en": "Thunder and lightning together — the shock that cuts through whatever was in the way."
+  }
  },
  {
   "n": 22,
@@ -1102,6 +1207,7 @@
    "cn": "艮",
    "en": "Mountain"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/賁",
   "yao": [
    {
     "label": "初九",
@@ -1127,7 +1233,11 @@
     "label": "上九",
     "text": "白賁，无咎。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山下有火",
+   "en": "Fire at the foot of a mountain — light that shows the shape of things without changing them."
+  }
  },
  {
   "n": 23,
@@ -1153,6 +1263,7 @@
    "cn": "艮",
    "en": "Mountain"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/剝",
   "yao": [
    {
     "label": "初六",
@@ -1178,7 +1289,11 @@
     "label": "上九",
     "text": "碩果不食，君子得輿，小人剝廬。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山附地上",
+   "en": "A mountain wearing down onto the plain — the top is going, grain by grain."
+  }
  },
  {
   "n": 24,
@@ -1204,6 +1319,7 @@
    "cn": "坤",
    "en": "Earth"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/復",
   "yao": [
    {
     "label": "初九",
@@ -1229,7 +1345,11 @@
     "label": "上六",
     "text": "迷復，凶，有災眚。用行師，終有大敗，以其國君，凶；至于十年，不克征。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "雷在地中",
+   "en": "Thunder still underground — the turn has already happened, and nothing shows yet."
+  }
  },
  {
   "n": 25,
@@ -1255,6 +1375,7 @@
    "cn": "乾",
    "en": "Heaven"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/无妄",
   "yao": [
    {
     "label": "初九",
@@ -1280,7 +1401,11 @@
     "label": "上九",
     "text": "无妄，行有眚，无攸利。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "天下雷行",
+   "en": "Thunder rolling under an open sky — everything acting straight out of its nature, nothing calculated."
+  }
  },
  {
   "n": 26,
@@ -1306,6 +1431,7 @@
    "cn": "艮",
    "en": "Mountain"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/大畜",
   "yao": [
    {
     "label": "初九",
@@ -1331,7 +1457,11 @@
     "label": "上九",
     "text": "何天之衢，亨。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "天在山中",
+   "en": "Heaven held inside a mountain — vast force deliberately contained, and accumulating while it waits."
+  }
  },
  {
   "n": 27,
@@ -1357,6 +1487,7 @@
    "cn": "艮",
    "en": "Mountain"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/頤",
   "yao": [
    {
     "label": "初九",
@@ -1382,7 +1513,11 @@
     "label": "上九",
     "text": "由頤，厲吉，利涉大川。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山下有雷",
+   "en": "Thunder under a still mountain — the shape above, the movement below; a mouth, and what goes into it."
+  }
  },
  {
   "n": 28,
@@ -1408,6 +1543,7 @@
    "cn": "兌",
    "en": "Lake"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/大過",
   "yao": [
    {
     "label": "初六",
@@ -1433,7 +1569,11 @@
     "label": "上六",
     "text": "過涉滅頂，凶，无咎。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "澤滅木",
+   "en": "A lake risen over the treetops — the load has passed what the structure can carry."
+  }
  },
  {
   "n": 29,
@@ -1459,6 +1599,7 @@
    "cn": "坎",
    "en": "Water"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/坎",
   "yao": [
    {
     "label": "初六",
@@ -1484,7 +1625,11 @@
     "label": "上六",
     "text": "係用徽纆，寘于叢棘，三歲不得，凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "水洊至",
+   "en": "Water arriving and arriving, one pit and then the next — danger that repeats."
+  }
  },
  {
   "n": 30,
@@ -1510,6 +1655,7 @@
    "cn": "離",
    "en": "Fire"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/離",
   "yao": [
    {
     "label": "初九",
@@ -1535,7 +1681,11 @@
     "label": "上九",
     "text": "王用出征，有嘉折首，獲匪其醜，无咎。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "明兩作",
+   "en": "Light doubled — brilliant, and burning only as long as it has something to hold on to."
+  }
  },
  {
   "n": 31,
@@ -1561,6 +1711,7 @@
    "cn": "兌",
    "en": "Lake"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/咸",
   "yao": [
    {
     "label": "初六",
@@ -1586,7 +1737,11 @@
     "label": "上六",
     "text": "咸其輔，頰，舌。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山上有澤",
+   "en": "A lake held in a mountain top — the solid thing hollowed to receive; felt before it is spoken."
+  }
  },
  {
   "n": 32,
@@ -1612,6 +1767,7 @@
    "cn": "震",
    "en": "Thunder"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/恒",
   "yao": [
    {
     "label": "初六",
@@ -1637,7 +1793,11 @@
     "label": "上六",
     "text": "振恆，凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "雷風",
+   "en": "Thunder and wind, which never arrive apart — a pairing that lasts because each renews the other."
+  }
  },
  {
   "n": 33,
@@ -1663,6 +1823,7 @@
    "cn": "乾",
    "en": "Heaven"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/遯",
   "yao": [
    {
     "label": "初六",
@@ -1688,7 +1849,11 @@
     "label": "上九",
     "text": "肥遯，无不利。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "天下有山",
+   "en": "A mountain under a withdrawing sky — heaven pulls upward, out of reach."
+  }
  },
  {
   "n": 34,
@@ -1714,6 +1879,7 @@
    "cn": "震",
    "en": "Thunder"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/大壯",
   "yao": [
    {
     "label": "初九",
@@ -1739,7 +1905,11 @@
     "label": "上六",
     "text": "羝羊觸藩，不能退，不能遂，无攸利，艱則吉。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "雷在天上",
+   "en": "Thunder at the very top of the sky — as loud as force gets, and still only noise unless it is aimed."
+  }
  },
  {
   "n": 35,
@@ -1765,6 +1935,7 @@
    "cn": "離",
    "en": "Fire"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/晉",
   "yao": [
    {
     "label": "初六",
@@ -1790,7 +1961,11 @@
     "label": "上九",
     "text": "晉其角，維用伐邑，厲吉无咎，貞吝。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "明出地上",
+   "en": "The sun clearing the horizon — rising in the open, at the pace the day allows."
+  }
  },
  {
   "n": 36,
@@ -1816,6 +1991,7 @@
    "cn": "坤",
    "en": "Earth"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/明夷",
   "yao": [
    {
     "label": "初九",
@@ -1841,7 +2017,11 @@
     "label": "上六",
     "text": "不明晦，初登于天，后入于地。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "明入地中",
+   "en": "The sun gone down into the ground — the light still exists; it is just nowhere it can be seen."
+  }
  },
  {
   "n": 37,
@@ -1867,6 +2047,7 @@
    "cn": "巽",
    "en": "Wind"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/家人",
   "yao": [
    {
     "label": "初九",
@@ -1892,7 +2073,11 @@
     "label": "上九",
     "text": "有孚威如，終吉。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "風自火出",
+   "en": "Wind coming off a fire — the hearth inside, its draught spreading out; what is ordered within is what reaches beyond."
+  }
  },
  {
   "n": 38,
@@ -1918,6 +2103,7 @@
    "cn": "離",
    "en": "Fire"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/睽",
   "yao": [
    {
     "label": "初九",
@@ -1943,7 +2129,11 @@
     "label": "上九",
     "text": "睽孤， 見豕負涂，載鬼一車， 先張之弧，后說之弧，匪寇婚媾，往遇雨則吉。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "上火下澤",
+   "en": "Fire rising while water sinks — sharing one place and moving apart."
+  }
  },
  {
   "n": 39,
@@ -1969,6 +2159,7 @@
    "cn": "坎",
    "en": "Water"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/蹇",
   "yao": [
    {
     "label": "初六",
@@ -1994,7 +2185,11 @@
     "label": "上六",
     "text": "往蹇來碩，吉；利見大人。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山上有水",
+   "en": "Water running down a mountainside — every way forward is steep and wet at once."
+  }
  },
  {
   "n": 40,
@@ -2020,6 +2215,7 @@
    "cn": "震",
    "en": "Thunder"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/解",
   "yao": [
    {
     "label": "初六",
@@ -2045,7 +2241,11 @@
     "label": "上六",
     "text": "公用射隼，于高墉之上，獲之，无不利。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "雷雨作",
+   "en": "Thunder and rain finally breaking — the pressure that had built is being let go."
+  }
  },
  {
   "n": 41,
@@ -2071,6 +2271,7 @@
    "cn": "艮",
    "en": "Mountain"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/損",
   "yao": [
    {
     "label": "初九",
@@ -2096,7 +2297,11 @@
     "label": "上九",
     "text": "弗損益之，无咎，貞吉，利有攸往，得臣无家。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山下有澤",
+   "en": "A lake cut into the foot of a mountain — the hollow is what was taken away, and it is what holds the water."
+  }
  },
  {
   "n": 42,
@@ -2122,6 +2327,7 @@
    "cn": "巽",
    "en": "Wind"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/益",
   "yao": [
    {
     "label": "初九",
@@ -2147,7 +2353,11 @@
     "label": "上九",
     "text": "莫益之，或擊之，立心勿恆，凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "風雷",
+   "en": "Wind and thunder amplifying each other — a window where effort returns more than it costs."
+  }
  },
  {
   "n": 43,
@@ -2173,6 +2383,7 @@
    "cn": "兌",
    "en": "Lake"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/夬",
   "yao": [
    {
     "label": "初九",
@@ -2198,7 +2409,11 @@
     "label": "上六",
     "text": "无號，終有凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "澤上于天",
+   "en": "Water piled up as high as the sky — it cannot be held any longer; the thing has to break."
+  }
  },
  {
   "n": 44,
@@ -2224,6 +2439,7 @@
    "cn": "乾",
    "en": "Heaven"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/姤",
   "yao": [
    {
     "label": "初六",
@@ -2249,7 +2465,11 @@
     "label": "上九",
     "text": "姤其角，吝，无咎。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "天下有風",
+   "en": "Wind under an open sky — it reaches everywhere, and it arrived without being invited."
+  }
  },
  {
   "n": 45,
@@ -2275,6 +2495,7 @@
    "cn": "兌",
    "en": "Lake"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/萃",
   "yao": [
    {
     "label": "初六",
@@ -2300,7 +2521,11 @@
     "label": "上六",
     "text": "齎咨涕洟，无咎。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "澤上于地",
+   "en": "Water gathered on flat ground — things collect wherever there is somewhere to collect."
+  }
  },
  {
   "n": 46,
@@ -2326,6 +2551,7 @@
    "cn": "坤",
    "en": "Earth"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/升",
   "yao": [
    {
     "label": "初六",
@@ -2351,7 +2577,11 @@
     "label": "上六",
     "text": "冥升，利于不息之貞。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "地中生木",
+   "en": "A tree pushing up through soil — growth you never catch happening, only having happened."
+  }
  },
  {
   "n": 47,
@@ -2377,6 +2607,7 @@
    "cn": "兌",
    "en": "Lake"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/困",
   "yao": [
    {
     "label": "初六",
@@ -2402,7 +2633,11 @@
     "label": "上六",
     "text": "困于葛藟，于臲卼，曰動悔。有悔，征吉。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "澤无水",
+   "en": "A lake bed with the water gone — the whole shape of provision, and nothing in it."
+  }
  },
  {
   "n": 48,
@@ -2428,6 +2663,7 @@
    "cn": "坎",
    "en": "Water"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/井",
   "yao": [
    {
     "label": "初六",
@@ -2453,7 +2689,11 @@
     "label": "上六",
     "text": "井收勿幕，有孚元吉。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "木上有水",
+   "en": "Water drawn up through wood — the well itself never moves; only the drawing does."
+  }
  },
  {
   "n": 49,
@@ -2479,6 +2719,7 @@
    "cn": "兌",
    "en": "Lake"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/革",
   "yao": [
    {
     "label": "初九",
@@ -2504,7 +2745,11 @@
     "label": "上六",
     "text": "君子豹變，小人革面，征凶，居貞吉。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "澤中有火",
+   "en": "Fire burning inside water — two things that cannot both remain; one of them gives."
+  }
  },
  {
   "n": 50,
@@ -2530,6 +2775,7 @@
    "cn": "離",
    "en": "Fire"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/鼎",
   "yao": [
    {
     "label": "初六",
@@ -2555,7 +2801,11 @@
     "label": "上九",
     "text": "鼎玉鉉，大吉，无不利。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "木上有火",
+   "en": "Fire under wood, under a vessel — raw material becoming something else by being held and cooked."
+  }
  },
  {
   "n": 51,
@@ -2581,6 +2831,7 @@
    "cn": "震",
    "en": "Thunder"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/震",
   "yao": [
    {
     "label": "初九",
@@ -2606,7 +2857,11 @@
     "label": "上六",
     "text": "震索索，視矍矍，征凶。震不于其躬，于其鄰，无咎。婚媾有言。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "洊雷",
+   "en": "Thunder, and then thunder again — the shock, and the second shock that tells you what you are made of."
+  }
  },
  {
   "n": 52,
@@ -2632,6 +2887,7 @@
    "cn": "艮",
    "en": "Mountain"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/艮",
   "yao": [
    {
     "label": "初六",
@@ -2657,7 +2913,11 @@
     "label": "上九",
     "text": "敦艮，吉。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "兼山",
+   "en": "Mountain against mountain — stillness that is not waiting for anything."
+  }
  },
  {
   "n": 53,
@@ -2683,6 +2943,7 @@
    "cn": "巽",
    "en": "Wind"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/漸",
   "yao": [
    {
     "label": "初六",
@@ -2708,7 +2969,11 @@
     "label": "上九",
     "text": "鴻漸于陸，其羽可用為儀，吉。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山上有木",
+   "en": "A tree growing on a mountainside — years of it, and not one stage skipped."
+  }
  },
  {
   "n": 54,
@@ -2734,6 +2999,7 @@
    "cn": "震",
    "en": "Thunder"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/歸妹",
   "yao": [
    {
     "label": "初九",
@@ -2759,7 +3025,11 @@
     "label": "上六",
     "text": "女承筐无實，士刲羊无血，无攸利。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "澤上有雷",
+   "en": "Thunder above a lake — the water moves because the thunder does; you are entering on terms set elsewhere."
+  }
  },
  {
   "n": 55,
@@ -2785,6 +3055,7 @@
    "cn": "震",
    "en": "Thunder"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/豐",
   "yao": [
    {
     "label": "初九",
@@ -2810,7 +3081,11 @@
     "label": "上六",
     "text": "豐其屋，蔀其家，窺其戶，闃其无人，三歲不觌，凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "雷電皆至",
+   "en": "Thunder and lightning arriving together — the fullest the sky gets, and the sun is already past noon."
+  }
  },
  {
   "n": 56,
@@ -2836,6 +3111,7 @@
    "cn": "離",
    "en": "Fire"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/旅",
   "yao": [
    {
     "label": "初六",
@@ -2861,7 +3137,11 @@
     "label": "上九",
     "text": "鳥焚其巢，旅人先笑后號咷。喪牛于易，凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山上有火",
+   "en": "A fire on a mountainside — it burns where it lands and then moves on; nothing here belongs to it."
+  }
  },
  {
   "n": 57,
@@ -2887,6 +3167,7 @@
    "cn": "巽",
    "en": "Wind"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/巽",
   "yao": [
    {
     "label": "初六",
@@ -2912,7 +3193,11 @@
     "label": "上九",
     "text": "巽在牀下，喪其資斧，貞凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "隨風",
+   "en": "Wind after wind — no single gust does anything; the repetition does."
+  }
  },
  {
   "n": 58,
@@ -2938,6 +3223,7 @@
    "cn": "兌",
    "en": "Lake"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/兌",
   "yao": [
    {
     "label": "初九",
@@ -2963,7 +3249,11 @@
     "label": "上六",
     "text": "引兌。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "麗澤",
+   "en": "Two lakes touching, each feeding the other — exchange that keeps both of them full."
+  }
  },
  {
   "n": 59,
@@ -2989,6 +3279,7 @@
    "cn": "巽",
    "en": "Wind"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/渙",
   "yao": [
    {
     "label": "初六",
@@ -3014,7 +3305,11 @@
     "label": "上九",
     "text": "渙其血，去逖出，无咎。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "風行水上",
+   "en": "Wind across the surface of water — what had set solid breaks up and disperses."
+  }
  },
  {
   "n": 60,
@@ -3040,6 +3335,7 @@
    "cn": "坎",
    "en": "Water"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/節",
   "yao": [
    {
     "label": "初九",
@@ -3065,7 +3361,11 @@
     "label": "上六",
     "text": "苦節，貞凶，悔亡。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "澤上有水",
+   "en": "Water above a lake with a rim — a container is only useful because it stops somewhere."
+  }
  },
  {
   "n": 61,
@@ -3091,6 +3391,7 @@
    "cn": "巽",
    "en": "Wind"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/中孚",
   "yao": [
    {
     "label": "初九",
@@ -3116,7 +3417,11 @@
     "label": "上九",
     "text": "翰音登于天，貞凶。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "澤上有風",
+   "en": "Wind moving over water — the surface answers something that never touches it."
+  }
  },
  {
   "n": 62,
@@ -3142,6 +3447,7 @@
    "cn": "震",
    "en": "Thunder"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/小過",
   "yao": [
    {
     "label": "初六",
@@ -3167,7 +3473,11 @@
     "label": "上六",
     "text": "弗遇過之，飛鳥離之，凶，是謂災眚。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "山上有雷",
+   "en": "Thunder heard on a mountain top — loud, and small against what it is standing on."
+  }
  },
  {
   "n": 63,
@@ -3193,6 +3503,7 @@
    "cn": "坎",
    "en": "Water"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/既濟",
   "yao": [
    {
     "label": "初九",
@@ -3218,7 +3529,11 @@
     "label": "上六",
     "text": "濡其首，厲。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "水在火上",
+   "en": "Water set over fire — everything in its right place, which is exactly when it starts to boil over."
+  }
  },
  {
   "n": 64,
@@ -3244,6 +3559,7 @@
    "cn": "離",
    "en": "Fire"
   },
+  "src": "https://zh.wikisource.org/wiki/周易/未濟",
   "yao": [
    {
     "label": "初六",
@@ -3269,6 +3585,10 @@
     "label": "上九",
     "text": "有孚于飲酒，无咎，濡其首，有孚失是。"
    }
-  ]
+  ],
+  "image": {
+   "cn": "火在水上",
+   "en": "Fire above water — the two have not met yet; the work is almost, and not, done."
+  }
  }
 ]
