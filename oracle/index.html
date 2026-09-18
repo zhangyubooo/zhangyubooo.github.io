@@ -6,9 +6,21 @@
   <title>World Oracle — an I Ching cast from live planetary data, by Yubo Zhang</title>
   <meta name="description" content="World Oracle by Yubo Zhang: ask a question and an I Ching hexagram is cast — not from a random number, but from the state of the planet right now. Live seismic, solar and atmospheric readings.">
   <link rel="canonical" href="https://zhangyubooo.github.io/oracle/">
+  <!-- Three faces, each doing one job. EB Garamond is the English book face;
+       Noto Serif SC sets the hexagram's name; LXGW WenKai (a kai / running-hand
+       face) sets the classical Chinese, because the judgment and the line
+       statements are brush-written texts and a printed Ming face makes them
+       look like signage. Inter stays, but only for the instrument readings —
+       see the note at the top of oracle.css.
+
+       All four are served with unicode-range subsets, so a browser downloads
+       only the slices of the Chinese faces that this page's characters fall
+       into, not the whole 20MB font. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css" rel="stylesheet">
   <link rel="stylesheet" href="oracle.css">
 </head>
 
@@ -109,7 +121,7 @@
            it is the only part of the old apparatus block that carried meaning
            rather than just identifying the hexagram. -->
       <h2 class="reading__name">
-        <span class="reading__cn" id="pCn"></span>
+        <span class="reading__cn" id="pCn" lang="zh-Hant"></span>
         <span class="reading__en" id="pEn"></span>
       </h2>
 
@@ -125,7 +137,7 @@
       <div class="apparatus">
         <p class="apparatus__image" id="pImage"></p>
         <p class="apparatus__trigrams" id="pTrigrams"></p>
-        <p class="apparatus__judgment" id="pJudgment"></p>
+        <p class="apparatus__judgment" id="pJudgment" lang="zh-Hant"></p>
         <p class="apparatus__source">
           <a id="pSource" target="_blank" rel="noopener"></a>
         </p>
@@ -153,7 +165,7 @@
     <div class="reading reading--relating" id="relating" hidden>
       <p class="relating__lede">and it is already turning into</p>
       <h2 class="reading__name">
-        <span class="reading__cn" id="rCn"></span>
+        <span class="reading__cn" id="rCn" lang="zh-Hant"></span>
         <span class="reading__en" id="rEn"></span>
       </h2>
       <p class="reading__answer" id="rReading"></p>
@@ -162,7 +174,7 @@
            say what the situation is turning into; a full second CV for it would
            just be the same apparatus twice, and the second time reads as noise. -->
       <div class="apparatus">
-        <p class="apparatus__judgment" id="rJudgment"></p>
+        <p class="apparatus__judgment" id="rJudgment" lang="zh-Hant"></p>
         <p class="apparatus__source">
           <a id="rSource" target="_blank" rel="noopener"></a>
         </p>

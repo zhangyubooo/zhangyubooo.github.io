@@ -1,10 +1,34 @@
 /* ============================================================
    World Oracle — oracle.css
 
-   Deliberately the same language as the main site's style.css: Inter, black,
-   white, grey, nothing else. No accent colour at all here — the hexagram is
-   six black bars on white, and that is the entire visual system. A project is
-   part of the portfolio, not a world of its own.
+   TWO REGISTERS, and every type and colour decision below follows from them.
+
+   1. The book. Everything addressed to the visitor — the question, the
+      hexagram's name, the answer, the classical texts — is set in book faces:
+      EB Garamond for English, Noto Serif SC for the hexagram's name, LXGW
+      WenKai for the classical Chinese. The two Chinese faces are not
+      interchangeable: Noto Serif SC is a cut Ming face and gives the name the
+      weight of a title, while LXGW WenKai is a kai face with the movement of
+      a brush still in it, which is what the judgment and the line statements
+      actually are.
+
+   2. The instruments. The live readings, the provenance trace, the seed, the
+      section labels — anything the machine says about itself — stays in Inter.
+      That is not an oversight. The whole claim of this page is that the
+      hexagram came from real measurements, so the measurements should not be
+      dressed up as scripture. The seam between the two faces is the seam
+      between the data and the text.
+
+   ONE COLOUR: 朱砂 (--c-cinnabar), and it means exactly one thing — THIS IS
+   MOVING. It marks the changing lines and nothing else: the rings beside them
+   on the figure, their names in the line-statement list, and the sentence that
+   hands the reading over to the second hexagram. That is the historical use
+   too — black is the printed text, red is the reader's mark on top of it.
+
+   The discipline that makes this work is what red is NOT used for. Not errors
+   (.ask__error marks itself with a rule for exactly this reason — if red means
+   'changing' it cannot also mean 'wrong'), not links, not buttons, not the
+   answer, not the hexagram's name. One colour, one meaning, three places.
 
    The whole page is a centred composition — one column down the middle of the
    screen, every element symmetric about it, at every width. A hexagram is a
@@ -14,7 +38,7 @@
    is kept to a short measure and given `text-wrap: balance`, which evens the
    line lengths out instead of leaving one orphan word on the last line.
 
-   Structure: ① Tokens ② Reset & base ③ Back link ④ Ask ⑤ World readings
+   Structure: ⓪ Faces ① Tokens ② Reset & base ③ Back link ④ Ask ⑤ World readings
               ⑥ Hexagram ⑦ Reading ⑧ Provenance ⑨ Responsive ⑩ Motion
 
    AI disclosure: Claude wrote this file and then walked me through it section
@@ -36,13 +60,44 @@
   --c-line:  #e5e5e5;
   --c-fill:  #f2f2f2;
 
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  /* 朱砂 — cinnabar, the mineral classical Chinese seal paste and marking ink
+     were ground from. Warm and earthy rather than the cooler crimson of a
+     modern seal; 6.6:1 on white, so it passes WCAG AA at every size used here,
+     including the 13px line labels. Two alternates if the mineral reading is
+     too muted: #c3272b is brighter seal-ink red (5.8:1), #8f2b22 is dried and
+     nearly brown (8.3:1). Change it here and it changes in all three places. */
+  --c-cinnabar: #a8342a;
 
-  --t-xs:      0.8125rem;   /* 13px  labels, apparatus, provenance */
-  --t-sm:      0.9375rem;   /* 15px  secondary text */
-  --t-base:    1.0625rem;   /* 17px  body */
-  --t-answer:  1.375rem;    /* 22px  THE ANSWER — the one line addressed to you */
-  --t-display: clamp(1.75rem, 2.6vw, 2.5rem);
+  /* Instruments. CJK faces are appended so that the few Chinese characters
+     that appear inside otherwise-machine text (the Wikisource reference, for
+     one) still land on a real face instead of a system default. */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial,
+               "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
+
+  /* The book, English. Garamond has no CJK glyphs, so a mixed string splits
+     itself across this stack automatically: Latin from Garamond, Chinese from
+     WenKai. No markup needed to make that happen. */
+  --font-serif: "EB Garamond", "LXGW WenKai", "Iowan Old Style", Georgia,
+                "Songti SC", "Times New Roman", serif;
+
+  /* The hexagram's name. A Ming face — vertical stems, triangular serifs,
+     printed rather than written. */
+  --font-cn-title: "Noto Serif SC", "Songti SC", "STSong", SimSun, serif;
+
+  /* The classical texts. A kai face — the brush stroke is still legible in it,
+     which is the right voice for a 3000-year-old divination manual. */
+  --font-cn-body: "LXGW WenKai", "Kaiti SC", KaiTi, STKaiti, "Noto Serif SC", serif;
+
+  /* Every size below is one notch larger than it was under Inter. That is not
+     a change of taste: Garamond's x-height is about 0.44 of its em where
+     Inter's is about 0.53, so the same nominal size renders visibly smaller.
+     The --t-xs labels are the exception — those are still Inter, and 13px is
+     right for them. */
+  --t-xs:      0.8125rem;   /* 13px  labels, apparatus, provenance (Inter) */
+  --t-sm:      1rem;        /* 16px  secondary text */
+  --t-base:    1.125rem;    /* 18px  body */
+  --t-answer:  1.5rem;      /* 24px  THE ANSWER — the one line addressed to you */
+  --t-display: clamp(2rem, 3vw, 2.875rem);
 
   --s-1: 0.25rem;
   --s-2: 0.5rem;
@@ -75,7 +130,7 @@ ul { list-style: none; }
 body {
   background: var(--c-bg);
   color: var(--c-text);
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-size: var(--t-base);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -104,8 +159,10 @@ code {
   font-size: 0.9em;
 }
 
-/* The small grey caps that label each stage of the ritual. */
+/* The small grey caps that label each stage of the ritual. Inter: a label is
+   apparatus, not text — it names the section, it is not part of the reading. */
 .section-label {
+  font-family: var(--font-sans);
   font-size: var(--t-xs);
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -117,6 +174,7 @@ code {
 
 /* ③ BACK LINK ------------------------------------------------*/
 .back {
+  font-family: var(--font-sans);
   position: fixed;
   top: var(--gutter);
   left: var(--gutter);
@@ -164,8 +222,11 @@ code {
 
 .ask__title {
   font-size: var(--t-display);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 500;
+  /* The negative tracking was there to tighten Inter, which is drawn loose for
+     screens. Garamond is drawn for a page and is already tight; pulling it in
+     further collides the serifs. A hair of positive tracking instead. */
+  letter-spacing: 0.01em;
   line-height: 1.15;
   margin-bottom: var(--s-3);
 }
@@ -187,7 +248,10 @@ code {
   max-width: 24rem;
   margin: 0 auto;
   border-bottom: 1px solid var(--c-text);
-  padding-bottom: var(--s-2);
+  /* Tight. The rule belongs to the question, so it sits just under the typed
+     text — far enough to clear a descender, close enough that the two read as
+     one object. The space above the text is the generous side. */
+  padding-bottom: var(--s-1);
 }
 
 .ask__input {
@@ -197,7 +261,7 @@ code {
   background: transparent;
   font: inherit;
   color: inherit;
-  padding: var(--s-2) 0;
+  padding: var(--s-2) 0 0;   /* room above, none below — see .ask__form */
   text-align: center;        /* the typed question grows out from the axis */
 }
 .ask__input::placeholder { color: var(--c-muted); }
@@ -211,7 +275,10 @@ code {
   font-weight: 500;
   color: var(--c-text);
   cursor: pointer;
-  padding: var(--s-2) 0;
+  /* Must match .ask__input exactly: with align-items: stretch the taller of
+     the two sets the form's height, so padding left on the button alone would
+     hold the rule down and undo the tightening above. */
+  padding: var(--s-2) 0 0;
 }
 .ask__submit:hover { color: var(--c-muted); }
 .ask__submit[disabled] { color: var(--c-line); cursor: default; }
@@ -291,6 +358,7 @@ code {
 }
 
 .world__item {
+  font-family: var(--font-sans);
   font-size: var(--t-xs);
   line-height: 1.65;
 }
@@ -376,6 +444,12 @@ code {
    Marked with hollow rings in the margin, so the six bars stay a clean stack
    and the annotation stays outside them.
 
+   Cinnabar, and note what stays black: the BAR does not change colour. A
+   changing line is still a real line of the hexagram you have right now — what
+   is red is the mark on it, not the line itself. That is the same division as
+   a red-marked classical text, where the printing is black and only the
+   reader's annotation is red.
+
    There are two rings, one each side, and that is not decoration: a single
    ring on the right is a weight hanging off one end, and on a centre axis the
    eye reads the whole figure as sitting left of true even when it measures
@@ -389,7 +463,10 @@ code {
   width: 0.5rem;
   height: 0.5rem;
   margin-top: -0.25rem;
-  border: 1px solid var(--c-text);
+  /* 1.5px, not the 1px it was in black. Cinnabar is 6.6:1 on white where black
+     is 18:1, so the same hairline reads as a fainter mark — the extra half
+     pixel buys back the presence the colour spent. */
+  border: 1.5px solid var(--c-cinnabar);
   border-radius: 50%;
 }
 .yao--changing::before { right: calc(100% + var(--s-3)); }
@@ -421,10 +498,13 @@ code {
   margin-bottom: var(--s-4);
 }
 
-/* The Chinese name is the one place the page lets type get large. It is the
-   only character set on the page that is not Inter, and that difference is
-   the whole typographic event. */
+/* The Chinese name is the one place the page lets type get large. Noto Serif
+   SC rather than the kai face used for the texts below it: this is the
+   hexagram's title, and a title is printed, not brushed. Set side by side the
+   difference is the point — the name is carved, the judgment under it is
+   written by hand. */
 .reading__cn {
+  font-family: var(--font-cn-title);
   font-size: var(--t-display);
   font-weight: 500;
   line-height: 1.1;
@@ -433,6 +513,9 @@ code {
 .reading__en {
   font-size: var(--t-answer);
   font-weight: 400;
+  font-style: italic;   /* Garamond's italic is a different hand, not a slant —
+                           it separates the translation from the name without
+                           needing a second size or colour. */
   color: var(--c-muted);
 }
 
@@ -472,22 +555,35 @@ code {
    trigram pair it came from. Kept because the sentence above is a reading and
    a reader is entitled to see what it is a reading OF. */
 .apparatus__trigrams {
+  /* Mostly Chinese with an English tail, so the kai face leads and Garamond
+     picks up the Latin. Bumped off --t-xs: 13px was fine for Inter labels but
+     is genuinely hard on multi-stroke characters like 觀 and 噬. */
+  font-family: var(--font-cn-body);
   margin-top: var(--s-2);
-  font-size: var(--t-xs);
+  font-size: var(--t-sm);
   color: var(--c-muted);
 }
 
 /* The classical judgment, set at the reading size rather than the label size —
-   it is three thousand year old text, not metadata. */
+   it is three thousand year old text, not metadata. Kai face, and a size up
+   again: this is the single oldest thing on the page and the one line a
+   visitor who reads Chinese will go to first. */
 .apparatus__judgment {
-  font-size: var(--t-sm);
-  margin-top: var(--s-2);
+  font-family: var(--font-cn-body);
+  font-size: var(--t-base);
+  line-height: 1.9;
+  color: var(--c-text);
+  margin-top: var(--s-3);
 }
 
 /* The identifier, demoted to last and made into the page's one outbound link.
    A hexagram number and a romanisation exist to look something up with, so
    here they actually do. */
 .apparatus__source {
+  /* Instrument register: a hexagram number and a chapter reference are
+     catalogue data, so they stay in Inter even though they sit inside a block
+     of book type. */
+  font-family: var(--font-sans);
   margin-top: var(--s-3);
   font-variant-numeric: tabular-nums;
 }
@@ -512,6 +608,7 @@ code {
 }
 
 .lines__label {
+  font-family: var(--font-sans);
   font-size: var(--t-xs);
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -537,30 +634,51 @@ code {
    gutter note beside it. */
 .lines__item { display: block; }
 
-/* 初九, 六二 — the position's name. Grey, because it is the address, not the
-   message. */
+/* 初九, 六二 — the position's name, and the SECOND place cinnabar appears. It
+   was grey, on the reasoning that it is an address rather than a message. That
+   was right about its importance and wrong about its job: these labels name
+   exactly the lines the red rings are drawn beside, and in grey nothing tells
+   you so. Red makes the figure and this list one statement instead of two —
+   you can see which ring became which paragraph without being told.
+
+   This is also why the labels can stay small. They do not need size to be
+   found; they are the only coloured thing in a column of black text. */
 .lines__pos {
   display: block;
-  font-size: var(--t-xs);
-  color: var(--c-muted);
+  font-family: var(--font-cn-body);
+  font-size: var(--t-sm);
+  color: var(--c-cinnabar);
+  letter-spacing: 0.1em;
   margin-bottom: var(--s-1);
 }
 
 /* Full black and at reading size: this is the text the cast selected, not
    metadata about it. Generous line-height because dense classical Chinese at
-   a small leading is punishing to read. */
+   a small leading is punishing to read — and the kai face needs it more than a
+   Ming face would, since its strokes carry into the space around them. */
 .lines__text {
-  font-size: var(--t-sm);
-  line-height: 1.8;
+  font-family: var(--font-cn-body);
+  font-size: var(--t-base);
+  line-height: 1.95;
   color: var(--c-text);
 }
 
 .reading--relating { margin-bottom: var(--s-5); }
 
 /* Lower case and conversational on purpose: this is a sentence continuing from
-   the reading above it, not a new section heading. */
+   the reading above it, not a new section heading.
+
+   The THIRD and last place cinnabar appears, and the one that closes the
+   circuit. Red on the figure says these lines move; red on the labels says
+   which ones; red here is the movement arriving somewhere. Follow the colour
+   down the page and you have followed the argument. Italic rather than bold
+   because it is a spoken aside, and a bold red line here would outweigh the
+   answer above it. */
 .relating__lede {
-  color: var(--c-muted);
+  font-style: italic;
+  font-size: var(--t-answer);
+  line-height: 1.4;
+  color: var(--c-cinnabar);
   margin-bottom: var(--s-3);
 }
 
@@ -588,10 +706,16 @@ code {
 
 
 /* ⑧ PROVENANCE ----------------------------------------------*/
+/* The whole provenance block is the machine's own account of itself, so it is
+   Inter end to end — including the prose. Someone scrolling past should be
+   able to tell at a glance that they have left the reading and entered the
+   log. */
 .trace {
+  font-family: var(--font-sans);
   border-top: 1px solid var(--c-line);
   padding-top: var(--s-4);
-  font-size: var(--t-sm);
+  font-size: var(--t-xs);
+  line-height: 1.7;
 }
 
 .trace__summary {
