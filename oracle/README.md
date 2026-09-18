@@ -86,6 +86,65 @@ excluded from the seed, and the cast proceeds on the sources that answered.
 
 ---
 
+## The line statements, and which one answers you
+
+A hexagram is not one statement. It is a judgment plus **six line statements**
+(爻辭) — 384 in all — and which of them you read depends on how many lines are
+changing. Those are the rings drawn beside the figure.
+
+This matters more than it sounds. 乾, the most favourable hexagram in the book,
+contains 上九 亢龍有悔 — *the arrogant dragon will regret it*. 否, the hexagram of
+deadlock, contains 上九 傾否，先否後喜 — *the deadlock overturns; first blockage,
+then joy*. **A line can say the opposite of the hexagram holding it.** Showing
+only the judgment throws away five sixths of the book.
+
+The selection rule is Zhu Xi's, standard since the twelfth century:
+
+| Changing lines | What is read |
+|---|---|
+| 0 | the hexagram's own judgment, alone |
+| 1 | that line |
+| 2 | both, the upper one first |
+| 3 | the judgments of both hexagrams, this one governing |
+| 4 or 5 | the lines that did **not** move, read in the hexagram this is becoming |
+| 6 | 用九 / 用六 for 乾 and 坤; for every other hexagram, the judgment of its opposite |
+
+This is a deterministic algorithm that comes out of the source material rather
+than out of a design decision, which is why it is implemented properly instead
+of always showing the judgment. It was tested by running **all 4096
+combinations** — 64 hexagrams × 64 changing-line patterns. Every branch is
+reached, in exactly the binomial proportions (64 / 384 / 960 / 1280 / 960 /
+384 / 64), no selection returns a null or an empty text, and the 64 all-changing
+casts split 62 / 2 between the general rule and 乾坤's seventh statement.
+
+### Where the 384 texts came from, and how they check themselves
+
+They were **fetched from [Chinese Wikisource](https://zh.wikisource.org/wiki/周易)**,
+not typed from memory — 384 lines of classical Chinese is exactly the kind of
+thing that comes out looking plausible and being wrong.
+
+They also carry an independent check. Every line is labelled 初九 / 六二 / 上九
+and so on, where **九 means yang and 六 means yin** — so the classical text
+encodes the same six bits that `build_hexagrams.py` derives from the trigram
+table. All 384 labels are compared against the derived binary on every build,
+and the generator refuses to write its output if a single one disagrees. Two
+independent sources agreeing on 384 values is a much stronger guarantee than
+either one alone.
+
+Finding them also turned up two things worth recording: 否 separates its labels
+with `，` where every other chapter uses `：`, and hexagram 32 lives at
+`周易/恒` rather than `周易/恆`. Both were caught by the validator rather than by
+reading, which is the entire argument for having one.
+
+**Staging note.** The line texts currently sit *below* the rule, with the
+apparatus, because they exist here only as classical Chinese and putting text
+most visitors cannot read in the position reserved for the answer would be
+dishonest typography. An English sentence naming the rule appears with them, so
+a reader who cannot read the characters can still see that the selection was
+not arbitrary. When the modern renderings are written, they move above the rule.
+
+---
+
 ## Architectural decision: the hexagram texts are local, not an API
 
 Free I Ching APIs exist but are individual side projects or paid services,
@@ -132,6 +191,9 @@ To regenerate the data file:
 python3 tools/build_hexagrams.py     # standard library only, no pip install
 ```
 
+It will refuse to write anything if a hexagram's derived binary and the
+classical text's own line labels disagree.
+
 ---
 
 ## Things that were tested by trying to break it
@@ -147,6 +209,7 @@ python3 tools/build_hexagrams.py     # standard library only, no pip install
 | Button pressed repeatedly mid-cast | Ignored — the button disables for the duration of a cast. |
 | A quiet hour with zero earthquakes | Not an error: a count of zero is itself a reading of the world. |
 | 390 / 768 / 1280px wide | No horizontal overflow at any of them, and the fixed back-link never lands on top of the reading (it rejoins the normal flow below 48rem). |
+| Every changing-line combination | All 4096 (64 hexagrams × 64 patterns) run through the selection rule: every branch reached, no null or empty text returned. |
 | `prefers-reduced-motion` | The staggered build is skipped and the scrolling switches from smooth to instant; the finished figure appears at once. |
 
 ### How the page manages attention
@@ -187,10 +250,11 @@ work.
 oracle/
 ├── index.html              the page
 ├── oracle.css              all styling; tokens copied from the site's style.css
-├── oracle.js               entropy sources, casting engine, the ritual
-├── hexagrams.json          64 hexagrams — generated, do not edit by hand
+├── oracle.js               entropy sources, casting engine, line rule, ritual
+├── hexagrams.json          64 hexagrams + 384 line texts — generated, do not edit by hand
 ├── tools/
-│   └── build_hexagrams.py  generates and validates hexagrams.json
+│   ├── build_hexagrams.py  generates and validates hexagrams.json
+│   └── yao_source.json     the 384 line texts, as fetched from Chinese Wikisource
 ├── prompt_log.md           the AI prompts that shaped this
 └── README.md               this file
 ```

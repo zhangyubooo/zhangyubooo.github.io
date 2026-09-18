@@ -136,3 +136,36 @@ you design anything on top of it.
 
 *Entries below this line are mine, added as I revised the code and rewrote
 the sixty-four readings.*
+
+---
+
+### 8. The line statements — and refusing to type them from memory
+
+> *"有没有免费的 llm api 可以对用户问的问题以及起卦出来的东西做一个连接，给一个更直观的答案"*
+
+The answer I got was no — not because free ones don't exist (Pollinations runs
+without a key), but because adding one would have contradicted the thing this
+project is actually arguing:
+
+- the README says the interface cannot interpret, so juxtaposition *is* the
+  design work — an LLM makes that sentence false
+- same seed → same hexagram is guaranteed and printed; LLM output is not
+  reproducible, so the provenance panel would break at the last step
+- the I Ching's mechanism is that **you** do the interpreting
+
+And the real answer: the specificity I wanted was already in the source
+material and I hadn't used it. 384 line statements, and a rule from the twelfth
+century for which one applies.
+
+Then the part I care about most:
+
+> *"我不会凭记忆打 384 条古文。"*
+
+384 lines of classical Chinese is exactly what comes out looking plausible and
+being wrong. They were fetched from Chinese Wikisource instead, and checked
+against the trigram-derived binary through the 九 / 六 in their own position
+names — two independent sources agreeing on 384 values.
+
+The validator immediately earned itself: 否 uses `，` where every other chapter
+uses `：`, and hexagram 32 is filed under 恒 rather than 恆. Neither would have
+been noticed by reading.

@@ -7,9 +7,17 @@ which two trigrams sit on the bottom and top. Typing 64 x 6 binary digits by han
 is how you get one silently wrong hexagram that nobody notices for months.
 Here the binary is DERIVED, and then checked (64 unique patterns, all 64 possible
 6-bit values present exactly once).
+
+The 384 line texts (爻辭) in yao_source.json were fetched from Chinese Wikisource
+(zh.wikisource.org/wiki/周易), not typed from memory. They carry their own check:
+each line is labelled 初九 / 六二 / 上九 and so on, where 九 means yang and 六 means
+yin — so the classical text independently encodes the same six bits this file
+derives from the trigrams. Every one of the 384 labels is compared against the
+derived binary below. Two independent sources agreeing is the whole point.
 """
 import json
 import os
+import sys
 
 # Written next to the page that consumes it, one level up from tools/.
 OUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "hexagrams.json")
@@ -183,6 +191,64 @@ def build():
     return out
 
 
+YAO_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "yao_source.json")
+
+POSITIONS = ["初", "二", "三", "四", "五", "上"]
+
+
+def expected_label(index, is_yang):
+    """初九 / 六二 / … / 上六 — the name the classical text gives this position."""
+    num = "九" if is_yang else "六"
+    if index == 0:
+        return "初" + num
+    if index == 5:
+        return "上" + num
+    return num + POSITIONS[index]
+
+
+def attach_yao(data):
+    """Merge the classical line texts in, checking every label as we go."""
+    with open(YAO_PATH, encoding="utf-8") as f:
+        source = json.load(f)
+
+    problems = []
+    for h in data:
+        entry = source.get(str(h["n"]))
+        if entry is None:
+            problems.append(f"hexagram {h['n']} {h['cn']}: no line texts in yao_source.json")
+            continue
+        lines = entry["lines"]
+        if len(lines) != 6:
+            problems.append(f"{h['cn']}: {len(lines)} line texts, expected 6")
+            continue
+
+        for i, line in enumerate(lines):
+            want = expected_label(i, h["lines"][i] == 1)
+            if line["label"] != want:
+                problems.append(
+                    f"{h['cn']} line {i+1}: source says {line['label']}, trigrams say {want}")
+            if not line["text"].strip():
+                problems.append(f"{h['cn']} line {i+1}: empty text")
+
+        h["yao"] = lines
+        if "yong" in entry:
+            h["yong"] = entry["yong"]
+
+    # 用九 and 用六 belong to hexagrams 1 and 2 and to nothing else.
+    yong = sorted(x["n"] for x in data if "yong" in x)
+    if yong != [1, 2]:
+        problems.append(f"用九/用六 found on hexagrams {yong}, expected [1, 2]")
+
+    if problems:
+        for p in problems:
+            print("  FAIL:", p)
+        sys.exit("line-text validation failed — not writing output")
+
+    total = sum(len(h["yao"]) for h in data)
+    print(f"validated: {total} line texts, every label agrees with the derived binary")
+    return data
+
+
 def validate(data):
     """Fail loudly rather than shipping a silently wrong hexagram."""
     assert len(data) == 64, f"expected 64 hexagrams, got {len(data)}"
@@ -217,6 +283,7 @@ def validate(data):
 if __name__ == "__main__":
     data = build()
     validate(data)
+    attach_yao(data)
     with open(OUT_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
     print("wrote " + OUT_PATH)

@@ -115,6 +115,21 @@
         <p class="apparatus__meta" id="pTrigrams"></p>
         <p class="apparatus__judgment" id="pJudgment"></p>
       </div>
+
+      <!-- The line statements (爻辭). A hexagram is a judgment plus six line
+           texts, and which of them answers depends on how many lines are
+           moving — so this block is the changing-line rings on the figure
+           finally saying what they mean.
+
+           They sit below the rule for now because they are only available
+           here as classical Chinese, and putting text most visitors cannot
+           read in the position reserved for the answer would be dishonest
+           typography. When the modern renderings exist they move up. -->
+      <div class="lines" id="lines" hidden>
+        <p class="lines__label">The changing lines</p>
+        <p class="lines__rule" id="linesRule"></p>
+        <ul class="lines__list" id="linesList"></ul>
+      </div>
     </div>
 
     <!-- Only rendered when the cast produced changing lines. For a lot of
@@ -126,6 +141,7 @@
       <p class="reading__answer" id="rReading"></p>
       <div class="apparatus">
         <p class="apparatus__meta" id="rMeta"></p>
+        <p class="apparatus__judgment" id="rJudgment"></p>
       </div>
     </div>
 

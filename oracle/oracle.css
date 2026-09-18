@@ -405,6 +405,59 @@ code {
   margin-top: var(--s-2);
 }
 
+/* The line statements. Given their own block rather than folded into the
+   apparatus, because they are not reference about the hexagram — they are
+   what the cast actually selected, and the rings on the figure point at them.
+   Below the rule only until the modern renderings exist; then this moves up. */
+.lines {
+  margin-top: var(--s-5);
+  border-top: 1px solid var(--c-line);
+  padding-top: var(--s-3);
+}
+
+.lines__label {
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  margin-bottom: var(--s-2);
+}
+
+/* Which rule the cast fell under, in plain English. Someone who cannot read
+   the characters below can still see that the selection was not arbitrary. */
+.lines__rule {
+  font-size: var(--t-sm);
+  color: var(--c-muted);
+  max-width: 30rem;
+  margin-bottom: var(--s-3);
+}
+
+.lines__list { display: grid; gap: var(--s-2); }
+
+.lines__item {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: var(--s-3);
+  align-items: baseline;
+}
+
+/* 初九, 六二 — the position's name. Grey, because it is the address, not the
+   message. */
+.lines__pos {
+  font-size: var(--t-xs);
+  color: var(--c-muted);
+}
+
+/* Full black and at reading size: this is the text the cast selected, not
+   metadata about it. Generous line-height because dense classical Chinese at
+   a small leading is punishing to read. */
+.lines__text {
+  font-size: var(--t-sm);
+  line-height: 1.8;
+  color: var(--c-text);
+}
+
 .reading--relating { margin-bottom: var(--s-5); }
 
 /* Lower case and conversational on purpose: this is a sentence continuing from

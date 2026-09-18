@@ -326,6 +326,69 @@
 
   const primaryBits = (lines) => lines.map((l) => (l.yang ? 1 : 0));
 
+  /* Which text actually answers the question.
+     A hexagram is not one statement — it is a judgment plus six line
+     statements (爻辭), 384 in all, and which of them you read depends on how
+     many lines are changing. The rules below are Zhu Xi's, the standard set
+     since the twelfth century. They are the reason a cast of 離 with the
+     bottom line moving and a cast of 離 with the fourth line moving are not
+     the same reading at all.
+
+     This is a deterministic algorithm that comes out of the source material
+     rather than out of a design decision, which is exactly why it is worth
+     implementing properly instead of always showing the judgment. */
+  function selectTexts(lines, primary, relating) {
+    const moving = [];
+    lines.forEach((l, i) => { if (l.changing) moving.push(i); });
+    const n = moving.length;
+    const at = (hex, i) => (hex && hex.yao && hex.yao[i]) || null;
+
+    if (n === 0) {
+      return { rule: "No line is changing, so the hexagram's own judgment stands alone.", items: [] };
+    }
+    if (n === 1) {
+      return {
+        rule: "One changing line. That line is the reading.",
+        items: [at(primary, moving[0])]
+      };
+    }
+    if (n === 2) {
+      return {
+        rule: "Two changing lines. Read both, the upper one first.",
+        items: [at(primary, moving[1]), at(primary, moving[0])]
+      };
+    }
+    if (n === 3) {
+      return {
+        rule: "Three changing lines. Read the judgments of both hexagrams — this one governs, the one it becomes qualifies it.",
+        items: []
+      };
+    }
+    if (n === 4 || n === 5) {
+      // The lines that did NOT move, read in the hexagram this one is turning
+      // into. Lower first — in a cast this unsettled the still points are
+      // what you have to stand on.
+      const still = [0, 1, 2, 3, 4, 5].filter((i) => moving.indexOf(i) === -1);
+      return {
+        rule: n + " changing lines. Read the " + (still.length === 1 ? "line that did not move" : "lines that did not move") +
+              ", in the hexagram this is becoming.",
+        items: still.map((i) => at(relating, i))
+      };
+    }
+    // All six. Hexagrams 1 and 2 have a seventh statement kept for exactly
+    // this case; every other hexagram hands the reading to its opposite.
+    if (primary && primary.yong) {
+      return {
+        rule: "Every line is changing — the one case " + primary.cn + " has a seventh statement for.",
+        items: [primary.yong]
+      };
+    }
+    return {
+      rule: "Every line is changing. Nothing here is fixed; the reading is the judgment of the hexagram it becomes.",
+      items: []
+    };
+  }
+
   /* The relating hexagram: every changing line becomes its opposite. This is
      the part people forget the I Ching is actually about — it does not
      describe a state, it describes a state turning into another one. */
@@ -447,10 +510,12 @@
     renderPrimary(primary);
 
     const changing = lines.filter((l) => l.changing);
+    let relating = null;
     if (changing.length) {
-      const relating = lookup(relatingBits(lines));
+      relating = lookup(relatingBits(lines));
       if (relating) renderRelating(relating);
     }
+    renderLines(selectTexts(lines, primary, relating));
 
     els.result.hidden = false;
     renderTrace(results, lines, seed);
@@ -477,6 +542,7 @@
     els.cast.hidden = true;
     els.result.hidden = true;
     els.relating.hidden = true;
+    els.lines.hidden = true;
     els.trace.hidden = true;
     els.trace.open = false;
   }
@@ -568,7 +634,37 @@
     els.rReading.textContent = h.reading;
     els.rMeta.textContent =
       "Hexagram " + h.n + " " + h.glyph + " · " + h.pinyin + " · " + h.en;
+    els.rJudgment.textContent = h.judgment;
     els.relating.hidden = false;
+  }
+
+  /* The rule is always stated, even when it selects nothing to show — "no
+     line is changing" is itself a fact about this cast, and leaving the block
+     out entirely would make the six rings on the figure look decorative. */
+  function renderLines(selection) {
+    els.linesRule.textContent = selection.rule;
+    els.linesList.innerHTML = "";
+
+    selection.items.forEach(function (item) {
+      if (!item) return;
+      const li = document.createElement("li");
+      li.className = "lines__item";
+
+      const label = document.createElement("span");
+      label.className = "lines__pos";
+      label.textContent = item.label;
+
+      const text = document.createElement("span");
+      text.className = "lines__text";
+      text.lang = "zh-Hant";          // so a browser picks a Chinese face for it
+      text.textContent = item.text;
+
+      li.appendChild(label);
+      li.appendChild(text);
+      els.linesList.appendChild(li);
+    });
+
+    els.lines.hidden = false;
   }
 
   function renderTrace(results, lines, seed) {
@@ -617,7 +713,8 @@
       "asked", "askedText",
       "world", "worldList", "cast", "hexagram",
       "result", "primary", "pCn", "pReading", "pMeta", "pTrigrams", "pJudgment",
-      "relating", "rCn", "rReading", "rMeta",
+      "relating", "rCn", "rReading", "rMeta", "rJudgment",
+      "lines", "linesRule", "linesList",
       "reset", "trace", "traceList", "traceSeed"
     ].forEach((id) => { els[id] = $(id); });
 
