@@ -223,6 +223,7 @@ classical text's own line labels disagree.
 |---|---|
 | Empty question | Inline message, focus returns to the field. **No request is made at all** (verified by recording network traffic). |
 | Wi-Fi off | All three sources report "could not be reached" within 8s; **no hexagram is drawn**; the form comes back with the question still in it. |
+| Wi-Fi off, **second attempt** | Caught a real bug while filming. The solar source kept answering with the wifi off: sunrise and sunset for a fixed latitude are the same all day, so that API sends a long `max-age` and the browser was serving it from its own HTTP cache without touching the network — the page was casting from a reading of a world it could no longer see. All three live sources are now fetched with `cache: "no-store"`. `hexagrams.json` is not, because caching a local file of fixed classical text is a feature rather than a lie. |
 | One source down | That column says why it could not be reached and stays on screen saying it for the rest of the reading; it is excluded from the seed and the cast proceeds on the other two. |
 | A source returns 200 but with unexpected fields | Treated as a failure (`no usable fields in response`) rather than seeding the cast with an empty array. |
 | One source much slower than the others | Its row sits visibly in a `reading…` state while the others fill. There is no blank screen at any point. |

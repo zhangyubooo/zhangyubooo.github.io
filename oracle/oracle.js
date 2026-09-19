@@ -39,6 +39,9 @@
 
   /* ② UTILITIES ----------------------------------------------*/
 
+  /* Passed to every live source. Never to hexagrams.json. See fetchJSON. */
+  const NO_STORE = { cache: "no-store" };
+
   const $ = (id) => document.getElementById(id);
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -92,12 +95,26 @@
 
   /* fetch with a real timeout. Without AbortController a dropped connection
      can leave a request hanging for a minute and the page just sits there —
-     this is what makes "turn the wifi off" fail fast and legibly. */
-  async function fetchJSON(url) {
+     this is what makes "turn the wifi off" fail fast and legibly.
+
+     `opts` exists for exactly one reason: NO_STORE on the three live sources.
+     This was found by testing, not by reading. With the wifi off, the solar
+     source kept answering — sunrise and sunset for a fixed latitude are the
+     same all day, so that API sends a long max-age, and the browser was
+     serving the response out of its own HTTP cache without ever touching the
+     network. The page was then casting from a reading of a world it could no
+     longer see, which is precisely the substitution this project claims it
+     will not make. no-store bypasses the cache, so an unreachable source is
+     reported as unreachable.
+
+     hexagrams.json deliberately does NOT get this. It is a local file holding
+     the same three-thousand-year-old text every time, and caching it is a
+     feature rather than a lie. */
+  async function fetchJSON(url, opts) {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), CONFIG.netTimeout);
     try {
-      const res = await fetch(url, { signal: ctrl.signal });
+      const res = await fetch(url, Object.assign({ signal: ctrl.signal }, opts));
       if (!res.ok) throw new Error("HTTP " + res.status);
       return await res.json();
     } finally {
@@ -146,7 +163,8 @@
   async function readSeismic() {
     try {
       const data = await fetchJSON(
-        "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
+        "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson",
+        NO_STORE
       );
       const features = (data && data.features) || [];
       if (!features.length) {
@@ -188,7 +206,8 @@
   async function readSolar() {
     try {
       const data = await fetchJSON(
-        "https://api.sunrisesunset.io/json?lat=" + CONFIG.lat + "&lng=" + CONFIG.lng
+        "https://api.sunrisesunset.io/json?lat=" + CONFIG.lat + "&lng=" + CONFIG.lng,
+        NO_STORE
       );
       const r = (data && data.results) || {};
 
@@ -238,7 +257,7 @@
         "?latitude=" + CONFIG.lat +
         "&longitude=" + CONFIG.lng +
         "&current=temperature_2m,pressure_msl,cloud_cover,wind_direction_10m,wind_speed_10m";
-      const data = await fetchJSON(url);
+      const data = await fetchJSON(url, NO_STORE);
       const c = (data && data.current) || {};
 
       const fields = [

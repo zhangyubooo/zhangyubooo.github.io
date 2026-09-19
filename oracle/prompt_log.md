@@ -187,3 +187,26 @@ would have caught:
 - **Hexagram 32's** Wikisource page is filed under a variant form of its name,
   not the form in my own character table, so the URL built from that table
   returned a 404 for that one hexagram.
+
+---
+
+### 9. The refusal did not actually refuse
+
+Found while rehearsing the demo video, not while writing code. I turned the
+wifi off, asked a question, and expected the page to refuse — and the second
+column answered anyway.
+
+Nothing was wrong with the error handling. The browser was serving that
+response out of its own HTTP cache: sunrise and sunset for a fixed latitude
+are identical all day, so the API sends a long `max-age`, and `fetch()` will
+happily satisfy a request from disk while offline. The page was casting from a
+reading of a world it could no longer see — which is the exact substitution the
+README says it will never make. The refusal case had been tested by watching
+the message appear, and the message had been appearing for a reason I had not
+checked.
+
+The fix is one option on three calls: `cache: "no-store"`. The lesson is the
+one the assignment keeps pointing at from a different angle — *the code looked
+right and the output looked right, and it was still lying.* I would not have
+found this by reading it, only by unplugging something and watching what
+refused to break.
