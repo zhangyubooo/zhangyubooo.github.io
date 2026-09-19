@@ -757,6 +757,57 @@ code {
 .trace__seed { color: var(--c-muted); }
 
 
+/* ⑧b COLOPHON ------------------------------------------------
+   Instrument register, like the provenance block above it: this is the page
+   identifying itself, not part of the reading. Deliberately quiet — it sits
+   below the last thing anyone came here for, and its job is to be there when
+   someone goes looking, not to compete on the way down.
+   ------------------------------------------------------------ */
+.colophon {
+  font-family: var(--font-sans);
+  border-top: 1px solid var(--c-line);
+  margin-top: var(--s-5);
+  padding-top: var(--s-4);
+  font-size: var(--t-xs);
+  line-height: 1.7;
+  color: var(--c-muted);
+}
+
+/* Same treatment as .trace__summary, because it is the same kind of control:
+   a quiet line that opens something optional. Two identical affordances at the
+   bottom of the page read as one pattern; two different ones read as a mess. */
+.colophon__summary {
+  cursor: pointer;
+  color: var(--c-muted);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.colophon__summary:hover { color: var(--c-text); }
+
+.colophon__what {
+  max-width: 30rem;
+  margin: var(--s-3) auto 0;
+  text-wrap: balance;
+}
+.colophon__what b { font-weight: 500; color: var(--c-text); }
+
+.colophon__source { margin-top: var(--s-3); }
+
+/* The same treatment as the hexagram's Wikisource link, so the two outbound
+   links on the page behave identically. */
+.colophon__source a {
+  color: var(--c-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--c-line);
+}
+.colophon__source a:hover {
+  color: var(--c-text);
+  border-bottom-color: var(--c-text);
+}
+
+
 /* ⑨ RESPONSIVE ----------------------------------------------*/
 @media (max-width: 34rem) {
   :root {
