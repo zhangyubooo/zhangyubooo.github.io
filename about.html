@@ -138,6 +138,37 @@
     </section>
   -->
 
+  <!-- Ask Yubo (HW4). The page stays static: ask-yubo.js sends each question to my
+       Flask backend on Render, which holds the AI API key and answers as me. -->
+  <section class="about__ask ask" data-ask aria-labelledby="ask-heading">
+    <h2 id="ask-heading">Ask Yubo</h2>
+    <p class="ask__intro">
+      An AI version of me that answers only from what's on this site. It can get
+      things wrong — for anything important, email the real me below.
+    </p>
+
+    <!-- aria-live: screen readers announce new replies as they arrive -->
+    <ol class="ask__log" data-ask-log aria-live="polite">
+      <li class="ask__msg ask__msg--model">
+        <span class="ask__who">Yubo (AI)</span>
+        <p class="ask__text">Hi! Ask me about my projects, what I study, or how I like to work.</p>
+      </li>
+    </ol>
+
+    <form class="ask__form" data-ask-form>
+      <label class="visually-hidden" for="ask-input">Your question</label>
+      <input id="ask-input" type="text" maxlength="500" autocomplete="off"
+             placeholder="Ask a question…">
+      <button type="submit">Send</button>
+    </form>
+
+    <ul class="ask__suggestions" aria-label="Example questions">
+      <li><button type="button" data-ask-suggestion>What are you studying?</button></li>
+      <li><button type="button" data-ask-suggestion>How did you make Restless Mind?</button></li>
+      <li><button type="button" data-ask-suggestion>用中文介绍一下你自己</button></li>
+    </ul>
+  </section>
+
   <section class="about__contact">
     <h2>Contact</h2>
     <!-- Email spelled out in plain text: mailto: does nothing on a machine with no mail client, so this is the fallback -->
@@ -169,5 +200,6 @@
 </footer>
 
 <script src="script.js"></script>
+<script src="ask-yubo.js"></script>
 </body>
 </html>

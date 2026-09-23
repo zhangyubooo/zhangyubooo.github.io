@@ -508,6 +508,98 @@ a { color: inherit; }
 
 
 
+/* Ask Yubo (HW4) — the chat box.
+   Built from pieces the page already has: messages borrow the Education entry
+   (hairline on top, grey label above the text), and the labels borrow the h3
+   treatment. No new colours, no rounded corners, no shadows. */
+.ask { max-width: 60ch; }
+
+.ask__intro {
+  font-size: var(--t-sm);
+  color: var(--c-muted);
+  margin-bottom: var(--s-4);
+}
+
+.ask__log { padding: 0; list-style: none; }   /* the reset only removes bullets from ul; this is an ol */
+
+.ask__msg {
+  padding: var(--s-3) 0;
+  border-top: 1px solid var(--c-line);
+}
+
+.ask__who {
+  display: block;
+  font-size: var(--t-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-muted);
+  margin-bottom: var(--s-1);
+}
+
+/* pre-wrap keeps the line breaks in a reply instead of collapsing them */
+.ask__text { white-space: pre-wrap; }
+
+.ask__msg.is-pending .ask__text,
+.ask__msg--error .ask__text { color: var(--c-muted); }
+
+/* The input row closes the log off like the last Education entry does */
+.ask__form {
+  display: flex;
+  gap: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--c-text);
+}
+
+/* Form controls don't inherit the page font by default — they use the system's */
+.ask__form input,
+.ask__form button,
+.ask__suggestions button { font: inherit; color: inherit; }
+
+.ask__form input {
+  flex: 1;
+  min-width: 0;             /* lets the input shrink on narrow phones instead of overflowing */
+  padding: var(--s-2) 0;
+  border: 0;
+  background: transparent;
+}
+
+.ask__form input::placeholder { color: var(--c-muted); }
+
+.ask__form button {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--c-text);
+  background: var(--c-text);
+  color: var(--c-bg);
+  cursor: pointer;
+}
+
+.ask__form button:disabled,
+.ask__suggestions button:disabled { opacity: 0.4; cursor: default; }
+
+.ask__suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-3);
+  margin-top: var(--s-3);
+  font-size: var(--t-sm);
+}
+
+/* Example questions look like the site's text links, not like buttons */
+.ask__suggestions button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--c-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.ask__suggestions button:hover:not(:disabled) { color: var(--c-text); }
+
+
+
 /* ⑨ PLAY PAGE ------------------------------------------------
    A masonry gallery. Nothing is cropped, so every item has a different height.
    ------------------------------------------------------------ */
