@@ -1,0 +1,335 @@
+/* ============================================================
+   Ask Yubo — floating chat widget  (15-113 HW4)
+   ask-yubo.css
+
+   A self-contained component: this file + ask-yubo.js, added to any page
+   with two lines. It borrows the site's tokens from style.css (--c-*, --t-*,
+   --s-*, --font-sans), so it stays black / white / grey like everything else.
+
+   Structure: ① Launcher ② Panel ③ Header ④ Message log ⑤ Bubbles
+              ⑥ Suggestions ⑦ Composer ⑧ Phones ⑨ Reduced motion
+
+   Design notes
+   - The panel floats with rounded corners (16px) and a hairline border, like a
+     message window; the bubbles inside are rounded too (18px), because rounded
+     bubbles ARE the "text message" language. On phones the panel fills the
+     screen, so it goes square. A soft shadow lifts the panel off the page — the
+     one place on the site with a shadow, because it's the one thing that floats.
+     No accent colour.
+   - My messages: black bubble on the right. AI: light-grey bubble on the left.
+     That's the whole colour system of an SMS thread, reduced to two greys.
+   ============================================================ */
+
+.ask {
+  --ask-launcher: 3.5rem;                   /* 56px bubble */
+  --ask-edge: var(--gutter);                /* distance from the window edges */
+  --ask-gap: 0.75rem;                       /* space between bubble and panel */
+  --ask-bubble-r: 1.125rem;                 /* 18px bubble corner */
+  --ask-panel-r: 1rem;                      /* 16px panel corner (not on phones, where it's full screen) */
+  /* Two layered shadows read as "lifted off the page": a wide, soft one for the
+     distance, and a tight, slightly darker one where it's closest to the page.
+     Black at low opacity rather than a grey, so it darkens whatever is under it. */
+  --ask-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.14), 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
+  font-family: var(--font-sans);
+}
+
+
+/* ① LAUNCHER ------------------------------------------------
+   The round button that sits in the bottom-right corner of every page. */
+.ask__launcher {
+  position: fixed;
+  right: var(--ask-edge);
+  bottom: var(--ask-edge);
+  z-index: 200;                             /* above the nav (100) */
+  width: var(--ask-launcher);
+  height: var(--ask-launcher);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--c-text);
+  color: var(--c-bg);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.ask__launcher:hover { transform: scale(1.04); }
+.ask__launcher svg { width: 1.5rem; height: 1.5rem; }
+
+/* Two icons live in the button; which one shows depends on open / closed */
+.ask__launcher .ask__icon-close,
+.ask.is-open .ask__launcher .ask__icon-chat { display: none; }
+.ask.is-open .ask__launcher .ask__icon-close { display: block; }
+
+
+/* ② PANEL ---------------------------------------------------
+   Floats above the launcher, on the right. Closed = invisible AND unfocusable
+   (visibility: hidden), so keyboard users can't tab into a hidden box. */
+.ask__panel {
+  position: fixed;
+  right: var(--ask-edge);
+  bottom: calc(var(--ask-edge) + var(--ask-launcher) + var(--ask-gap));
+  z-index: 200;
+  width: min(24rem, calc(100vw - 2 * var(--ask-edge)));
+  height: min(40rem, calc(100svh - var(--ask-launcher) - var(--ask-gap) - 2 * var(--ask-edge) - 4rem));
+  display: flex;
+  flex-direction: column;
+  background: var(--c-bg);
+  border: 1px solid var(--c-line);
+  border-radius: var(--ask-panel-r);
+  box-shadow: var(--ask-shadow);            /* floats above the page */
+  overflow: hidden;                         /* clip the header and input bar to the rounded corners */
+
+  /* closed state: slightly to the right and transparent */
+  opacity: 0;
+  transform: translateX(1rem);
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+}
+
+.ask.is-open .ask__panel {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s;
+}
+
+/* When the chat was already open on the previous page, appear instantly
+   instead of sliding in again on every page change */
+.ask.no-anim .ask__panel { transition: none; }
+
+
+/* ③ HEADER — like the contact bar at the top of a text thread -------- */
+.ask__header {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-3);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.ask__avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--c-fill);
+  flex-shrink: 0;
+}
+
+.ask__title { flex: 1; min-width: 0; line-height: 1.3; }
+
+.ask__name {
+  display: block;
+  font-size: var(--t-sm);
+  font-weight: 500;
+}
+
+.ask__sub {
+  display: block;
+  font-size: var(--t-xs);
+  color: var(--c-muted);
+}
+
+.ask__close {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--c-muted);
+  cursor: pointer;
+}
+
+.ask__close:hover { color: var(--c-text); }
+.ask__close svg { width: 1.125rem; height: 1.125rem; }
+
+
+/* ④ MESSAGE LOG ---------------------------------------------- */
+.ask__log {
+  flex: 1;
+  overflow-y: auto;
+  /* Scrolling to the end of the chat must not start scrolling the page behind it
+     (on the home page that would also trigger the intro ↔ projects jump). */
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: var(--s-3);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+
+/* ⑤ BUBBLES -------------------------------------------------- */
+.ask__msg {
+  max-width: 80%;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--ask-bubble-r);
+  font-size: var(--t-sm);
+  line-height: 1.45;
+  white-space: pre-wrap;                    /* keep line breaks in replies */
+  overflow-wrap: anywhere;                  /* a long URL can't push the bubble wider than the panel */
+}
+
+.ask__msg--model {
+  align-self: flex-start;
+  background: var(--c-fill);
+  color: var(--c-text);
+  border-bottom-left-radius: 0.25rem;       /* the "tail" corner points at the speaker */
+}
+
+.ask__msg--user {
+  align-self: flex-end;
+  background: var(--c-text);
+  color: var(--c-bg);
+  border-bottom-right-radius: 0.25rem;
+}
+
+/* A new speaker gets a little more air than two messages in a row from the same one */
+.ask__msg--user + .ask__msg--model,
+.ask__msg--model + .ask__msg--user { margin-top: var(--s-2); }
+
+/* A message that didn't go through stays in the thread, faded */
+.ask__msg.is-failed { opacity: 0.45; }
+
+/* Small centred grey lines: "Waking up the server…", "Not delivered…" */
+.ask__note {
+  align-self: center;
+  max-width: 90%;
+  margin: var(--s-1) 0;
+  font-size: var(--t-xs);
+  color: var(--c-muted);
+  text-align: center;
+}
+
+.ask__note--right { align-self: flex-end; text-align: right; }
+
+/* Typing indicator: three dots in an AI bubble */
+.ask__typing {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem 0;
+}
+
+.ask__typing span {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--c-muted);
+  animation: ask-blink 1.2s infinite ease-in-out;
+}
+
+.ask__typing span:nth-child(2) { animation-delay: 0.15s; }
+.ask__typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes ask-blink {
+  0%, 60%, 100% { opacity: 0.25; }
+  30%           { opacity: 1; }
+}
+
+
+/* ⑥ SUGGESTIONS — only shown before the first question ------------ */
+.ask__suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0 var(--s-3) var(--s-3);
+  list-style: none;
+}
+
+.ask__suggestions[hidden] { display: none; }
+
+.ask__suggestions button {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font: inherit;
+  font-size: var(--t-xs);
+  cursor: pointer;
+}
+
+.ask__suggestions button:hover:not(:disabled) { border-color: var(--c-text); }
+
+
+/* ⑦ COMPOSER ------------------------------------------------- */
+.ask__form {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-3);
+  border-top: 1px solid var(--c-line);
+}
+
+.ask__form input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font: inherit;
+  /* 16px minimum: iPhone Safari zooms the whole page in on any smaller input */
+  font-size: max(1rem, var(--t-sm));
+}
+
+/* Focus: the border turns black and a 1px outline sits right on it, giving a
+   2px ring that follows the rounded shape. (The site-wide 2px outline with a 3px
+   gap looked doubled around a pill-shaped field. Still never "outline: none".) */
+.ask__form input:focus { border-color: var(--c-text); }
+.ask__form input:focus-visible { outline: 1px solid var(--c-text); outline-offset: 0; }
+.ask__form input::placeholder { color: var(--c-muted); }
+
+.ask__send {
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--c-text);
+  color: var(--c-bg);
+  cursor: pointer;
+}
+
+.ask__send svg { width: 1.125rem; height: 1.125rem; }
+
+.ask__send:disabled,
+.ask__suggestions button:disabled { opacity: 0.3; cursor: default; }
+
+
+/* ⑧ PHONES --------------------------------------------------
+   A floating box is too cramped on a phone, so the chat takes the whole
+   screen (like opening a thread in Messages) and the page behind stops scrolling. */
+@media (max-width: 600px) {
+  .ask__panel {
+    inset: 0;
+    width: auto;
+    height: auto;                           /* top:0 + bottom:0 decide the height */
+    border: 0;
+    border-radius: 0;                       /* full screen: square edges meet the phone's own */
+    box-shadow: none;                       /* nothing to float above */
+    transform: translateY(1rem);
+  }
+
+  .ask.is-open .ask__launcher { display: none; }   /* the header's × closes it instead */
+  html.ask-lock { overflow: hidden; }
+}
+
+
+/* ⑨ REDUCED MOTION ------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ask__panel,
+  .ask.is-open .ask__panel { transition: none; transform: none; }
+  .ask__launcher { transition: none; }
+  .ask__typing span { animation: none; opacity: 0.6; }
+}
