@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask Yubo — an AI chat on Yubo Zhang's portfolio</title>
+  <meta name="description" content="Ask Yubo is a chat with an AI version of Yubo Zhang, built with a Flask backend on Render and a static frontend on GitHub Pages.">
+  <link rel="canonical" href="https://zhangyubooo.github.io/ask-yubo.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="ask-yubo.css">   <!-- Ask Yubo chat widget (HW4) -->
+</head>
+
+<!-- Project page for Ask Yubo (15-113 HW4). It borrows the About page layout
+     (page-about, .about, .entries) so it needs almost no CSS of its own. -->
+<body class="page-about">
+
+<header class="nav is-visible">
+  <nav aria-label="Main navigation">
+    <a class="nav__name" href="index.html#intro">Yubo Zhang</a>
+    <ul class="nav__links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="play.html">Play</a></li>
+      <li><a href="mailto:yubozhang1224@outlook.com">Contact me</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="about ask-page">
+
+  <h1 class="about__heading">Ask Yubo</h1>
+  <p class="ask-page__tags">AI Chat · Backend + Frontend · 2026</p>
+
+  <section>
+    <p class="ask-page__lead">
+      A chat with an AI version of me, available from the round button in the
+      bottom-right corner of every page on this site. Ask it about my projects,
+      what I study, or how I like to work — it answers in my voice, using only
+      what is already published here.
+    </p>
+    <!-- data-ask-open: ask-yubo.js opens the chat when this is clicked -->
+    <button class="ask-trigger" type="button" data-ask-open>Open the chat →</button>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <p class="ask-page__lead">
+      This site is static: plain HTML, CSS and JavaScript on GitHub Pages, where
+      anything in the code can be read by anyone who opens the browser's
+      developer tools. A chatbot needs a secret API key, so it can't live here
+      on its own.
+    </p>
+    <p class="ask-page__lead">
+      Instead, the chat window sends each question to a small Python (Flask)
+      backend I deployed on Render. The backend checks the message, adds a
+      description of who I am, asks an AI model with the key it keeps in an
+      environment variable, and sends the reply back as JSON.
+    </p>
+    <p class="ask-page__flow">
+      Browser (GitHub Pages) → Flask backend (Render) → AI model (gpt-oss-20b via Groq) → back to the browser
+    </p>
+  </section>
+
+  <section>
+    <h2>Decisions</h2>
+    <ul class="entries">
+      <li class="entry">
+        <span class="entry__title">The key never reaches the browser</span>
+        <span class="entry__meta">It exists only in Render's settings and in a local file that Git ignores.</span>
+      </li>
+      <li class="entry">
+        <span class="entry__title">The server remembers nothing</span>
+        <span class="entry__meta">The browser keeps the conversation and sends it with every question — no database, and the chat follows you from page to page.</span>
+      </li>
+      <li class="entry">
+        <span class="entry__title">A public endpoint needs guarding</span>
+        <span class="entry__meta">Anyone can call the backend directly, so every message is checked and each visitor is rate-limited before the AI is asked anything.</span>
+      </li>
+      <li class="entry">
+        <span class="entry__title">Failing politely</span>
+        <span class="entry__meta">The free server sleeps when idle. The page wakes it early, says so when a reply is slow, and keeps undelivered messages so they can be re-sent.</span>
+      </li>
+      <li class="entry">
+        <span class="entry__title">It shouldn't make things up</span>
+        <span class="entry__meta">An early test said my degree was five years long. It's four. The persona now states it, forbids embellishing, and the model runs cooler.</span>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Code</h2>
+    <ul class="entries">
+      <li class="entry">
+        <span class="entry__title">
+          <a href="https://github.com/zhangyubooo/ask-yubo-backend" target="_blank" rel="noopener">Backend on GitHub ↗</a>
+        </span>
+        <span class="entry__meta">Flask API, persona, README and prompt log</span>
+      </li>
+      <li class="entry">
+        <span class="entry__title">
+          <a href="https://github.com/zhangyubooo/zhangyubooo.github.io/blob/main/ask-yubo.js" target="_blank" rel="noopener">Frontend on GitHub ↗</a>
+        </span>
+        <span class="entry__meta">ask-yubo.js and ask-yubo.css — the chat button and window, added to each page with two lines</span>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>
+    Built with Claude as a coding partner — the key prompts are in the
+    <a href="https://github.com/zhangyubooo/ask-yubo-backend/blob/main/prompt_log.md"
+       target="_blank" rel="noopener">prompt log ↗</a>
+  </p>
+  <p>© 2026 Yubo Zhang</p>
+</footer>
+
+<script src="script.js"></script>
+<script src="ask-yubo.js"></script>   <!-- builds the floating chat button + panel -->
+</body>
+</html>

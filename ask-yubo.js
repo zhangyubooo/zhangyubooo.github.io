@@ -347,6 +347,13 @@
     send(input.value);
   });
 
+  // Any element with data-ask-open elsewhere on the site (e.g. the "Open the chat"
+  // button on ask-yubo.html) opens the chat too. Listening on document means the
+  // button doesn't need its own script.
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('[data-ask-open]')) setOpen(true);
+  });
+
   // Esc closes the chat when focus is inside it
   root.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && root.classList.contains('is-open')) setOpen(false);
