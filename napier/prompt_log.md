@@ -100,6 +100,23 @@ Result: the box now has sixteen places in one row and the rods carry no text (ro
 
 Result: rods in the box carry their Roman numeral again (stacked letter over letter so it fits a rod 1/10 as wide as it is tall); "Begin as a new visitor" moved from the footer to a real button under the box, next to "Pack the set". It still needs a second click, and turns red while waiting for it.
 
+## Phase 4 — Deploying (Sun 10/4, early morning)
+
+**Prompt 17**
+> 先开始部署吧，细节问题我再明天检查之后再修改
+
+Result: backend committed and published from GitHub Desktop, deployed on Render. `napier-backend.onrender.com` turned out to belong to someone else (it answered `{"detail":"Not Found"}`, a FastAPI-style error, not our Flask one), so Render gave the service `napier-backend-prtd.onrender.com`; `js/api.js` was pointed there.
+
+**Prompt 18**
+> Neon是啥有必要接吗
+
+Result: Render's free tier wipes the server's disk whenever it sleeps (after 15 idle minutes), restarts or redeploys, so the SQLite file — and every visitor's box — disappears. Neon is a free, permanent Postgres host; `storage.py` already switches to it when `DATABASE_URL` is set. Decided to connect it after the check-in.
+
+**Prompt 19**
+> pack动画上的rods正面也上box里的数字
+
+Result: each 3D rod's front face now carries its Roman numeral, drawn on a canvas (1:10 like the rod) and used as a texture on the +z face of the box geometry; the camera moved slightly closer so the numerals read.
+
 ## Where AI got it wrong (candidates — ✍️ pick one and write the paragraph yourself)
 
 1. **An invented fact in the card mottos.** While drafting the twelve cards, Claude wrote a motto for rod V saying Henry Briggs "rode four days" to meet Napier. When the fact sheet was checked against MacTutor, nothing supported the four days; what the sources do record is the quarter-hour of silent admiration. The line was cut and the motto rewritten. This is exactly why Napier may only speak from `facts.md`.

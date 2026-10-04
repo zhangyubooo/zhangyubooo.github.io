@@ -15,8 +15,9 @@ import {
   Scene, PerspectiveCamera, WebGLRenderer, Group, Mesh, BoxGeometry, PlaneGeometry,
   BufferGeometry, BufferAttribute, MeshStandardMaterial, ShadowMaterial,
   HemisphereLight, DirectionalLight, Vector3, MathUtils,
-  PCFSoftShadowMap, SRGBColorSpace, ACESFilmicToneMapping, OrbitControls,
+  PCFSoftShadowMap, SRGBColorSpace, ACESFilmicToneMapping, OrbitControls, CanvasTexture,
 } from "../vendor/three-napier.min.js";
+import { CARDS } from "./cards.js";
 
 // ---------------------------------------------------------------------------
 // 1. Measurements taken from the CAD model (mm)
@@ -65,6 +66,28 @@ function meshFromPart(part, material) {
   return mesh;
 }
 
+/**
+ * The face of one rod: bone-coloured, with its Roman numeral stacked letter
+ * over letter at the top end — the same marking as the rods in the box.
+ * Drawn on a canvas 1:10 like the rod itself, then used as a texture.
+ */
+function numeralTexture(numeral) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 100;
+  canvas.height = 1000;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#efe4c9";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#3a2a18";
+  ctx.font = '88px "IM Fell English SC", "IM Fell English", Georgia, serif';
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  [...numeral].forEach((letter, i) => ctx.fillText(letter, canvas.width / 2, 28 + i * 76));
+  const texture = new CanvasTexture(canvas);
+  texture.colorSpace = SRGBColorSpace;
+  return texture;
+}
+
 function buildScene(model) {
   const scene = new Scene();
 
@@ -96,7 +119,11 @@ function buildScene(model) {
   const rodGeometry = new BoxGeometry(ROD.w, ROD.len, ROD.w);   // long side along y, like the CAD rods
   const rods = [];
   for (let i = 0; i < ROD_COUNT; i += 1) {
-    const rod = new Mesh(rodGeometry, bone);
+    // A box has six faces (+x, −x, +y, −y, +z, −z). The +z face is the one that
+    // faces up on the tray and faces the visitor once the tray stands, so it
+    // gets the numeral; the other five stay plain bone.
+    const face = new MeshStandardMaterial({ map: numeralTexture(CARDS[i].numeral), roughness: 0.55 });
+    const rod = new Mesh(rodGeometry, [bone, bone, bone, bone, face, bone]);
     rod.castShadow = true;
     rod.receiveShadow = true;
     trayGroup.add(rod);
@@ -140,6 +167,7 @@ function pose(parts, t) {
 // 5. Public: start the animation inside `container`
 // ---------------------------------------------------------------------------
 export async function startPacking(container, { reducedMotion = false, onDone = () => {} } = {}) {
+  await document.fonts.ready;   // the numerals are drawn with the page's typeface
   const response = await fetch("models/rod-box.json");
   if (!response.ok) throw new Error("The model of the case could not be loaded.");
   const model = await response.json();
@@ -155,8 +183,8 @@ export async function startPacking(container, { reducedMotion = false, onDone = 
 
   const camera = new PerspectiveCamera(26, 1, 1, 3000);
   camera.up.set(0, 0, 1);                                    // z is up, as in the CAD model
-  const target = new Vector3(78, 34, 40);
-  camera.position.copy(target).add(new Vector3(-150, -400, 210));
+  const target = new Vector3(76, 34, 48);
+  camera.position.copy(target).add(new Vector3(-145, -390, 205));
 
   // Visitors can drag to turn the set; it slowly turns by itself once packed.
   const controls = new OrbitControls(camera, renderer.domElement);
