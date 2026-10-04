@@ -5,7 +5,7 @@
 //    Testing on my laptop → the local Flask server; everywhere else → Render.
 // ---------------------------------------------------------------------------
 const LOCAL = ["localhost", "127.0.0.1"].includes(location.hostname);
-export const API_BASE = LOCAL ? "http://127.0.0.1:5002" : "https://napier-backend.onrender.com";
+export const API_BASE = LOCAL ? "http://127.0.0.1:5002" : "https://napier-backend-prtd.onrender.com";
 
 // Render's free tier sleeps; the first request can take ~50 s. Wait that long
 // before giving up, but no longer.
