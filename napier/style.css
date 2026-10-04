@@ -1,0 +1,423 @@
+/* Napier's Rod Box
+   ① tokens  ② page  ③ portrait + frame  ④ inscription  ⑤ plaque + buttons
+   ⑥ rods  ⑦ tray  ⑧ box  ⑨ reading dialog  ⑨b packing  ⑩ footer  ⑪ wide screens  ⑫ reduced motion */
+
+/* ① Tokens ---------------------------------------------------------------- */
+:root {
+  --wall: #15110d;          /* gallery wall */
+  --wall-2: #1f1913;
+  --ink: #ece2cb;           /* parchment text */
+  --ink-dim: #a99c83;
+  --gold: #d2ad62;
+  --gold-deep: #8a6a2c;
+  --bone: #efe4c9;          /* rods */
+  --bone-edge: #cdbb94;
+  --bone-ink: #3a2a18;
+  --wood: #5b3a20;
+  --wood-dark: #2e1c0e;
+  --danger: #e2a37f;
+
+  --serif: "IM Fell English", "Iowan Old Style", Georgia, serif;
+  --caps: "IM Fell English SC", "IM Fell English", Georgia, serif;
+
+  --gutter: 16px;
+  --radius: 3px;
+}
+
+/* ② Page ------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--wall); }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.5;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, #2a2118 0%, transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 2px, transparent 2px 7px),
+    var(--wall);
+  overflow-x: hidden;
+}
+a { color: var(--gold); }
+
+.top {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 14px var(--gutter);
+  font-size: 15px;
+}
+.top__back { text-decoration: none; color: var(--ink-dim); }
+.top__back:hover { color: var(--ink); }
+.top__status { color: var(--ink-dim); font-style: italic; text-align: right; }
+.top__status::before {
+  content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 8px;
+  border-radius: 50%; background: var(--ink-dim); vertical-align: 2px;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+.top__status.is-awake::before { background: var(--gold); animation: none; }
+
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);   /* min 0: the wide tray must scroll, not stretch the page */
+  gap: 28px;
+  padding: 8px var(--gutter) 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ③ Portrait + gilded frame -------------------------------------------- */
+.gallery { margin: 0; scroll-margin-top: 12px; }
+.frame {
+  margin: 0 auto;
+  max-width: 560px;
+  padding: 14px;
+  /* gilded moulding: layered gradients + bevel shadows, no image needed */
+  background:
+    linear-gradient(135deg, #f3d892 0%, #a27a35 22%, #e8c677 48%, #7a5a22 72%, #d9b56b 100%);
+  box-shadow:
+    inset 0 0 0 2px rgba(60,40,10,.6),
+    inset 0 0 0 7px rgba(255,236,180,.25),
+    inset 0 0 0 9px rgba(60,40,10,.55),
+    0 30px 60px rgba(0,0,0,.6),
+    0 6px 14px rgba(0,0,0,.5);
+  border-radius: 2px;
+}
+.portrait {
+  position: relative;
+  aspect-ratio: 500 / 558;          /* the painting's own proportions: nothing is cropped */
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 40%, #3a2c1e 0%, #17110b 75%);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.8);
+}
+.portrait__img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  /* "breathing": a very slow, slight zoom so the painting never feels frozen */
+  animation: breathe 9s ease-in-out infinite alternate;
+  transform-origin: 55% 25%;        /* zoom towards his face */
+  transition: filter 1.2s ease;
+}
+.frame.no-image .portrait__img { display: none; }
+.frame.no-image .portrait::after {
+  content: "[ portrait: images/napier-portrait.jpg ]";
+  position: absolute; left: 0; right: 0; bottom: 18%;
+  text-align: center; color: rgba(236,226,203,.25); font-style: italic; font-size: 15px;
+}
+
+/* candlelight: a warm glow that flickers irregularly from the lower left */
+.portrait__candle {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 70% 60% at 15% 95%, rgba(255,170,70,.28), transparent 60%);
+  mix-blend-mode: soft-light;
+  animation: flicker 5.3s steps(1, end) infinite;
+}
+/* while Napier "reads": the painting dims and the candle grows */
+.frame.is-thinking .portrait__img { filter: brightness(.6) saturate(.85); }
+.frame.is-thinking .portrait__candle {
+  background: radial-gradient(ellipse 90% 80% at 50% 100%, rgba(255,175,80,.45), transparent 65%);
+  animation: glow 1.8s ease-in-out infinite alternate;
+}
+
+.caption {
+  margin: 14px auto 0; max-width: 560px;
+  text-align: center; font-size: 14px; font-style: italic; color: var(--ink-dim);
+}
+
+/* ④ Inscription — painted on a tablet at the foot of the canvas ------------
+   The real painting already has its own lettering at the top ("John Napier of
+   Merchiston", "1616") and his face sits high, so the answers get their own
+   panel, coloured like the painting's dark olive wall, inside the same frame. */
+.tablet {
+  position: relative;
+  overflow: hidden;
+  min-height: 8.6em;
+  padding: 18px 7% 20px;
+  display: grid; place-items: center;
+  background:
+    radial-gradient(ellipse 60% 90% at 20% 0%, rgba(120,95,55,.20), transparent 70%),
+    radial-gradient(ellipse 50% 80% at 85% 100%, rgba(0,0,0,.35), transparent 70%),
+    linear-gradient(#34312b, #2a2722);
+  box-shadow:
+    inset 0 1px 0 rgba(0,0,0,.9),            /* the seam between painting and tablet */
+    inset 0 2px 0 rgba(210,173,98,.18),
+    inset 0 0 30px rgba(0,0,0,.55);
+  scroll-margin-top: 16px;
+}
+.inscription, .ghost {
+  margin: 0;
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(16px, 4.3vw, 21px);
+  line-height: 1.38;
+  text-align: center;
+  color: var(--gold);
+  text-shadow: 0 0 1px rgba(255,220,150,.5), 0 1px 2px rgba(0,0,0,.9);
+  text-wrap: pretty;
+}
+.inscription { position: relative; z-index: 2; transition: opacity .8s ease; }
+.frame.is-thinking .inscription { opacity: .2; }   /* the old answer recedes while he reads */
+.word { display: inline-block; white-space: nowrap; }
+.letter {
+  display: inline-block;
+  opacity: 0;
+  animation: surface .9s ease-out forwards;
+}
+.tablet__ghosts {           /* same box as the tablet, so the ghost sits centred like the text */
+  position: absolute; inset: 0; pointer-events: none;
+  display: grid; place-items: center;
+  padding: 18px 7% 20px;
+}
+.ghost {                      /* the previous answer, sunk into the varnish: texture, not text */
+  z-index: 1;
+  color: rgba(210,173,98,.05);
+  text-shadow: none;
+  filter: blur(1.4px);
+  transform: scale(.97);
+}
+
+/* ⑤ Plaque + buttons ----------------------------------------------------- */
+.desk { display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px; align-content: start; min-width: 0; }
+
+.plaque {
+  padding: 18px 20px 20px;
+  background: linear-gradient(#2a2119, #211a13);
+  border: 1px solid #4a3a26;
+  box-shadow: inset 0 1px 0 rgba(255,230,180,.06);
+  border-radius: var(--radius);
+  min-height: 140px;
+}
+.plaque__eyebrow {
+  margin: 0 0 6px;
+  font-family: var(--caps); font-size: 15px; letter-spacing: .06em; color: var(--gold);
+}
+.plaque__text { margin: 0; font-size: 21px; line-height: 1.35; }
+.plaque__actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.plaque__actions:has(> :not([hidden])) { min-height: 44px; }
+
+.btn {
+  font: inherit; font-family: var(--caps); font-size: 17px; letter-spacing: .04em;
+  color: #1b130a;
+  background: linear-gradient(#e7c579, #b98f45);
+  border: 1px solid #6e5222;
+  border-radius: var(--radius);
+  padding: 10px 18px;
+  min-height: 44px;
+  cursor: pointer;
+  box-shadow: 0 2px 0 #5a4219, 0 6px 14px rgba(0,0,0,.35);
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:active { transform: translateY(1px); box-shadow: 0 1px 0 #5a4219; }
+.btn--quiet {
+  color: var(--ink); background: transparent; border-color: #6a5536; box-shadow: none;
+}
+.btn:focus-visible, .rod:focus-visible, .linklike:focus-visible {
+  outline: 2px solid var(--gold); outline-offset: 3px;
+}
+
+.label {
+  margin: 0 0 10px;
+  font-family: var(--caps); font-weight: normal; font-size: 17px; letter-spacing: .05em;
+}
+.label__count { color: var(--ink-dim); font-family: var(--serif); font-style: italic; letter-spacing: 0; }
+
+/* ⑥ Rods — bone-coloured strips; numeral on top, text running down ------ */
+.rod {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  width: 46px;
+  padding: 10px 0 12px;
+  font: inherit;
+  color: var(--bone-ink);
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.10), transparent 18%, transparent 80%, rgba(0,0,0,.14)),
+    repeating-linear-gradient(0deg, rgba(120,90,40,.05) 0 1px, transparent 1px 5px),
+    var(--bone);
+  border: 1px solid var(--bone-edge);
+  border-radius: 2px;
+  box-shadow: 0 3px 6px rgba(0,0,0,.45);
+  cursor: pointer;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.rod__numeral {
+  font-family: var(--caps); font-size: 15px; line-height: 1;
+  padding-bottom: 7px; border-bottom: 1px solid rgba(58,42,24,.35); width: 70%; text-align: center;
+}
+.rod__title, .rod__motto {
+  writing-mode: vertical-rl;
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+/* ⑦ Tray — the rods still to present, lying flat in two columns ----------- */
+.tray {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 12px;
+  padding: 6px 0 4px;
+}
+.rod--tray {
+  flex-direction: row; gap: 0;
+  width: auto; height: 46px;
+  padding: 0;
+  text-align: left;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.35), transparent 22%, transparent 72%, rgba(0,0,0,.16)),
+    repeating-linear-gradient(90deg, rgba(120,90,40,.05) 0 1px, transparent 1px 5px),
+    var(--bone);
+}
+.rod--tray .rod__numeral {
+  flex: 0 0 52px; width: auto;
+  padding: 0; border-bottom: 0;
+  border-right: 1px solid rgba(58,42,24,.35);
+  align-self: stretch; display: grid; place-items: center;
+}
+.rod--tray .rod__title {
+  writing-mode: horizontal-tb;
+  padding: 0 12px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rod--tray:hover { transform: translateX(-4px); }
+.rod--tray.is-selected {
+  transform: translateX(-8px);
+  box-shadow: 0 0 0 2px var(--gold), 0 8px 16px rgba(0,0,0,.55);
+}
+.rod--tray.is-presented { animation: present .8s ease-in forwards; }
+.rod--tray.is-locked {        /* the memory rod, waiting until last */
+  cursor: not-allowed; opacity: .45; filter: grayscale(.4);
+}
+.rod--tray.is-locked:hover { transform: none; }
+.rod--tray.is-locked .rod__title::after { content: " · asked last"; font-style: italic; }
+
+/* ⑧ Box — sixteen places in one row; each rod stands in its place ------------ */
+.box {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 22px));   /* all sixteen always fit on one row */
+  justify-content: center;
+  gap: clamp(3px, 1.1vw, 9px);
+  align-items: end;
+  padding: 18px 14px 14px;
+  background:
+    repeating-linear-gradient(92deg, rgba(0,0,0,.12) 0 2px, transparent 2px 11px, rgba(255,200,140,.04) 11px 13px, transparent 13px 23px),
+    linear-gradient(#6b4527, var(--wood) 40%, #46291a);
+  border: 1px solid #22150a;
+  border-radius: var(--radius);
+  box-shadow: inset 0 10px 18px rgba(0,0,0,.55), inset 0 -2px 0 rgba(255,220,170,.08), 0 10px 24px rgba(0,0,0,.4);
+}
+.place {                      /* an empty slot: a faint groove the rod will fill */
+  aspect-ratio: 1 / 10;        /* the real rods are 5.3 × 53.3 mm */
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.35), inset 0 3px 6px rgba(0,0,0,.35);
+  background: rgba(0,0,0,.12);
+}
+.rod--box {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; height: 100%;
+  padding: 6px 0 0;
+  border-radius: 1px;
+}
+.rod--box .rod__numeral {     /* the numeral stands letter-over-letter at the top of the rod */
+  width: auto; padding: 0; border: 0;
+  writing-mode: vertical-rl; text-orientation: upright;
+  font-size: clamp(9px, 1.1vw, 12px); line-height: 1; letter-spacing: -0.3em;   /* upright letters sit loosely; pull them together */
+}
+.rod--box:hover { transform: translateY(-4px); }
+.rod--box.is-arriving { animation: arrive .7s cubic-bezier(.2,.8,.3,1.2); }
+.box__hint { margin: 10px 0 0; color: var(--ink-dim); font-size: 15px; font-style: italic; }
+.box__note { margin: 10px 0 0; color: var(--danger); font-size: 15px; font-style: italic; }
+.box__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+#new-visitor.is-confirming { border-color: var(--danger); color: var(--danger); }   /* second click empties the box */
+
+/* ⑨ Reading dialog ---------------------------------------------------------- */
+.reading {
+  width: min(560px, calc(100% - 2 * var(--gutter)));
+  padding: 26px 24px 22px;
+  color: var(--bone-ink);
+  background: linear-gradient(#f4ead2, #e7d8b6);
+  border: 1px solid var(--bone-edge);
+  border-radius: var(--radius);
+  box-shadow: 0 30px 80px rgba(0,0,0,.7);
+}
+.reading::backdrop { background: rgba(8,5,2,.72); }
+.reading__numeral { margin: 0; font-family: var(--caps); color: var(--gold-deep); letter-spacing: .05em; }
+.reading__question { margin: 4px 0 14px; font-weight: normal; font-size: 24px; line-height: 1.25; }
+.reading__inscription { margin: 0 0 14px; font-style: italic; font-size: 19px; }
+.reading__motto { margin: 0 0 6px; font-family: var(--caps); }
+.reading__count { margin: 0 0 18px; font-size: 15px; color: #6d5a3d; }
+.reading .btn--quiet { color: var(--bone-ink); border-color: #a48c5f; }
+
+/* ⑨b The finale: packing the set into its case (WebGL canvas) ------------------ */
+.pack {                      /* outside .stage, so the sticky portrait can't slide over it */
+  max-width: 1280px; margin: 0 auto;
+  padding: 12px var(--gutter) 40px;
+  scroll-margin-top: 16px;
+}
+.pack__intro { max-width: 70ch; margin-bottom: 14px; }
+.pack__eyebrow { margin: 0; font-family: var(--caps); color: var(--gold); letter-spacing: .06em; font-size: 15px; }
+.pack__title { margin: 2px 0 8px; font-weight: normal; font-size: clamp(26px, 4vw, 34px); line-height: 1.15; }
+.pack__text { margin: 0; color: var(--ink-dim); font-size: 17px; }
+.pack__stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  min-height: 300px;
+  border-radius: var(--radius);
+  background: radial-gradient(ellipse 70% 80% at 50% 60%, #3a2c1f, #1a140e 75%);
+  box-shadow: inset 0 0 0 1px #3a2d1f, inset 0 0 60px rgba(0,0,0,.6);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;         /* vertical swipes still scroll the page on phones */
+}
+.pack__stage:active { cursor: grabbing; }
+.pack__stage canvas { display: block; width: 100%; height: 100%; }
+.pack__actions { margin-top: 14px; min-height: 44px; }
+
+/* ⑩ Footer -------------------------------------------------------------- */
+.foot {
+  max-width: 1280px; margin: 0 auto;
+  padding: 24px var(--gutter) 40px;
+  border-top: 1px solid #33291d;
+  font-size: 15px; color: var(--ink-dim);
+}
+.foot p { max-width: 70ch; margin: 0 0 10px; }
+.linklike {
+  font: inherit; color: var(--gold); background: none; border: 0; padding: 0;
+  text-decoration: underline; cursor: pointer;
+}
+
+/* ⑪ Wide screens: portrait left, desk right ------------------------------ */
+@media (min-width: 900px) {
+  .stage {
+    grid-template-columns: minmax(380px, 1fr) minmax(400px, 1fr);
+    gap: 48px;
+    padding-top: 16px;
+    align-items: start;
+  }
+  .gallery { position: sticky; top: 16px; }
+  /* fit painting + tablet in one screen height: painting is 500:558, tablet ≈ 200px */
+  .frame { max-width: min(560px, calc((100vh - 330px) * 0.896)); min-width: 360px; }
+  .caption { max-width: min(560px, calc((100vh - 330px) * 0.896)); }
+  .inscription, .ghost { font-size: clamp(17px, 1.6vw, 23px); }
+}
+
+/* ⑫ Animations, and turning them off for people who ask --------------------- */
+@keyframes breathe { from { transform: scale(1); } to { transform: scale(1.018) translateY(-0.4%); } }
+@keyframes flicker {
+  0% { opacity: .9; } 13% { opacity: .65; } 21% { opacity: 1; } 37% { opacity: .75; }
+  52% { opacity: .95; } 61% { opacity: .7; } 78% { opacity: 1; } 90% { opacity: .8; }
+}
+@keyframes glow { from { opacity: .6; } to { opacity: 1; } }
+@keyframes pulse { 50% { opacity: .3; } }
+@keyframes surface {
+  0%   { opacity: 0; filter: blur(4px); color: #fff3cf; }
+  60%  { opacity: 1; filter: blur(0); color: #ffe6a6; text-shadow: 0 0 10px rgba(255,210,120,.9); }
+  100% { opacity: 1; filter: blur(0); }
+}
+@keyframes present { to { transform: translateX(-60px); opacity: .2; } }   /* slides off towards the portrait */
+@keyframes arrive { from { transform: translateY(-60px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .letter { opacity: 1; }
+}

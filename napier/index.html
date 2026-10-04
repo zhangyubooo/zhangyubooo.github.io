@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Napier's Rod Box — Yubo Zhang</title>
+  <meta name="description" content="Present a carved rod to the 1616 portrait of John Napier. He answers in paint, and the rod joins your box. A web companion to an exhibit on Napier's bones at CMU's Posner Center.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+
+  <header class="top">
+    <a class="top__back" href="../index.html">← Yubo Zhang</a>
+    <span class="top__status" id="status" aria-live="polite">Waking the portrait…</span>
+  </header>
+
+  <main class="stage">
+
+    <!-- ① The portrait. Napier's answers are painted into it. -->
+    <section class="gallery" aria-label="Portrait of John Napier">
+      <figure class="frame" id="portrait">
+        <div class="portrait">
+          <img class="portrait__img" id="portrait-img" src="images/napier-portrait.jpg"
+               alt="Portrait of John Napier, painted in 1616: a bearded man in a black gown and white ruff, seated beside a globe with one hand on a book">
+          <div class="portrait__candle" aria-hidden="true"></div>
+        </div>
+        <!-- The painted tablet at the foot of the canvas, where Napier's answers appear.
+             (The top of the real painting already carries its own inscription and his face,
+             so the answers live in a panel below instead of over them.) -->
+        <div class="tablet">
+          <div class="tablet__ghosts" id="ghosts" aria-hidden="true"></div>
+          <p class="inscription" id="inscription" aria-live="polite"></p>
+        </div>
+      </figure>
+      <p class="caption">John Napier of Merchiston, 1550–1617 · after the portrait of 1616</p>
+    </section>
+
+    <!-- ② The plaque, the tray of rods still to ask, and the visitor's box. -->
+    <section class="desk">
+
+      <div class="plaque" id="plaque" aria-live="polite">
+        <p class="plaque__eyebrow" id="plaque-eyebrow">Napier's Rod Box</p>
+        <p class="plaque__text" id="plaque-text">Choose a rod and present it to Napier. He will answer in paint.</p>
+        <div class="plaque__actions">
+          <button class="btn" id="present-btn" type="button" hidden>Present the rod</button>
+          <button class="btn btn--quiet" id="retry-btn" type="button" hidden>Try again</button>
+        </div>
+      </div>
+
+      <div class="tray-wrap">
+        <h2 class="label">The rods <span class="label__count" id="tray-count"></span></h2>
+        <div class="tray" id="tray" role="list"></div>
+      </div>
+
+      <div class="box-wrap">
+        <h2 class="label">Your box <span class="label__count" id="box-count"></span></h2>
+        <div class="box" id="box" role="list" aria-label="Your box: sixteen places, one for each rod"></div>
+        <p class="box__hint" id="box-hint">Every rod you present comes to rest here, in its own place. Tap one to reread it.</p>
+        <p class="box__note" id="box-note" hidden></p>
+        <div class="box__actions">
+          <button class="btn btn--bind" id="bind-btn" type="button" hidden>Pack the set</button>
+          <button class="btn btn--quiet" id="new-visitor" type="button">Begin as a new visitor</button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ③ The finale: once all sixteen rods are in the box, they are packed into the real case.
+       The tray, case and lid come from my CAD model of the set (models/rod-box.json). -->
+  <section class="pack" id="pack" hidden aria-labelledby="pack-title">
+    <div class="pack__intro">
+      <p class="pack__eyebrow">All sixteen rods presented</p>
+      <h2 class="pack__title" id="pack-title">Packing your set</h2>
+      <p class="pack__text" id="pack-text">
+        The sixteen rods are laid side by side on their tray, the tray is stood up and slid into its case,
+        and the lid closes along its groove — the way the set was made to travel. Drag to turn it.
+      </p>
+    </div>
+    <div class="pack__stage" id="pack-stage" role="img" aria-label="Animation: sixteen rods are laid on a tray, which slides into a wooden case; the lid slides shut."></div>
+    <div class="pack__actions">
+      <button class="btn btn--quiet" id="pack-replay" type="button" hidden>Pack again</button>
+    </div>
+  </section>
+
+  <!-- Reading a rod from the box -->
+  <dialog class="reading" id="reading" aria-labelledby="reading-title">
+    <form method="dialog">
+      <p class="reading__numeral" id="reading-numeral"></p>
+      <h3 class="reading__question" id="reading-title"></h3>
+      <p class="reading__inscription" id="reading-inscription"></p>
+      <p class="reading__motto" id="reading-motto"></p>
+      <p class="reading__count" id="reading-count"></p>
+      <button class="btn btn--quiet" value="close">Return the rod</button>
+    </form>
+  </dialog>
+
+  <footer class="foot">
+    <p>
+      A companion to <em>Napier's Bones</em>, an exhibit for the Posner Center for Special Collections,
+      Carnegie Mellon University (51-265, fall 2026). Napier's replies are written live by an AI model
+      from a curated fact sheet; legends are told as legends.
+    </p>
+    <p>
+      <a href="https://github.com/zhangyubooo/zhangyubooo.github.io/tree/main/napier">Frontend code</a> ·
+      <a href="https://github.com/zhangyubooo/napier-backend">Backend code</a>
+    </p>
+  </footer>
+
+</body>
+</html>
