@@ -35,7 +35,7 @@ const TRAY_PACKED = CASE_AT.clone().add(new Vector3(0.3, 0.27, -0.78));  // stan
 const TRAY_ABOVE = TRAY_PACKED.clone().add(new Vector3(0, 0, 62));     // just above the opening
 const LID_CLOSED = CASE_AT.clone().add(new Vector3(2.24, 0.17, 29.9));  // in the groove at the top
 const LID_OPEN = LID_CLOSED.clone().add(new Vector3(105, 0, 0));       // lined up with the groove, to the right
-const LID_ON_TABLE = new Vector3(210, 20, 1.65);                        // lying flat on the table to start (3.3 mm thick)
+const LID_ON_TABLE = new Vector3(250, 5, 1.65);                        // lying flat on the table to start (3.3 mm thick)
 
 // ---------------------------------------------------------------------------
 // 2. The timeline (seconds)

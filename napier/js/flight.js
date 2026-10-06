@@ -47,7 +47,7 @@ export function flyRod(fromRect, toEl, numeral) {
   // Halfway: lifted above both ends, half turned — a little arc through the air.
   const mid = {
     x: (start.x + end.x) / 2,
-    y: Math.min(start.y, end.y) - 70,
+    y: Math.min(start.y, end.y) - 120,
     turn: -45,
     sx: (start.sx + 1) / 2,
     sy: (start.sy + 1) / 2,
@@ -59,7 +59,7 @@ export function flyRod(fromRect, toEl, numeral) {
       { transform: css(mid), opacity: 1, offset: 0.45 },
       { transform: css(end), opacity: 1 },
     ],
-    { duration: 950, easing: "cubic-bezier(.45, 0, .2, 1)" },
+    { duration: 1000, easing: "cubic-bezier(.45, 0, .2, 1)" },
   );
 
   return flight.finished

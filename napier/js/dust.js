@@ -3,7 +3,7 @@
 // twinkles, and is brightest where it crosses the shaft of light that falls
 // across the painting from the upper left. Purely decorative.
 
-const COUNT = 60;
+const COUNT = 80;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 function makeMote() {
