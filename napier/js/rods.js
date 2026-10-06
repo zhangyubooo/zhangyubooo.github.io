@@ -25,8 +25,14 @@ function boxRod(card, saved, onOpen) {
   rod.type = "button";
   rod.className = "rod rod--box";
   rod.dataset.card = card.id;
-  rod.title = `Rod ${card.numeral}: “${saved.motto}”`;
-  rod.setAttribute("aria-label", `Rod ${card.numeral}, answered: ${saved.motto}. Open to read.`);
+  if (saved.skipped) {
+    rod.classList.add("is-skipped");                 // placed by "Skip experience", never answered
+    rod.title = `Rod ${card.numeral} (skipped)`;
+    rod.setAttribute("aria-label", `Rod ${card.numeral}, skipped, not answered.`);
+  } else {
+    rod.title = `Rod ${card.numeral}: “${saved.motto}”`;
+    rod.setAttribute("aria-label", `Rod ${card.numeral}, answered: ${saved.motto}. Open to read.`);
+  }
   const numeral = document.createElement("span");
   numeral.className = "rod__numeral";
   numeral.setAttribute("aria-hidden", "true");

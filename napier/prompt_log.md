@@ -117,6 +117,13 @@ Result: Render's free tier wipes the server's disk whenever it sleeps (after 15 
 
 Result: each 3D rod's front face now carries its Roman numeral, drawn on a canvas (1:10 like the rod) and used as a texture on the +z face of the box geometry; the camera moved slightly closer so the numerals read.
 
+## Phase 5 — After the midpoint check-in
+
+**Prompt 20**
+> 在那个backend code链接，frontend code链接，右边加一个skip experience可以直接点跳到用户全部问完，所有rods全在box里直接pack
+
+Result: a "Skip experience →" link next to the code links. It fills every empty place in the box with an unanswered rod (shown faded; opening one says it was skipped), keeps any rods already answered, and starts the packing animation. It never calls the server, so a reload shows the visitor's real box again — a shortcut for reviewers that doesn't spend sixteen AI calls or fake Napier's answers.
+
 ## Where AI got it wrong (candidates — ✍️ pick one and write the paragraph yourself)
 
 1. **An invented fact in the card mottos.** While drafting the twelve cards, Claude wrote a motto for rod V saying Henry Briggs "rode four days" to meet Napier. When the fact sheet was checked against MacTutor, nothing supported the four days; what the sources do record is the quarter-hour of silent admiration. The line was cut and the motto rewritten. This is exactly why Napier may only speak from `facts.md`.

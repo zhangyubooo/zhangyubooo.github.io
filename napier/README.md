@@ -27,7 +27,7 @@ object, not an AI app.
 inscription → open rods in your box to reread. Rod XVI ("What do you remember of me?") is locked
 until the other fifteen are asked. With a full box, "Pack the set" plays the packing animation (drag to
 turn the case).
-"Begin as a new visitor", under the box, empties it after a second click (useful at the exhibit). Works on phones.
+"Begin as a new visitor", under the box, empties it after a second click (useful at the exhibit). "Skip experience →" in the footer fills the box with unanswered rods and jumps straight to the packing animation (nothing is saved; reload to return). Works on phones.
 
 ## ✍️ Features I'm most proud of
 

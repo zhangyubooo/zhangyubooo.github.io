@@ -26,7 +26,7 @@ const el = {
   box: $("box"), boxCount: $("box-count"), boxNote: $("box-note"),
   reading: $("reading"), newVisitor: $("new-visitor"),
   bindBtn: $("bind-btn"), pack: $("pack"), packStage: $("pack-stage"), packText: $("pack-text"),
-  packReplay: $("pack-replay"),
+  packReplay: $("pack-replay"), skip: $("skip"),
 };
 
 const state = {
@@ -34,6 +34,7 @@ const state = {
   busy: false,      // true while waiting for Napier
   rods: [],         // this visitor's box: [{card, inscription, motto}], oldest first
   counts: {},       // {"4": 12} — how many visitors have asked each rod
+  skipped: false,   // true after "Skip experience": empty places hold unanswered rods
 };
 
 const GREETING_FIRST = "Good visitor, choose a rod and present it to me. I shall answer you in paint.";
@@ -180,7 +181,7 @@ function openReading(card, saved) {
   $("reading-numeral").textContent = `Rod ${card.numeral} · ${card.group}`;
   $("reading-title").textContent = card.question;
   $("reading-inscription").textContent = saved.inscription;
-  $("reading-motto").textContent = `“${saved.motto}”`;
+  $("reading-motto").textContent = saved.motto ? `“${saved.motto}”` : "";
   const count = state.counts[card.id];
   $("reading-count").textContent = count > 1
     ? `${count} visitors have presented this rod.`
@@ -202,6 +203,7 @@ async function openBox() {
     const data = await loadBox();
     state.rods = data.rods;
     state.counts = data.counts;
+    if (state.skipped) fillSkipped();   // the box arrived after a skip: keep the box full
     drawRods();
     if (state.rods.length && !state.busy) {
       writeInscription(el.inscription, el.ghosts, GREETING_BACK);
@@ -235,12 +237,38 @@ el.newVisitor.addEventListener("click", () => {
   state.rods = [];
   state.counts = {};
   state.selected = null;
+  state.skipped = false;
   clearInscriptions(el.inscription, el.ghosts);
   drawRods();
   setPlaque({ text: "A new visitor. Choose a rod and present it to Napier." });
   writeInscription(el.inscription, el.ghosts, GREETING_FIRST);
   openBox();
   window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// ---------------------------------------------------------------------------
+// 5b. Skip experience (for reviewers and demos): fill every empty place in the
+//     box with an unanswered rod and go straight to the packing. Nothing is
+//     sent to the server, so reloading the page shows the real box again.
+// ---------------------------------------------------------------------------
+const SKIPPED_TEXT = "You skipped ahead, so Napier has not answered this rod yet. Begin as a new visitor to present it properly.";
+
+function fillSkipped() {
+  const have = answeredIds();
+  const blanks = CARDS
+    .filter((card) => !have.has(card.id))
+    .map((card) => ({ card: card.id, inscription: SKIPPED_TEXT, motto: "", skipped: true }));
+  state.rods = state.rods.concat(blanks);
+}
+
+el.skip.addEventListener("click", () => {
+  if (state.busy) return;
+  state.skipped = true;
+  state.selected = null;
+  fillSkipped();
+  drawRods();
+  setPlaque({ eyebrow: "Skipped ahead", text: "All sixteen rods are in your box. The ones you didn't present stay unanswered." });
+  openPacking();
 });
 
 // ---------------------------------------------------------------------------
