@@ -132,6 +132,21 @@ Result:
 2. Packing finale: a paper label ("Napier's Bones · sixteen rods, packed by a visitor · today's date") fades onto the front of the closed case, and a "Save a picture" button downloads a PNG of the packed case.
 3. `js/dust.js`: dust motes drift through the light in the portrait, brightest along a diagonal shaft of light; paused when off-screen or for reduced motion.
 
+**Prompt 22** — the portfolio card:
+> 首页那张 Napier 卡片是完整整个项目的，但是这个web额外先放一张卡片，标明是那个大项目的一部分，然后等我那个大项目做完再合并
+
+Result: a separate "Napier's Rod Box" card at the top of the portfolio, tagged "Part of Hybrid Exhibition: Napier", with a cover screenshot of the real interface. The exhibition card stays as it is; the two will be merged when the exhibition is finished.
+
+**Prompt 23**
+> 之前改的打包标签的动画我没看到啊
+
+Result: the label was live and works (checked with screenshots after "Skip experience"); it appears only after the lid has fully closed, about ten seconds in, and an old cached copy of `packing.js` can hide it — a hard refresh fixes that.
+
+**Prompt 24** — a correction to the packing animation:
+> 还有一点是之前那个动画盒子的盖子是悬在空中等着，应该一开始在地面，rods装进去之后在升起来滑进去
+
+Result: the lid now starts lying flat on the table beside the case. Once the tray is in, it is lifted (straight up first, then across, like a hand picking it up), lined up with the groove, and slid shut. The packing now takes 10.6 s instead of 9.5 s.
+
 ## Where AI got it wrong (candidates — ✍️ pick one and write the paragraph yourself)
 
 1. **An invented fact in the card mottos.** While drafting the twelve cards, Claude wrote a motto for rod V saying Henry Briggs "rode four days" to meet Napier. When the fact sheet was checked against MacTutor, nothing supported the four days; what the sources do record is the quarter-hour of silent admiration. The line was cut and the motto rewritten. This is exactly why Napier may only speak from `facts.md`.

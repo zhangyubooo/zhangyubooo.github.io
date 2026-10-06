@@ -34,7 +34,8 @@ const TRAY_START = new Vector3(0, 0, 3.75);                     // tray lying fl
 const TRAY_PACKED = CASE_AT.clone().add(new Vector3(0.3, 0.27, -0.78));  // standing in the case's cavity
 const TRAY_ABOVE = TRAY_PACKED.clone().add(new Vector3(0, 0, 62));     // just above the opening
 const LID_CLOSED = CASE_AT.clone().add(new Vector3(2.24, 0.17, 29.9));  // in the groove at the top
-const LID_OPEN = LID_CLOSED.clone().add(new Vector3(105, 0, 0));       // slid out to the right
+const LID_OPEN = LID_CLOSED.clone().add(new Vector3(105, 0, 0));       // lined up with the groove, to the right
+const LID_ON_TABLE = new Vector3(210, 20, 1.65);                        // lying flat on the table to start (3.3 mm thick)
 
 // ---------------------------------------------------------------------------
 // 2. The timeline (seconds)
@@ -44,7 +45,8 @@ const T = {
   standUp: [4.1, 5.3],                 // tray rotates upright
   carry: [5.3, 6.7],                   // tray moves above the case
   slideIn: [6.7, 8.0],                 // tray slides down into the case
-  lid: [8.2, 9.5],                     // lid slides shut
+  lidLift: [8.1, 9.2],                 // lid is picked up off the table and lined up with the groove
+  lid: [9.3, 10.6],                    // lid slides shut
 };
 const END = T.lid[1];
 
@@ -201,8 +203,15 @@ function pose(parts, t) {
   pos.z += Math.sin(carry * Math.PI) * 18;                                  // a little arc while carried
   trayGroup.position.copy(pos.lerp(TRAY_PACKED, slide));
 
-  // Lid: slides along its groove from the right.
-  lid.position.copy(LID_OPEN.clone().lerp(LID_CLOSED, progress(t, T.lid)));
+  // Lid: lies on the table until the tray is in, then is lifted and slides along its groove.
+  // Lifting starts straight up; it only starts moving sideways a moment later, like a hand picking it up.
+  const [a, b] = T.lidLift;
+  const lifted = new Vector3(
+    MathUtils.lerp(LID_ON_TABLE.x, LID_OPEN.x, progress(t, [a + 0.3, b])),
+    MathUtils.lerp(LID_ON_TABLE.y, LID_OPEN.y, progress(t, [a + 0.3, b])),
+    MathUtils.lerp(LID_ON_TABLE.z, LID_OPEN.z, progress(t, [a, b])),
+  );
+  lid.position.copy(lifted.lerp(LID_CLOSED, progress(t, T.lid)));
 
   // Label: fades onto the front of the case once the lid is shut.
   parts.label.material.opacity = progress(t, [END, END + 0.9]);
