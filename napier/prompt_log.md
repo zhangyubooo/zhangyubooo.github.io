@@ -124,6 +124,14 @@ Result: each 3D rod's front face now carries its Roman numeral, drawn on a canva
 
 Result: a "Skip experience →" link next to the code links. It fills every empty place in the box with an unanswered rod (shown faded; opening one says it was skipped), keeps any rods already answered, and starts the packing animation. It never calls the server, so a reload shows the visitor's real box again — a shortcut for reviewers that doesn't spend sixteen AI calls or fake Napier's answers.
 
+**Prompt 21** — after asking whether the project meets the Project 2 requirements and what visual improvements could be added (Claude listed five; I chose three):
+> 做1，2，3
+
+Result:
+1. `js/flight.js`: after Napier answers, the rod flies from the tray (lying flat) into its own place in the box (standing up), using the FLIP technique: measure the start and end positions, animate a stand-in between them, then reveal the real rod.
+2. Packing finale: a paper label ("Napier's Bones · sixteen rods, packed by a visitor · today's date") fades onto the front of the closed case, and a "Save a picture" button downloads a PNG of the packed case.
+3. `js/dust.js`: dust motes drift through the light in the portrait, brightest along a diagonal shaft of light; paused when off-screen or for reduced motion.
+
 ## Where AI got it wrong (candidates — ✍️ pick one and write the paragraph yourself)
 
 1. **An invented fact in the card mottos.** While drafting the twelve cards, Claude wrote a motto for rod V saying Henry Briggs "rode four days" to meet Napier. When the fact sheet was checked against MacTutor, nothing supported the four days; what the sources do record is the quarter-hour of silent admiration. The line was cut and the motto rewritten. This is exactly why Napier may only speak from `facts.md`.

@@ -11,6 +11,8 @@ import { CARDS, cardById, MEMORY_CARD } from "./cards.js";
 import { getVisitorId, resetVisitor, wake, loadBox, presentRod } from "./api.js";
 import { writeInscription, clearInscriptions } from "./inscription.js";
 import { renderTray, renderBox } from "./rods.js";
+import { flyRod } from "./flight.js";
+import { startDust } from "./dust.js";
 
 // ---------------------------------------------------------------------------
 // 1. Elements and state
@@ -26,7 +28,7 @@ const el = {
   box: $("box"), boxCount: $("box-count"), boxNote: $("box-note"),
   reading: $("reading"), newVisitor: $("new-visitor"),
   bindBtn: $("bind-btn"), pack: $("pack"), packStage: $("pack-stage"), packText: $("pack-text"),
-  packReplay: $("pack-replay"), skip: $("skip"),
+  packReplay: $("pack-replay"), packSave: $("pack-save"), skip: $("skip"),
 };
 
 const state = {
@@ -86,12 +88,12 @@ let packing = null;   // the running animation, if any
 async function openPacking() {
   el.pack.hidden = false;
   el.pack.scrollIntoView({ behavior: "smooth", block: "start" });
-  if (packing) { packing.replay(); el.packReplay.hidden = true; return; }
+  if (packing) { packing.replay(); el.packReplay.hidden = true; el.packSave.hidden = true; return; }
   try {
     const { startPacking } = await import("./packing.js");   // three.js is ~550 KB, so load it late
     packing = await startPacking(el.packStage, {
       reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-      onDone: () => { el.packReplay.hidden = false; },
+      onDone: () => { el.packReplay.hidden = false; el.packSave.hidden = false; },
     });
   } catch (err) {
     console.error(err);
@@ -105,6 +107,18 @@ function closePacking() {
   packing = null;
   el.pack.hidden = true;
   el.packReplay.hidden = true;
+  el.packSave.hidden = true;
+}
+
+/** Download a picture of the packed case. */
+async function savePicture() {
+  const blob = await packing?.snapshot();
+  if (!blob) return;
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "napiers-bones-packed.png";
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }
 
 // ---------------------------------------------------------------------------
@@ -149,11 +163,14 @@ async function present() {
     state.selected = null;
 
     await writeInscription(el.inscription, el.ghosts, answer.inscription);
-    drawRods(answer.card);
-    // Wide screens: make sure the rod is seen landing in the box.
-    if (window.matchMedia("(min-width: 900px)").matches) {
-      el.box.querySelector(".is-arriving")?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }
+
+    // The rod flies from the tray into its place in the box. Wide screens first
+    // bring the box into view; then measure where the rod lies in the tray,
+    // redraw (the rod moves to the box), and fly a stand-in between the two.
+    if (window.matchMedia("(min-width: 900px)").matches) el.box.scrollIntoView({ block: "nearest" });
+    const from = el.tray.querySelector(`[data-card="${card.id}"]`)?.getBoundingClientRect();
+    drawRods();
+    flyRod(from, el.box.querySelector(`.rod--box[data-card="${answer.card}"]`), card.numeral);
 
     let text = answer.repeat
       ? "That rod was already in your box. Napier repeats himself, as old men do."
@@ -276,13 +293,15 @@ el.skip.addEventListener("click", () => {
 // ---------------------------------------------------------------------------
 el.presentBtn.addEventListener("click", present);
 el.bindBtn.addEventListener("click", openPacking);
-el.packReplay.addEventListener("click", () => { packing?.replay(); el.packReplay.hidden = true; });
+el.packReplay.addEventListener("click", () => { packing?.replay(); el.packReplay.hidden = true; el.packSave.hidden = true; });
+el.packSave.addEventListener("click", savePicture);
 el.retryBtn.addEventListener("click", present);
 el.portraitImg.addEventListener("error", () => el.portrait.classList.add("no-image"));
 if (el.portraitImg.complete && el.portraitImg.naturalWidth === 0) el.portrait.classList.add("no-image");
 
 drawRods();
 writeInscription(el.inscription, el.ghosts, GREETING_FIRST);
+startDust(el.portrait.querySelector(".portrait"));
 
 wake()
   .then(() => { el.status.textContent = "The portrait is awake"; el.status.classList.add("is-awake"); })

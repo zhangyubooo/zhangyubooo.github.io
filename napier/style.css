@@ -107,6 +107,11 @@ a { color: var(--gold); }
   text-align: center; color: rgba(236,226,203,.25); font-style: italic; font-size: 15px;
 }
 
+.portrait__dust {             /* drifting motes in the light (js/dust.js) */
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; mix-blend-mode: screen;
+}
+
 /* candlelight: a warm glow that flickers irregularly from the lower left */
 .portrait__candle {
   position: absolute; inset: 0; pointer-events: none;
@@ -325,7 +330,14 @@ a { color: var(--gold); }
 }
 .rod--box:hover { transform: translateY(-4px); }
 .rod--box.is-arriving { animation: arrive .7s cubic-bezier(.2,.8,.3,1.2); }
-.rod--box.is-skipped { opacity: .55; }        /* placed by "Skip experience", never answered */
+.rod--box.is-skipped { opacity: .55; }
+.rod--box.is-landed { animation: settle .35s ease-out; }
+.rod--flying {                /* the stand-in that flies from the tray to the box (js/flight.js) */
+  position: fixed; left: 0; top: 0; margin: 0; z-index: 50;
+  pointer-events: none; transition: none;
+  transform-origin: center;
+  box-shadow: 0 18px 30px rgba(0,0,0,.55);
+}        /* placed by "Skip experience", never answered */
 .box__hint { margin: 10px 0 0; color: var(--ink-dim); font-size: 15px; font-style: italic; }
 .box__note { margin: 10px 0 0; color: var(--danger); font-size: 15px; font-style: italic; }
 .box__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
@@ -416,6 +428,7 @@ a { color: var(--gold); }
   100% { opacity: 1; filter: blur(0); }
 }
 @keyframes present { to { transform: translateX(-60px); opacity: .2; } }   /* slides off towards the portrait */
+@keyframes settle { 0% { transform: translateY(-5px); } 60% { transform: translateY(1px); } 100% { transform: none; } }
 @keyframes arrive { from { transform: translateY(-60px); opacity: 0; } to { transform: none; opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {

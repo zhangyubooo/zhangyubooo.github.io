@@ -15,7 +15,7 @@ import {
   Scene, PerspectiveCamera, WebGLRenderer, Group, Mesh, BoxGeometry, PlaneGeometry,
   BufferGeometry, BufferAttribute, MeshStandardMaterial, ShadowMaterial,
   HemisphereLight, DirectionalLight, Vector3, MathUtils,
-  PCFSoftShadowMap, SRGBColorSpace, ACESFilmicToneMapping, OrbitControls, CanvasTexture,
+  PCFSoftShadowMap, SRGBColorSpace, ACESFilmicToneMapping, OrbitControls, CanvasTexture, Color,
 } from "../vendor/three-napier.min.js";
 import { CARDS } from "./cards.js";
 
@@ -88,6 +88,36 @@ function numeralTexture(numeral) {
   return texture;
 }
 
+/**
+ * The paper label pasted on the front of the case once it is shut, like a
+ * museum tag: what is inside, and the day this visitor packed it.
+ */
+function labelTexture(date) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 960;
+  canvas.height = 400;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#efe2c2";                                 // paper
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "#5a4326";                               // printed double rule
+  ctx.lineWidth = 6;
+  ctx.strokeRect(22, 22, canvas.width - 44, canvas.height - 44);
+  ctx.lineWidth = 2;
+  ctx.strokeRect(38, 38, canvas.width - 76, canvas.height - 76);
+  ctx.fillStyle = "#3a2a18";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = '84px "IM Fell English SC", "IM Fell English", Georgia, serif';
+  ctx.fillText("Napier's Bones", canvas.width / 2, 130);
+  ctx.font = 'italic 50px "IM Fell English", Georgia, serif';
+  ctx.fillText("sixteen rods, packed by a visitor", canvas.width / 2, 225);
+  ctx.font = '46px "IM Fell English SC", "IM Fell English", Georgia, serif';
+  ctx.fillText(date, canvas.width / 2, 305);
+  const texture = new CanvasTexture(canvas);
+  texture.colorSpace = SRGBColorSpace;
+  return texture;
+}
+
 function buildScene(model) {
   const scene = new Scene();
 
@@ -130,8 +160,20 @@ function buildScene(model) {
     rods.push(rod);
   }
 
+  // The label sits just in front of the case's front face (the case is 17.06 mm
+  // deep, so that face is 8.53 mm in front of its centre). A plane faces +z by
+  // default; turning it 90° about x makes it face the visitor (−y).
+  const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const label = new Mesh(
+    new PlaneGeometry(72, 30),
+    new MeshStandardMaterial({ map: labelTexture(today), roughness: 0.9, transparent: true, opacity: 0 }),
+  );
+  label.rotation.x = Math.PI / 2;
+  label.position.set(0, -8.53 - 0.15, -4);
+  caseMesh.add(label);
+
   scene.add(caseMesh, lid, trayGroup);
-  return { scene, trayGroup, rods, lid };
+  return { scene, trayGroup, rods, lid, label };
 }
 
 // ---------------------------------------------------------------------------
@@ -161,6 +203,9 @@ function pose(parts, t) {
 
   // Lid: slides along its groove from the right.
   lid.position.copy(LID_OPEN.clone().lerp(LID_CLOSED, progress(t, T.lid)));
+
+  // Label: fades onto the front of the case once the lid is shut.
+  parts.label.material.opacity = progress(t, [END, END + 0.9]);
 }
 
 // ---------------------------------------------------------------------------
@@ -231,6 +276,18 @@ export async function startPacking(container, { reducedMotion = false, onDone = 
     seek(t) {
       startTime = performance.now() - t * 1000;
       finished = t >= END;
+    },
+    /** A PNG of the current view, on a dark background, for "Save a picture". */
+    snapshot() {
+      return new Promise((resolve) => {
+        const saved = camera.position.clone();
+        camera.position.lerp(controls.target, 0.4);          // step in closer for the picture
+        parts.scene.background = new Color(0x1c150f);
+        renderer.render(parts.scene, camera);
+        renderer.domElement.toBlob(resolve, "image/png");   // reads the frame just drawn
+        parts.scene.background = null;
+        camera.position.copy(saved);
+      });
     },
     replay() {
       startTime = performance.now();

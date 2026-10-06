@@ -26,7 +26,7 @@ object, not an AI app.
 *Reminder:* pick a rod → read the question on the plaque → "Present the rod" → watch the
 inscription → open rods in your box to reread. Rod XVI ("What do you remember of me?") is locked
 until the other fifteen are asked. With a full box, "Pack the set" plays the packing animation (drag to
-turn the case).
+turn the case). Once packed, a paper label with the date appears on the case, and "Save a picture" downloads a PNG of it.
 "Begin as a new visitor", under the box, empties it after a second click (useful at the exhibit). "Skip experience →" in the footer fills the box with unanswered rods and jumps straight to the packing animation (nothing is saved; reload to return). Works on phones.
 
 ## ✍️ Features I'm most proud of
@@ -97,6 +97,8 @@ Flask backend on Render (napier-backend)
 | `js/api.js` | Backend URL, anonymous visitor id in localStorage, fetch with a 75 s timeout and friendly errors |
 | `js/inscription.js` | Splits the answer into letter spans with staggered animation; retires the previous answer to a ghost layer |
 | `js/rods.js` | Builds tray rods (lying flat, with titles) and the box: sixteen places in one row, each rod carrying only its numeral; locks rod XVI until last |
+| `js/flight.js` | After an answer, the rod flies from the tray into its place in the box (FLIP technique with the Web Animations API) |
+| `js/dust.js` | Dust motes drifting through the light in the portrait (a 2D canvas over the painting; paused off-screen and for reduced motion) |
 | `js/packing.js` | The finale in WebGL (three.js): builds the tray, case and lid from `models/rod-box.json`, adds sixteen rods at real size, and animates them with a pure `pose(t)` timeline. Loaded only when needed |
 | `models/rod-box.json` | Tray, case and lid meshes exported from my Fusion model (`napiers rods.3mf`), each recentred, in millimetres |
 | `vendor/three-napier.min.js` | three.js r186 (MIT) — only the classes `packing.js` uses, bundled and minified with esbuild |
