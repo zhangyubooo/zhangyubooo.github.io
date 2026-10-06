@@ -52,7 +52,7 @@ turn the case). Once packed, a paper label with the date appears on the case, an
 
 The frontend holds no secrets. The Groq API key and the database URL exist only as environment
 variables on Render (and in a local `.env` file that `.gitignore` keeps out of git). The browser
-only ever sends a random visitor id and a card number 1–12.
+only ever sends a random visitor id and a card number 1–16.
 
 ## ✍️ How I used AI
 
