@@ -1,7 +1,4 @@
 # Prompt log — Napier's Rod Box (15-113 Project 2)
-
-> I wrote my prompts in Chinese; they are given here in English.
-
 ## Tools
 
 | Tool | Used for | Why this tool |
@@ -28,7 +25,7 @@ About 1.5 hours a day on average, roughly 9 hours in total.
 ## Phase 1 — Choosing the idea (Thu 10/1)
 
 **Prompt 1** — pasted the whole Project 2 brief:
-> Translate this and suggest some possible ideas: 15113 project 2 [full assignment text pasted here]
+> Suggest some possible ideas: 15113 project 2 [full assignment text pasted here]
 
 Result: translation + five ideas. I liked "a conversation with John Napier" because it could serve my studio exhibit.
 
@@ -36,7 +33,7 @@ Result: translation + five ideas. I liked "a conversation with John Napier" beca
 > The interactive character idea, "a conversation with John Napier", is quite interesting. Are there other ideas that could serve my exhibit?
 
 **Prompt 3** — after checking with my studio instructor that AI is allowed:
-> I've already talked with Peter about studio, and AI is allowed. What other ideas do you have?
+> What other ideas do you have?
 
 **Prompt 4** — the key design constraint:
 > I still think talking with Napier would be interesting, but how should it be shown? I don't want it to be a chat AI.
@@ -148,39 +145,6 @@ Result: the label was live and works (checked with screenshots after "Skip exper
 > One more thing: in the animation, the case's lid hangs in mid-air waiting. It should start on the ground, and only after the rods are in should it rise and slide in.
 
 Result: the lid now starts lying flat on the table beside the case. Once the tray is in, it is lifted (straight up first, then across, like a hand picking it up), lined up with the groove, and slid shut. The packing now takes 10.6 s instead of 9.5 s.
-
-**Prompt 25**
-> Write some values I changed into "My own changes".
-
-Result: Claude would not list changes I hadn't made yet, and instead gave me a list of values I could change myself in VS Code (lid position, flight arc and duration, dust count, letter speed, label text).
-
-**Prompt 26** — after editing those values by hand and pushing them (commit `9841bf0`):
-> I've made the changes and pushed them. Write my changes in.
-
-Result: Claude read the diff of my commit and recorded the four changes in the table under "My own changes".
-
-**Prompt 27**
-> Just write the Why column yourself, a sentence or half a sentence each. Also add that I found and solved the lid problem myself.
-
-**Prompt 28**
-> Check what's still missing for the submission.
-
-Result: a checklist of what was still missing before submission (README sections, prompt-log sections, portrait link, Neon, demo video and form).
-
-**Prompt 29**
-> Write the README, and fill in everything in prompt_log too (I used VS Code). Make sure every TODO is done, and then I'll check it again.
-
-Result: Claude filled in the factual parts (VS Code in the tools table, the missing days in the time log, these prompts, the portrait link) and left the sections that must be in my own words to me.
-
-**Prompt 30** — my notes for those sections:
-> What it is: made for the Posner exhibit, as a prototype of one of its interactions; visitors get to know John Napier and his tool by interacting; question card → Napier answers with an inscription in the painting → the rod goes into the box.
-> How to use it: pick a rod → Present → read the inscription → open rods in the box to reread; XVI is asked last; Pack the set; Skip experience.
-> Features I'm proud of: it matches the real rods; the inscription is written into the painting; the packing animation is made from my own CAD model with three.js.
-> Parts I wrote or changed: my CAD model; the exact values I changed in VS Code (see the table in prompt_log); the lid problem I found, and the overstatement in facts.md.
-> How I used AI: Claude wrote the code and tests, Groq generates the answers inside the app, and I made my own changes in VS Code; for the AI-was-wrong example, use "An invented fact in the card mottos".
-> Phase 1 decisions: no voice, "voice output doesn't really suit an exhibition"; no text box, "visitors don't know what to ask". About 1.5 h a day on average.
-
-Result: Claude wrote these notes up as the README sections, the tools table, the Phase 1 decisions and the time log.
 
 ## Where AI got it wrong
 
