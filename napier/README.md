@@ -8,7 +8,7 @@
 
 ## What it is
 
-A prototype of one of the interactions for my 51-265 exhibit on Napier's bones at CMU's Posner Center.
+A prototype of one of the interactions for my exhibit design on Napier's bones at CMU's Posner Center.
 Visitors get to know John Napier and his calculating rods by interacting with him rather than reading
 a label. You pick a question card shaped like one of his rods and present it to his 1616 portrait. He
 answers with an inscription that appears in the painting, and the rod then goes into your box.
@@ -83,10 +83,6 @@ under my direction and then edited by me. My prompts are in [prompt_log.md](prom
 - Facts: MacTutor History of Mathematics (University of St Andrews), entries on John Napier and Henry Briggs
 
 ---
-
-## AI-generated technical notes
-
-*This section was written by Claude (Anthropic) and describes the code as built.*
 
 ### Architecture
 

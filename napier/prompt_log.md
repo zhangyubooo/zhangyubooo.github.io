@@ -157,8 +157,6 @@ Result: the lid now starts lying flat on the table beside the case. Once the tra
 
 ## My own changes
 
-All four are in commit `9841bf0` ("self fix"), edited by hand.
-
 | Date | File | What I changed (before → after) | Why |
 |---|---|---|---|
 | Tue 10/6 | `js/packing.js` | `LID_ON_TABLE`: `(210, 20, 1.65)` → `(250, 5, 1.65)` — where the lid lies on the table before it is picked up (x, y in mm; 1.65 = half the lid's 3.3 mm thickness, so it rests on the table) | Further from the tray's path to the case, so the table reads less crowded |
@@ -166,4 +164,4 @@ All four are in commit `9841bf0` ("self fix"), edited by hand.
 | Tue 10/6 | `js/flight.js` | Flight duration: `950` → `1000` ms | A little slower, so the higher arc doesn't feel rushed |
 | Tue 10/6 | `js/dust.js` | `COUNT`: `60` → `80` dust motes in the portrait's light | More motes make the shaft of light in the portrait show up better |
 
-**A problem I found in the packing animation (fixed in commit `30926c9`).** While watching the animation I noticed the lid was floating in mid-air beside the case the whole time, waiting to slide in. A real lid would lie on the table. I decided how it should work instead: the lid starts flat on the table, and only after the rods and tray are in the case is it lifted, lined up with the groove and slid shut. Claude wrote the code for it (prompt 24); I then tuned where the lid lies (the `LID_ON_TABLE` row above).
+**A problem I found in the packing animation.** While watching the animation I noticed the lid was floating in mid-air beside the case the whole time, waiting to slide in. A real lid would lie on the table. I decided how it should work instead: the lid starts flat on the table, and only after the rods and tray are in the case is it lifted, lined up with the groove and slid shut. Claude wrote the code for it (prompt 24); I then tuned where the lid lies (the `LID_ON_TABLE` row above).
