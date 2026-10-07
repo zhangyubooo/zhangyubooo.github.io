@@ -1,45 +1,52 @@
 # Napier's Rod Box
 
-> **TODO (Yubo):** the sections marked ✍️ must be rewritten in your own words before submitting —
-> the course asks for a README you wrote yourself. The notes under each heading are only reminders
-> of what to cover. The section at the very bottom is labelled as AI-generated and may stay as is.
-
 **Live:** https://zhangyubooo.github.io/napier/
 **Backend code:** https://github.com/zhangyubooo/napier-backend
 **Prompt log:** [prompt_log.md](prompt_log.md)
 
 ---
 
-## ✍️ What it is
+## What it is
 
-*Reminder:* a web companion to the 51-265 exhibit on Napier's bones and the *Rabdologia* for the
-Posner Center. You choose one of sixteen carved rods (each one is a question), present it to the
-1616 portrait of John Napier, and his answer appears as an inscription painted into the canvas.
-The rod then joins your box, carved with a short motto. Come back later and the box — and Napier —
-remember you. Rod XVI, "What do you remember of me?", unlocks last; once all sixteen are in the box,
-a 3D animation packs them the way the real set travels — onto the tray, into the case, lid slid shut —
-using my own CAD model of the set. No chat box, no typing, no voice: it should feel like an exhibit
-object, not an AI app.
+A prototype of one of the interactions for my 51-265 exhibit on Napier's bones at CMU's Posner Center.
+Visitors get to know John Napier and his calculating rods by interacting with him rather than reading
+a label. You pick a question card shaped like one of his rods and present it to his 1616 portrait. He
+answers with an inscription that appears in the painting, and the rod then goes into your box.
 
-## ✍️ How to use it
+## How to use it
 
-*Reminder:* pick a rod → read the question on the plaque → "Present the rod" → watch the
-inscription → open rods in your box to reread. Rod XVI ("What do you remember of me?") is locked
-until the other fifteen are asked. With a full box, "Pack the set" plays the packing animation (drag to
-turn the case). Once packed, a paper label with the date appears on the case, and "Save a picture" downloads a PNG of it.
-"Begin as a new visitor", under the box, empties it after a second click (useful at the exhibit). "Skip experience →" in the footer fills the box with unanswered rods and jumps straight to the packing animation (nothing is saved; reload to return). Works on phones.
+1. Pick a rod from the tray. Its question appears on the plaque.
+2. Press "Present the rod" and watch Napier's answer appear on the tablet under the portrait.
+3. The rod flies into your box. Tap any rod in the box to read its answer again.
+4. Rod XVI ("What do you remember of me?") unlocks only after the other fifteen.
+5. With all sixteen in the box, "Pack the set" plays the packing animation (you can drag to turn the case).
+   Afterwards a label with the date appears on the case, and "Save a picture" downloads it.
+6. "Skip experience →" at the bottom fills the box and jumps straight to the packing, without saving
+   anything. "Begin as a new visitor" (two clicks) empties the box.
 
-## ✍️ Features I'm most proud of
+It also works on phones.
 
-*Reminder — pick 2–3 and say why:*
-- Question cards instead of a text box: the design choice that removes prompt injection entirely
-- The inscription surfacing letter by letter, with older answers sinking into the varnish as "ghosts"
-- Memory you can see: the rod box, stored per anonymous visitor in a database
-- Napier only speaks from a curated fact sheet, and legends are told as legends
+## Features I'm most proud of
 
-## ✍️ Parts I wrote or changed myself
+- **It follows the real rods.** There are sixteen question rods because a real set has sixteen rods,
+  and they keep the real 1:10 proportions and carry Roman numerals.
+- **The answer is written into the painting.** Napier's reply appears letter by letter as an
+  inscription on the portrait, not in a chat bubble.
+- **The packing animation uses my own CAD model.** The tray, case and lid come from my model of the
+  set, animated in three.js: the rods drop onto the tray, the tray slides into the case and the lid
+  closes.
 
-*Reminder — list the concrete changes you made by hand and why (graders weight this heavily).*
+## Parts I wrote or changed myself
+
+- **The CAD model** of the set (tray, sixteen rods, case with a sliding lid), which the packing
+  animation is built from.
+- **Values I changed by hand in VS Code** (commit `9841bf0`): where the lid lies on the table
+  (`LID_ON_TABLE`), the height and duration of the rod's flight into the box (70 → 120 px,
+  950 → 1000 ms), and the number of dust motes in the portrait (60 → 80). Details are in the
+  prompt log's "My own changes" table.
+- **Problems I found:** the lid floated in mid-air during the packing (I decided it should start on
+  the table and be lifted only after the tray is in), and the first real answer overstated what the
+  rods can do, so the fact sheet `facts.md` was made precise.
 
 ## How to run it locally
 
@@ -54,14 +61,23 @@ The frontend holds no secrets. The Groq API key and the database URL exist only 
 variables on Render (and in a local `.env` file that `.gitignore` keeps out of git). The browser
 only ever sends a random visitor id and a card number 1–16.
 
-## ✍️ How I used AI
+## How I used AI
 
-*Reminder:* which tools for which parts, one place it was wrong, and a citation for the code it
-produced. Details and verbatim prompts are in [prompt_log.md](prompt_log.md).
+- **Claude** (Anthropic, in the Cowork desktop app) wrote the code and the tests for both the
+  frontend and the backend, following my design decisions.
+- **Groq** (`openai/gpt-oss-20b`) runs inside the app and writes Napier's answers from a fact sheet.
+- **VS Code**: where I made my own changes to the code.
+
+One place the AI was wrong: while writing the card mottos, Claude invented a fact, that Henry Briggs
+"rode four days" to meet Napier. Checking against MacTutor found nothing to support it, so the line
+was cut. This is why Napier is only allowed to answer from `facts.md`.
+
+Citation: the code in this folder and in the backend repository was generated by Claude (Anthropic)
+under my direction and then edited by me. My prompts are in [prompt_log.md](prompt_log.md).
 
 ## Credits
 
-- Portrait of John Napier (1616), public domain, via Wikimedia Commons — **TODO: add exact file link**
+- Portrait of John Napier (1616), public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:John_Napier_(mathematician))
 - Typeface: IM Fell English by Igino Marini (Google Fonts, SIL Open Font License)
 - 3D: [three.js](https://threejs.org) (MIT); the tray, case and lid are my own CAD model
 - Facts: MacTutor History of Mathematics (University of St Andrews), entries on John Napier and Henry Briggs

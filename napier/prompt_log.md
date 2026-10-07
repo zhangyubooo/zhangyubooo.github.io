@@ -1,69 +1,71 @@
 # Prompt log — Napier's Rod Box (15-113 Project 2)
 
-> **TODO (Yubo):** keep adding entries as you work — every session, every hand edit. Prompts are
-> pasted verbatim (most were written in Chinese; that is the original wording). Lines marked ✍️
-> need your own words.
+> I wrote my prompts in Chinese; they are given here in English.
 
 ## Tools
 
-| Tool | Used for | ✍️ Why this tool |
+| Tool | Used for | Why this tool |
 |---|---|---|
-| Claude (Cowork, desktop app; model `claude-opus-5-5`) | Translating the brief, brainstorming, design discussion, writing the first version of the backend and frontend, fact-checking against web sources, browser screenshot tests | |
+| Claude (Cowork, desktop app; model `claude-opus-5-5`) | Translating the brief, brainstorming, design discussion, writing the first version of the backend and frontend, fact-checking against web sources, browser screenshot tests | Wrote and tested the code from my design decisions |
 | Groq API, `openai/gpt-oss-20b` | Runs inside the app: writes Napier's inscription + motto | Reused from HW4 (Ask Yubo), where Gemini was blocked |
-| ✍️ (add anything else: VS Code, ChatGPT for debugging, etc.) | | |
+| VS Code | Editing the code by hand (commit `9841bf0`: lid position, flight arc and duration, dust count) and reading the files Claude wrote | To make and check my own changes by hand |
 
 ## Time log
 
+About 1.5 hours a day on average, roughly 9 hours in total.
+
 | Date | What | Hours |
 |---|---|---|
-| Wed 9/30 | Earlier exploration: a gesture-controlled Napier's rods calculator (MediaPipe). Planned, then dropped in favour of the portrait idea | ✍️ |
-| Thu 10/1 | Read the brief, brainstormed directions, settled the design (prompts 1–9) | ✍️ |
-| Sat 10/3 | First full build: backend + frontend + local tests (prompt 10); real portrait, first real Groq test, 16 rods + bone set (prompts 11–14) | ✍️ |
-| ✍️ | | |
+| Wed 9/30 | Earlier exploration: a gesture-controlled Napier's rods calculator (MediaPipe). Planned, then dropped in favour of the portrait idea | ~1.5 |
+| Thu 10/1 | Read the brief, brainstormed directions, settled the design (prompts 1–9) | ~1.5 |
+| Sat 10/3 | First full build: backend + frontend + local tests (prompt 10); real portrait, first real Groq test, 16 rods + bone set (prompts 11–14) | ~1.5 |
+| Sun 10/4 | Deployed: backend to Render, frontend to GitHub Pages; Neon discussed; numerals on the 3D rods (prompts 17–19); midpoint check-in | ~1.5 |
+| Tue 10/6 | Skip experience, requirements check, rod flight + case label + dust, portfolio card, lid fix (prompts 20–24); my own edits in VS Code (commit `9841bf0`) | ~1.5 |
+| Wed 10/7 | README and prompt log, demo video, submission (prompts 25–30) | ~1.5 |
 
 ---
 
 ## Phase 1 — Choosing the idea (Thu 10/1)
 
 **Prompt 1** — pasted the whole Project 2 brief:
-> 翻译，并说说可能的idea: 15113 project 2 [full assignment text pasted here]
+> Translate this and suggest some possible ideas: 15113 project 2 [full assignment text pasted here]
 
 Result: translation + five ideas. I liked "a conversation with John Napier" because it could serve my studio exhibit.
 
 **Prompt 2**
-> "和 John Napier 对话"的互动角色这个挺有趣的，有没有别的可以服务于我的exhibit
+> The interactive character idea, "a conversation with John Napier", is quite interesting. Are there other ideas that could serve my exhibit?
 
 **Prompt 3** — after checking with my studio instructor that AI is allowed:
-> studio我已经和peter聊过了，可以使用ai，还有什么别的想法说说
+> I've already talked with Peter about studio, and AI is allowed. What other ideas do you have?
 
 **Prompt 4** — the key design constraint:
-> 我还是觉得对话Napier这个会很有趣，但是怎么表现呢？我不想是聊天ai
+> I still think talking with Napier would be interesting, but how should it be shown? I don't want it to be a chat AI.
 
 Result: five ways to show the character without a chat interface (letters, a living portrait, marginalia, question cards, answering by calculation).
 
 **Prompt 5**
-> 我觉得你说的那个组合很好，我喜欢问题卡片的提问形式，可以是那种抽出问题卡片，然后napier收到之后进行回答，但是你说的用算筹算一遍，这个怎么根据问题翻译算式？其实我比较喜欢napier油画像能动的感觉。你怎么说？
+> I think the combination you described is good. I like asking through question cards: you draw a question card, and Napier answers once he receives it. But for the idea of working it out on the rods, how would a question be turned into a calculation? Actually, I quite like the feeling of Napier's oil portrait coming alive. What do you think?
 
 **Prompt 6** — cutting what doesn't fit an exhibit:
-> 我觉得不要视觉追踪，也不要语音输出，因为语音输出在展览里不太适合。还能怎么办
+> I don't want eye tracking, and no voice output either, because voice output doesn't really suit an exhibition. What else could we do?
 
 **Prompt 7**
-> 回答出现，采用写进画里的铭文。对于记忆怎么"看得见"这个会不会太难了，而且目前技术上符合113吗
+> For how the answer appears, use an inscription written into the painting. Would making the memory "visible" be too hard? And does this meet the 113 technical requirements?
 
 **Prompt 8** — keeping art production small:
-> 我觉得不用出现物品，想办法把问题卡片设计成，问完问题之后就会被陈列出来，或者其他形式，我不想太多关于美术
+> I don't think objects need to appear. Find a way to design the question cards so that once a question is asked, the card gets displayed, or some other form. I don't want too much art work.
 
 Result: question cards shaped like Napier's rods; once asked, a rod is carved with a motto and stored in a rod box under the portrait.
 
 **Prompt 9**
-> 就第一种了
+> Let's go with the first one.
 
-✍️ *My decisions in this phase, in my words (what I rejected and why: voice, eye tracking, objects in the painting, the calculation gimmick):*
+**My decisions in this phase:** no voice output, because spoken answers don't suit an exhibit space; and no text box, because visitors don't know what to ask — so they choose from question cards instead.
 
 ## Phase 2 — First build (Sat 10/3)
 
 **Prompt 10**
-> 开始做吧
+> Let's start building.
 
 What Claude produced (first version, before my own changes):
 - Backend `napier-backend/`: Flask app with `/health`, `/visitor/<id>`, `/ask`; `persona.md` (who Napier is, output format), `facts.md` (fact sheet with sources), `cards.json` (the twelve rods), `storage.py` (SQLAlchemy: SQLite locally, Postgres on Render).
@@ -73,59 +75,59 @@ What Claude produced (first version, before my own changes):
 ## Phase 3 — Real portrait, first real test, 16 rods (Sat 10/3, evening)
 
 **Prompt 11** — sent the 1616 portrait image:
-> 这是那个肖像，然后你告诉我两个终端都输入什么指令来本地测试
+> Here is the portrait. Tell me what commands to type in the two terminals to test locally.
 
 Result: the portrait was placed in `images/`. Because the real painting already has lettering at the top and his face sits high, the inscription moved from the top of the canvas to a painted tablet at the foot of the frame.
 
 **Prompt 12** — after running both terminals locally, with a screenshot of the first real Groq answer:
-> 这样应该是跑通了吧？
+> So it's working now, right?
 
 Result: yes — the full chain worked (page → Flask → Groq → SQLite → box). Two issues spotted in the screenshot: the answer claimed the rods give "the product of any two numbers" (overstated), and the old greeting's ghost overlapped the new inscription.
 
 **Prompt 13** — design changes:
-> 两个小问题可以修掉，然后问题的话再加4个做到16个吧，因为实际rods就有16个。然后问的16个rods横着摆放，这样更好看清上面的字。全问完就可以把box里的rods打包成真正的rods
+> Fix the two small issues. Then add 4 more questions to make 16, because a real set has 16 rods. Lay the 16 question rods horizontally so the text on them is easier to read. Once all are asked, the rods in the box can be packed into a real set of rods.
 
 **Prompt 14** — bug report while that was being built:
-> 现在的话，有一个bug12个问完，第十二个不会消失
+> Right now there's a bug: after all 12 are asked, the twelfth one doesn't disappear.
 
 Result: rod XII/XVI ("What do you remember of me?") had been designed to stay in the tray so it could be re-asked, which looked like a bug and meant the box never felt finished. Now it is locked until the other fifteen are asked, and leaves the tray like the others. Also: four new rods (Reading Rods, The Point, Merchiston, The Pigeons), tray rods lie flat in two columns, and a full box can be bound into a printable set of Napier's bones (`js/bones.js`). The fact sheet now says exactly how the rods are read (one digit of the multiplier at a time).
 
 **Prompt 15** — with my CAD model of the real set attached (`napiers rods.3mf`: a tray, sixteen rods and a case with a sliding lid):
-> 首先，问完之后列在box里的rods上不要文字，，保证box一行能直接放下所有rods。然后装订效果非常不好，数字都是乱的。不要上面是数字的。直接做一个动画就是把rods打包好，装进盒子里，文件里是我根据实际建模出来的，里面有一个托盘和十六个rods然后还有盖子。可以帮助你理解rods是怎么打包的。
+> First, the rods listed in the box after being asked should have no text on them, and make sure one row of the box fits all the rods. Second, the binding effect looks very bad; the numbers are all jumbled. Drop the version with numbers on it. Instead, just make an animation that packs the rods and puts them into the case. The file is my model of the real set: a tray, sixteen rods and a lid. It can help you understand how the rods are packed.
 
 Result: the box now has sixteen places in one row and the rods carry no text (rods keep the real 1:10 proportions, 5.3 × 53.3 mm). The printable "bone set" was removed. In its place, `js/packing.js` loads the tray, case and lid from my model (converted to `models/rod-box.json`) and animates the packing in three.js: rods tip over onto the tray one by one, the tray stands up and slides into the case, and the lid slides shut along its groove. Positions come from measuring the model (e.g. case cavity 96 × 9.2 × 57.8 mm, the tray 95.1 × 57.5 × 7.5 mm, lid groove at the top).
 
 **Prompt 16**
-> 问完box里的rods还是要带问题的数字的，pack的动画很好，那个begin as a new visitor的按钮再明显一点，可以放在box下面单独一个按钮
+> The rods in the box should still carry their question's numeral after being asked. The pack animation is good. Make the "Begin as a new visitor" button more visible; it can be its own button under the box.
 
 Result: rods in the box carry their Roman numeral again (stacked letter over letter so it fits a rod 1/10 as wide as it is tall); "Begin as a new visitor" moved from the footer to a real button under the box, next to "Pack the set". It still needs a second click, and turns red while waiting for it.
 
 ## Phase 4 — Deploying (Sun 10/4, early morning)
 
 **Prompt 17**
-> 先开始部署吧，细节问题我再明天检查之后再修改
+> Let's start deploying. I'll check the details tomorrow and fix them then.
 
 Result: backend committed and published from GitHub Desktop, deployed on Render. `napier-backend.onrender.com` turned out to belong to someone else (it answered `{"detail":"Not Found"}`, a FastAPI-style error, not our Flask one), so Render gave the service `napier-backend-prtd.onrender.com`; `js/api.js` was pointed there.
 
 **Prompt 18**
-> Neon是啥有必要接吗
+> What is Neon? Do we need to connect it?
 
 Result: Render's free tier wipes the server's disk whenever it sleeps (after 15 idle minutes), restarts or redeploys, so the SQLite file — and every visitor's box — disappears. Neon is a free, permanent Postgres host; `storage.py` already switches to it when `DATABASE_URL` is set. Decided to connect it after the check-in.
 
 **Prompt 19**
-> pack动画上的rods正面也上box里的数字
+> Put the box numerals on the front of the rods in the pack animation too.
 
 Result: each 3D rod's front face now carries its Roman numeral, drawn on a canvas (1:10 like the rod) and used as a texture on the +z face of the box geometry; the camera moved slightly closer so the numerals read.
 
 ## Phase 5 — After the midpoint check-in
 
 **Prompt 20**
-> 在那个backend code链接，frontend code链接，右边加一个skip experience可以直接点跳到用户全部问完，所有rods全在box里直接pack
+> To the right of the Backend code and Frontend code links, add a "Skip experience" that jumps straight to the point where the visitor has asked everything, with all the rods in the box, and goes directly to packing.
 
 Result: a "Skip experience →" link next to the code links. It fills every empty place in the box with an unanswered rod (shown faded; opening one says it was skipped), keeps any rods already answered, and starts the packing animation. It never calls the server, so a reload shows the visitor's real box again — a shortcut for reviewers that doesn't spend sixteen AI calls or fake Napier's answers.
 
 **Prompt 21** — after asking whether the project meets the Project 2 requirements and what visual improvements could be added (Claude listed five; I chose three):
-> 做1，2，3
+> Do 1, 2 and 3.
 
 Result:
 1. `js/flight.js`: after Napier answers, the rod flies from the tray (lying flat) into its own place in the box (standing up), using the FLIP technique: measure the start and end positions, animate a stand-in between them, then reveal the real rod.
@@ -133,29 +135,63 @@ Result:
 3. `js/dust.js`: dust motes drift through the light in the portrait, brightest along a diagonal shaft of light; paused when off-screen or for reduced motion.
 
 **Prompt 22** — the portfolio card:
-> 首页那张 Napier 卡片是完整整个项目的，但是这个web额外先放一张卡片，标明是那个大项目的一部分，然后等我那个大项目做完再合并
+> The Napier card on the homepage is for the whole project. For now, add a separate card for this web app, marked as part of that larger project, and I'll merge them once the larger project is done.
 
 Result: a separate "Napier's Rod Box" card at the top of the portfolio, tagged "Part of Hybrid Exhibition: Napier", with a cover screenshot of the real interface. The exhibition card stays as it is; the two will be merged when the exhibition is finished.
 
 **Prompt 23**
-> 之前改的打包标签的动画我没看到啊
+> I didn't see the packing label animation you added earlier.
 
 Result: the label was live and works (checked with screenshots after "Skip experience"); it appears only after the lid has fully closed, about ten seconds in, and an old cached copy of `packing.js` can hide it — a hard refresh fixes that.
 
 **Prompt 24** — a correction to the packing animation:
-> 还有一点是之前那个动画盒子的盖子是悬在空中等着，应该一开始在地面，rods装进去之后在升起来滑进去
+> One more thing: in the animation, the case's lid hangs in mid-air waiting. It should start on the ground, and only after the rods are in should it rise and slide in.
 
 Result: the lid now starts lying flat on the table beside the case. Once the tray is in, it is lifted (straight up first, then across, like a hand picking it up), lined up with the groove, and slid shut. The packing now takes 10.6 s instead of 9.5 s.
 
-## Where AI got it wrong (candidates — ✍️ pick one and write the paragraph yourself)
+**Prompt 25**
+> Write some values I changed into "My own changes".
+
+Result: Claude would not list changes I hadn't made yet, and instead gave me a list of values I could change myself in VS Code (lid position, flight arc and duration, dust count, letter speed, label text).
+
+**Prompt 26** — after editing those values by hand and pushing them (commit `9841bf0`):
+> I've made the changes and pushed them. Write my changes in.
+
+Result: Claude read the diff of my commit and recorded the four changes in the table under "My own changes".
+
+**Prompt 27**
+> Just write the Why column yourself, a sentence or half a sentence each. Also add that I found and solved the lid problem myself.
+
+**Prompt 28**
+> Check what's still missing for the submission.
+
+Result: a checklist of what was still missing before submission (README sections, prompt-log sections, portrait link, Neon, demo video and form).
+
+**Prompt 29**
+> Write the README, and fill in everything in prompt_log too (I used VS Code). Make sure every TODO is done, and then I'll check it again.
+
+Result: Claude filled in the factual parts (VS Code in the tools table, the missing days in the time log, these prompts, the portrait link) and left the sections that must be in my own words to me.
+
+**Prompt 30** — my notes for those sections:
+> What it is: made for the Posner exhibit, as a prototype of one of its interactions; visitors get to know John Napier and his tool by interacting; question card → Napier answers with an inscription in the painting → the rod goes into the box.
+> How to use it: pick a rod → Present → read the inscription → open rods in the box to reread; XVI is asked last; Pack the set; Skip experience.
+> Features I'm proud of: it matches the real rods; the inscription is written into the painting; the packing animation is made from my own CAD model with three.js.
+> Parts I wrote or changed: my CAD model; the exact values I changed in VS Code (see the table in prompt_log); the lid problem I found, and the overstatement in facts.md.
+> How I used AI: Claude wrote the code and tests, Groq generates the answers inside the app, and I made my own changes in VS Code; for the AI-was-wrong example, use "An invented fact in the card mottos".
+> Phase 1 decisions: no voice, "voice output doesn't really suit an exhibition"; no text box, "visitors don't know what to ask". About 1.5 h a day on average.
+
+Result: Claude wrote these notes up as the README sections, the tools table, the Phase 1 decisions and the time log.
+
+## Where AI got it wrong
+
+**The example I chose: 1.** The others are also listed for the record.
 
 1. **An invented fact in the card mottos.** While drafting the twelve cards, Claude wrote a motto for rod V saying Henry Briggs "rode four days" to meet Napier. When the fact sheet was checked against MacTutor, nothing supported the four days; what the sources do record is the quarter-hour of silent admiration. The line was cut and the motto rewritten. This is exactly why Napier may only speak from `facts.md`.
 2. **A layout bug the AI wrote and only found by looking.** The first CSS made the page wider than a phone screen: the tray of twelve rods stretched the grid column (a CSS grid item's minimum width defaults to its content). It only showed up in the phone screenshot; fixed with `minmax(0, 1fr)` columns.
 3. **Overstating what the rods do (found in the first real Groq answer).** Napier's inscription for rod I said a simple addition of diagonals "gives the product of any two numbers". The rods actually multiply a many-digit number by one digit per reading; a many-digit multiplier needs one reading per digit and an addition of the partial results. The model wasn't inventing a fact so much as stretching a vague line in the fact sheet, so the fix was to make `facts.md` precise (with the 425 × 6 example) rather than to argue with the model.
 4. **A refactor that deleted two functions it still needed.** While swapping the bone set for the packing animation, Claude replaced a block of `main.js` by slicing between two comments, and the slice also contained `setPlaque()` and `showPortrait()`. The page loaded with no visible error, but clicking a rod did nothing. The headless-browser test caught it (`setPlaque is not defined` in the console) and the functions were restored. Lesson: an edit that "looks" small can remove more than intended; run the click-through test after every change.
-5. ✍️ (add any others you find)
 
-## ✍️ My own changes
+## My own changes
 
 All four are in commit `9841bf0` ("self fix"), edited by hand.
 
