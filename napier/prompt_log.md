@@ -17,8 +17,8 @@ About 1.5 hours a day on average, roughly 9 hours in total.
 | Thu 10/1 | Read the brief, brainstormed directions, settled the design (prompts 1–9) | ~1.5 |
 | Sat 10/3 | First full build: backend + frontend + local tests (prompt 10); real portrait, first real Groq test, 16 rods + bone set (prompts 11–14) | ~1.5 |
 | Sun 10/4 | Deployed: backend to Render, frontend to GitHub Pages; Neon discussed; numerals on the 3D rods (prompts 17–19); midpoint check-in | ~1.5 |
-| Tue 10/6 | Skip experience, requirements check, rod flight + case label + dust, portfolio card, lid fix (prompts 20–24); my own edits in VS Code (commit `9841bf0`) | ~1.5 |
-| Wed 10/7 | README and prompt log, demo video, submission (prompts 25–30) | ~1.5 |
+| Tue 10/6 | Skip experience, requirements check, rod flight + case label + dust, portfolio card, lid fix (prompts 20–24); my own edits in VS Code | ~1.5 |
+| Wed 10/7 | README and prompt log, demo video, submission (prompt 25); connected the Neon database | ~1.5 |
 
 ---
 
@@ -145,6 +145,11 @@ Result: the label was live and works (checked with screenshots after "Skip exper
 > One more thing: in the animation, the case's lid hangs in mid-air waiting. It should start on the ground, and only after the rods are in should it rise and slide in.
 
 Result: the lid now starts lying flat on the table beside the case. Once the tray is in, it is lifted (straight up first, then across, like a hand picking it up), lined up with the groove, and slid shut. The packing now takes 10.6 s instead of 9.5 s.
+
+**Prompt 25**
+> Let's connect Neon.
+
+Result: I created a free Postgres database on Neon and added its connection string to Render as the `DATABASE_URL` environment variable (never in the code or the repo). The backend's `storage.py` already switched to Postgres when that variable is set, so no code changed; Render's log now shows `Database: Postgres (DATABASE_URL)`, and visitors' boxes survive the free server going to sleep.
 
 ## Where AI got it wrong
 
