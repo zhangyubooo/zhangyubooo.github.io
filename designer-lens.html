@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Designer Lens — a vector database of designers, by Yubo Zhang</title>
+  <meta name="description" content="Designer Lens is a command-line app that keeps a searchable library of the designers Yubo Zhang follows and connects every new designer, note or idea to what is already there. Built with ChromaDB and Wikipedia.">
+  <link rel="canonical" href="https://zhangyubooo.github.io/designer-lens.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="ask-yubo.css">        <!-- chat widget + the project-page rules this page reuses -->
+  <link rel="stylesheet" href="designer-lens.css">   <!-- only the screenshots and the terminal block -->
+</head>
+
+<!-- Project page for Designer Lens (15-113 HW6). Same layout as ask-yubo.html:
+     the About page structure (page-about, .about, .entries) plus the
+     .ask-page__* rules from ask-yubo.css. -->
+<body class="page-about">
+
+<header class="nav is-visible">
+  <nav aria-label="Main navigation">
+    <a class="nav__name" href="index.html#intro">Yubo Zhang</a>
+    <ul class="nav__links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="play.html">Play</a></li>
+      <li><a href="mailto:yubozhang1224@outlook.com">Contact me</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="about ask-page">
+
+  <h1 class="about__heading">Designer Lens</h1>
+  <p class="ask-page__tags">Vector Database · Command-Line App · 2026</p>
+
+  <section>
+    <p class="ask-page__lead">
+      A searchable library of the designers I follow — mostly architects, plus
+      graphic, interior and product designers. Adding is the core of it: every
+      time I add a designer, a note or one of my own ideas, it searches the
+      library straight away and tells me what the new thing connects to.
+    </p>
+    <p class="ask-page__lead">
+      When I design, I often don't know that someone has already solved a
+      similar problem, or what a technique is even called. An ordinary search
+      needs the right words. This one searches by meaning.
+    </p>
+  </section>
+
+  <section>
+    <h2>It finds meaning, not words</h2>
+    <p class="ask-page__lead">
+      My question shares no words with the passage it finds. I describe the
+      inside of a kitchen-towel roll; Wikipedia says "cardboard tubing".
+    </p>
+    <!-- Screenshots are stills from my demo recording (26 Oct 2026) -->
+    <figure class="dl-shot">
+      <img src="images/designer-lens-library.jpg" width="1170" height="742" loading="lazy"
+           alt="Terminal: the library overview (91 architecture, 17 graphic, 7 interior, 3 other and 4 product designers), the menu, and the question 'somewhere for displaced people to live, built from the stuff inside a roll of kitchen towel'">
+      <figcaption>The library at the start of the demo, then a question in my own words.</figcaption>
+    </figure>
+    <figure class="dl-shot">
+      <img src="images/designer-lens-results.jpg" width="1170" height="742" loading="lazy"
+           alt="Terminal: the closest designers. 1.217 Shigeru Ban, on paper and cardboard tubing as a building material; 1.246 Anna Heringer; 1.273 Diébédo Francis Kéré">
+      <figcaption>The closest designers, each with its best passage and its distance (lower is closer). Shigeru Ban comes first.</figcaption>
+    </figure>
+    <p class="ask-page__lead">
+      Then a language model writes a short brief, using only those passages:
+    </p>
+    <!-- Real output from the same session, shortened -->
+    <pre class="dl-terminal" aria-label="The brief the app wrote for this question"><span class="dl-terminal__dim">Brief:</span>
+  Looking for: examples of low-cost, recyclable, paper-based shelters for
+  displaced people.
+
+  Shigeru Ban
+  He is known for using paper tubing as a building material. His paper house
+  and DIY refugee shelters show how paper can be used to create emergency
+  housing for displaced people.
+
+  Anna Heringer
+  Her work is loosely related; she uses local materials such as mud and bamboo,
+  but not paper. ...</pre>
+    <p class="ask-page__flow">
+      Wikipedia articles → ~150-word passages → embeddings (all-MiniLM-L6-v2) → ChromaDB → closest passages → a short brief (gpt-oss-20b via Groq), written only from those passages
+    </p>
+  </section>
+
+  <section>
+    <h2>Every addition is a search</h2>
+    <p class="ask-page__lead">
+      Whatever I add is used as a query straight away, so the library answers
+      back: who a new designer is close to, and what a new note connects to.
+    </p>
+    <figure class="dl-shot">
+      <img src="images/designer-lens-connected.jpg" width="1170" height="742" loading="lazy"
+           alt="Terminal: after adding Eileen Gray, 'Their article mentions designers already in your library: Le Corbusier', followed by what she shares with Zaha Hadid, Yasmeen Lari and Yvonne Farrell">
+      <figcaption>Adding Eileen Gray. Her article mentions Le Corbusier, who is already in the library, and the app says when a similarity is only on the surface.</figcaption>
+    </figure>
+    <figure class="dl-shot">
+      <img src="images/designer-lens-note.jpg" width="1170" height="742" loading="lazy"
+           alt="Terminal: after adding a note about a staircase with steps of slightly different heights, the app names Liu Yichun's Spiral Gallery in Jiading New Town as the best lead and Heatherwick's Vessel as only loosely related">
+      <figcaption>Adding a note about a staircase whose steps change height. The best lead is Liu Yichun's Spiral Gallery; Heatherwick's Vessel is only loosely related.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>What's inside</h2>
+    <p class="ask-page__lead">
+      I started from my own list of 210 designers and studios. The app found an
+      English Wikipedia article for 119 of them, cut each article into passages
+      of about 150 words, and stored them in a vector database: about 2,200
+      passages, each one tagged with the designer, discipline and section.
+      Designers without an article come in through my own notes.
+    </p>
+  </section>
+
+  <section>
+    <h2>What I learned</h2>
+    <ul class="entries">
+      <li class="entry">
+        <span class="entry__title">Names collide</span>
+        <span class="entry__meta">The first lookup returned an actress, a Go player and the Yellow Sea instead of designers. Every match is now checked, and a new designer is only added after I confirm it's the right person.</span>
+      </li>
+      <li class="entry">
+        <span class="entry__title">The source isn't neutral</span>
+        <span class="entry__meta">English Wikipedia covered 91 of my 108 architects but only 7 of 33 interior designers. My own notes are how the rest get in.</span>
+      </li>
+      <li class="entry">
+        <span class="entry__title">One loud voice</span>
+        <span class="entry__meta">One designer with many passages filled all five results for a question about wallpaper. Results are now grouped by designer, best passage first.</span>
+      </li>
+      <li class="entry">
+        <span class="entry__title">Similar isn't connected</span>
+        <span class="entry__meta">Comparing summaries didn't put Le Corbusier near Charlotte Perriand, who worked with him for ten years. An exact search for names in a new designer's article now shows those links alongside the similar ones.</span>
+      </li>
+      <li class="entry">
+        <span class="entry__title">Distance isn't judgement</span>
+        <span class="entry__meta">For my own ideas, a really related project scored worse than an unrelated one. Retrieval finds the candidates; the model reads them and gives the verdict.</span>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Code</h2>
+    <ul class="entries">
+      <li class="entry">
+        <span class="entry__title">
+          <a href="https://github.com/zhangyubooo/designer-lens" target="_blank" rel="noopener">Designer Lens on GitHub ↗</a>
+        </span>
+        <span class="entry__meta">Python app, README with the two test queries, and how to rebuild the database</span>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>
+    Built with Claude as a coding partner — the key prompts are in the
+    <a href="https://github.com/zhangyubooo/designer-lens/blob/main/prompt_log.md"
+       target="_blank" rel="noopener">prompt log ↗</a>
+  </p>
+  <p>© 2026 Yubo Zhang</p>
+</footer>
+
+<script src="script.js"></script>
+<script src="ask-yubo.js"></script>   <!-- builds the floating chat button + panel -->
+</body>
+</html>

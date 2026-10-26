@@ -1,0 +1,53 @@
+/* ============================================================
+   designer-lens.css — only what designer-lens.html adds.
+   Everything else on that page comes from style.css (About layout)
+   and ask-yubo.css (⑩ the project-page rules).
+
+   Design notes
+   - Screenshots are stills from my demo recording, cropped to the window.
+   - The terminal block shows real output, so it is set in a monospace
+     font, the one place on the site that isn't Inter.
+   - Same palette as the rest of the site: the light-grey fill already
+     used for chat bubbles, black text, grey for the app's own prompts.
+     No rounded corners, no shadow, no colour.
+   ============================================================ */
+
+.dl-terminal {
+  margin-top: var(--s-4);
+  padding: var(--s-4);
+  background: var(--c-fill);
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  color: var(--c-text);
+  white-space: pre;           /* keep the app's own line breaks and indents */
+  overflow-x: auto;           /* long lines scroll inside the box on phones */
+  max-width: 56rem;           /* same width as the screenshots */
+}
+
+.dl-terminal strong { font-weight: 600; }
+.dl-terminal__dim { color: var(--c-muted); }
+
+/* Stills from the demo recording. One per row and capped in width, so the
+   terminal text stays readable; a hairline border marks the edge of the
+   window against the white page. */
+.dl-shot {
+  margin: var(--s-4) 0 0;
+  max-width: 56rem;
+}
+
+.dl-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--c-line);
+}
+
+.dl-shot figcaption {
+  margin-top: var(--s-2);
+  max-width: 60ch;
+  font-size: var(--t-sm);
+  color: var(--c-muted);
+}
+
+.dl-shot + .ask-page__lead { margin-top: var(--s-5); }
