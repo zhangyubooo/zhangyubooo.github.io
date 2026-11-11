@@ -1,4 +1,6 @@
-# Prompt log — Napier's Rod Box (15-113 Project 2)
+# Prompt log — Napier's Rod Box (15-113 Project 2) → Ask Napier exhibit screens (51-265)
+
+Phases 1–5 and the two sections after them are the 15-113 Project 2 log as submitted. Phase 6 (at the end) is the 51-265 exhibit version, made in November 2026 with the studio instructor's permission to use AI.
 ## Tools
 
 | Tool | Used for | Why this tool |
@@ -170,3 +172,36 @@ Result: I created a free Postgres database on Neon and added its connection stri
 | Tue 10/6 | `js/dust.js` | `COUNT`: `60` → `80` dust motes in the portrait's light | More motes make the shaft of light in the portrait show up better |
 
 **A problem I found in the packing animation.** While watching the animation I noticed the lid was floating in mid-air beside the case the whole time, waiting to slide in. A real lid would lie on the table. I decided how it should work instead: the lid starts flat on the table, and only after the rods and tray are in the case is it lifted, lined up with the groove and slid shut. Claude wrote the code for it (prompt 24); I then tuned where the lid lies (the `LID_ON_TABLE` row above).
+
+---
+
+## Phase 6 — Exhibit screens for 51-265 (Wed 11/11/2026)
+
+Tool: Claude (Anthropic, desktop app linked to my Mac; model `claude-opus-5-5`). The conversation was in Chinese; prompts are translated.
+
+**Prompt 26**
+> How is the AI Napier in the exhibition designed right now? … If we prototype the AI Napier in each zone's screen as a web app, what do you suggest?
+
+Result: Claude summarised the current plan (portrait with a sensor pad at the entrance; a small Napier avatar in the bottom-right of each station screen that opens a chat) and suggested one web app for all three zones switched by URL, suggested questions first, short replies, answers only from the fact sheet, and an idle reset for the shared screen.
+
+**Prompt 27**
+> I built a web app about Napier AI for my 15-113 final project. Modify it, and save it to the same place. Read the handoff first, check the current code, then ask me what I want to change.
+
+Result: Claude read both repositories and asked four questions. My answers: **overwrite `napier/` in place**; **suggested questions plus free typing**; **a kiosk screen** (how-to content, avatar in the corner, chat panel, reset when idle); **all three zones** at once.
+
+Claude then:
+- checked the facts for the promptuary and location arithmetic on the web (Wikipedia, Google Arts & Culture / Museo Arqueológico Nacional, MAA Convergence, the Ricci Institute catalogue for Giacomo Rho's *Chou Suan*, Leibniz 1703) and added them to `facts.md` with sources;
+- added `/chat`, `zones.json`, `persona_chat.md` and an anonymous `questions` table to the backend, keeping the Rod Box endpoints unchanged;
+- rewrote this folder as the three exhibit screens, with the worked examples drawn as SVG from numbers (473 × 6, 7 × 98765, 9 × 12) and offline answers for the suggested questions;
+- tested with a mock AI in a headless browser: all three zones at 1280 × 800, 1920 × 1080 and on a phone; the idle reset; the offline fallback; and the lattice answers against 20,000 random multiplications.
+
+**Prompt 28**
+> [attached `napier_screen_ui_package.zip`] Following the handoff file, change it to look the way it does in my exhibition.
+
+Result: the package (exported from my Rhino model) sets the dark screen UI as the standard: square 15″ rods screens with six pages, and tall 17″ × 36″ screens for rod 15 and rod 16 with the chat always shown. Claude rebuilt the frontend to match it: every page is drawn as SVG from the design's own coordinates (taken from the package's scripts and PNGs), the chat panel follows the design's sizes, and the screen scales to fit any display. Kept from the earlier version: the live AI replies, suggested questions (drawn as outlined bubbles), typed questions, offline answers and the idle reset. The backend's `zones.json` now describes what is on each new screen (425 × 6, the plate rack, standing 5 seconds, START). Checked by rendering every page at design size next to the package's PNGs.
+
+**Prompt 29**
+> Did the rods screens use my earlier three.js model? You could have one page that is just that model; double-click unpacks it, and then each part can be dragged on its own.
+
+Result: they did not (the Rod Box files had been removed), so Claude restored my model of the set (`models/rod-box.json`) from git and added page 7 to the rods screens. The case stands closed and turns; a double-tap plays the Rod Box packing timeline backwards (lid out, tray lifted out and laid flat) and spreads the sixteen rods on the table; then the case, lid, tray and every rod can be dragged on their own, and another double-tap packs everything back up. The rods now carry real rod faces instead of the Rod Box's numerals. three.js was rebundled (r186) with the extra classes needed for picking and dragging. Tested in a headless browser with mouse and touch: unpack, drag a rod, the lid and the case, pack again.
+

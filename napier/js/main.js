@@ -1,310 +1,193 @@
-// main.js — connects the pieces: rods ↔ backend ↔ inscription.
+// Ask Napier — the exhibit screens for "Making Calculation Visible".
 //
-// The page is always in one of these moments:
-//   idle      nothing chosen; the plaque invites you to pick a rod
-//   selected  a rod is lifted; the plaque shows its question + "Present the rod"
-//   asking    waiting for Napier (the portrait dims, the candle brightens)
-//   answered  the inscription is painted; the rod joins the box
-//   error     something failed; the plaque explains and offers "Try again"
+//   ./                               landing: links to every screen
+//   ./?zone=rods&page=3              a rods screen showing page 3 (each of rods 2–7
+//                                    shows its own page by default; visitors can page)
+//   ./?zone=promptuary               the rod 15 screen
+//   ./?zone=location                 the rod 16 screen
+//   …&kiosk=1                        as it runs in the exhibit: no "All screens" link,
+//                                    and the backend is pinged every 10 minutes
 
-import { CARDS, cardById, MEMORY_CARD } from "./cards.js";
-import { getVisitorId, resetVisitor, wake, loadBox, presentRod } from "./api.js";
-import { writeInscription, clearInscriptions } from "./inscription.js";
-import { renderTray, renderBox } from "./rods.js";
-import { flyRod } from "./flight.js";
-import { startDust } from "./dust.js";
+import { ZONES, ZONE_ORDER, SHAPES } from "./zones.js";
+import { drawPage } from "./art.js";
+import { createChat } from "./chat.js";
+import { wake } from "./api.js";
 
-// ---------------------------------------------------------------------------
-// 1. Elements and state
-// ---------------------------------------------------------------------------
+const IDLE_MS = 60_000;           // no touch for this long → "Still there?" (if in use)
+const IDLE_COUNTDOWN_S = 10;      // …then back to this screen's default state
+const KEEP_AWAKE_MS = 10 * 60_000;
+const HINTS = {
+  packed: "Double-tap the box to unpack it",
+  unpacking: "Unpacking…",
+  open: "Drag any piece  ·  double-tap to pack it up",
+  packing: "Packing…",
+};
+
 const $ = (id) => document.getElementById(id);
-const el = {
-  status: $("status"),
-  portrait: $("portrait"), portraitImg: $("portrait-img"),
-  inscription: $("inscription"), ghosts: $("ghosts"),
-  plaque: $("plaque"), eyebrow: $("plaque-eyebrow"), plaqueText: $("plaque-text"),
-  presentBtn: $("present-btn"), retryBtn: $("retry-btn"),
-  tray: $("tray"), trayCount: $("tray-count"),
-  box: $("box"), boxCount: $("box-count"), boxNote: $("box-note"),
-  reading: $("reading"), newVisitor: $("new-visitor"),
-  bindBtn: $("bind-btn"), pack: $("pack"), packStage: $("pack-stage"), packText: $("pack-text"),
-  packReplay: $("pack-replay"), packSave: $("pack-save"), skip: $("skip"),
-};
+const params = new URLSearchParams(location.search);
+const zone = ZONES[params.get("zone")];
+const kiosk = params.get("kiosk") === "1";
 
-const state = {
-  selected: null,   // card id of the lifted rod, or null
-  busy: false,      // true while waiting for Napier
-  rods: [],         // this visitor's box: [{card, inscription, motto}], oldest first
-  counts: {},       // {"4": 12} — how many visitors have asked each rod
-  skipped: false,   // true after "Skip experience": empty places hold unanswered rods
-};
-
-const GREETING_FIRST = "Good visitor, choose a rod and present it to me. I shall answer you in paint.";
-const GREETING_BACK = "Ah, you return. Your rods are where you left them, and I have not forgotten you.";
+if (!zone) showLanding();
+else showScreen(zone);
 
 // ---------------------------------------------------------------------------
-// 2. Drawing helpers
-// ---------------------------------------------------------------------------
-function answeredIds() {
-  return new Set(state.rods.map((rod) => rod.card));
-}
-
-function drawRods(justAdded = null) {
-  const inTray = renderTray(el.tray, answeredIds(), state.selected, selectRod);
-  const inBox = renderBox(el.box, state.rods, openReading, justAdded);
-  el.trayCount.textContent = inTray ? `· ${inTray} to ask` : "· all presented";
-  el.boxCount.textContent = inBox ? `· ${inBox} of ${CARDS.length}` : "";
-
-  // A full box can be packed into the real case.
-  el.bindBtn.hidden = !isComplete();
-  if (!isComplete()) closePacking();
-}
-
-function isComplete() {
-  return answeredIds().size === CARDS.length;
-}
-
-function setPlaque({ eyebrow = "Napier's Rod Box", text, present = false, retry = false }) {
-  el.eyebrow.textContent = eyebrow;
-  el.plaqueText.textContent = text;
-  el.presentBtn.hidden = !present;
-  el.retryBtn.hidden = !retry;
-}
-
-/** On a phone the painting scrolls out of view; bring the inscription tablet back for the answer. */
-function showPortrait() {
-  const tablet = el.portrait.querySelector(".tablet");
-  const box = tablet.getBoundingClientRect();
-  if (box.top < 0 || box.bottom > window.innerHeight) {
-    tablet.scrollIntoView({ behavior: "smooth", block: "end" });
-  }
-}
-
-// ---------------------------------------------------------------------------
-// 2b. The finale: packing the set (WebGL, loaded only when it's needed)
-// ---------------------------------------------------------------------------
-let packing = null;   // the running animation, if any
-
-async function openPacking() {
-  el.pack.hidden = false;
-  el.pack.scrollIntoView({ behavior: "smooth", block: "start" });
-  if (packing) { packing.replay(); el.packReplay.hidden = true; el.packSave.hidden = true; return; }
-  try {
-    const { startPacking } = await import("./packing.js");   // three.js is ~550 KB, so load it late
-    packing = await startPacking(el.packStage, {
-      reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-      onDone: () => { el.packReplay.hidden = false; el.packSave.hidden = false; },
-    });
-  } catch (err) {
-    console.error(err);
-    el.packStage.replaceChildren();
-    el.packText.textContent = "This browser could not draw the 3D case (WebGL is unavailable), but your sixteen rods are safe in the box above.";
-  }
-}
-
-function closePacking() {
-  packing?.dispose();
-  packing = null;
-  el.pack.hidden = true;
-  el.packReplay.hidden = true;
-  el.packSave.hidden = true;
-}
-
-/** Download a picture of the packed case. */
-async function savePicture() {
-  const blob = await packing?.snapshot();
-  if (!blob) return;
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "napiers-bones-packed.png";
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-}
-
-// ---------------------------------------------------------------------------
-// 3. Choosing and presenting a rod
-// ---------------------------------------------------------------------------
-function selectRod(card) {
-  if (state.busy) return;
-  state.selected = card.id;
-  drawRods();
-  setPlaque({
-    eyebrow: `Rod ${card.numeral} · ${card.group}`,
-    text: card.question,
-    present: true,
+function showLanding() {
+  const sets = [
+    ["Set 1 · Rods 2–7", "Touch & Learn", "six 15″ × 15″ screens, one page each"],
+    ["Set 2 · Rod 15", "Promptuarium", "17″ × 36″ screen"],
+    ["Set 3 · Rod 16", "Location Arithmetic", "17″ × 36″ screen"],
+  ];
+  ZONE_ORDER.forEach((id, i) => {
+    const z = ZONES[id];
+    const card = document.createElement("section");
+    card.className = "set";
+    card.innerHTML = `<p class="set__kicker"></p><h2 class="set__title"></h2><p class="set__size"></p><div class="set__pages"></div>`;
+    card.querySelector(".set__kicker").textContent = sets[i][0];
+    card.querySelector(".set__title").textContent = sets[i][1];
+    card.querySelector(".set__size").textContent = sets[i][2];
+    const links = card.querySelector(".set__pages");
+    if (z.pages.length > 1) {
+      z.pages.forEach((p, n) => {
+        const a = document.createElement("a");
+        a.href = `?zone=${id}&page=${n + 1}`;
+        a.textContent = `p${n + 1}`;
+        a.title = p.title;
+        links.append(a);
+      });
+    } else {
+      const a = document.createElement("a");
+      a.href = `?zone=${id}`;
+      a.textContent = "Open the screen →";
+      links.append(a);
+    }
+    $("landing-sets").append(card);
   });
+  $("landing").hidden = false;
 }
 
-async function present() {
-  const card = cardById(state.selected);
-  if (!card || state.busy) return;
+// ---------------------------------------------------------------------------
+function showScreen(z) {
+  document.title = `${z.pages[0].title} · Ask Napier`;
+  const screen = $("screen");
+  screen.dataset.shape = z.shape;
+  screen.dataset.zone = z.id;
+  if (kiosk) $("back").hidden = true;
+  $("stage").hidden = false;
 
-  state.busy = true;
-  el.portrait.classList.add("is-thinking");
-  el.tray.querySelector(`[data-card="${card.id}"]`)?.classList.add("is-presented");
-  setPlaque({ eyebrow: `Rod ${card.numeral}`, text: "Napier is reading your rod…" });
-  showPortrait();
+  const inline = z.shape === "tall";
+  const chat = createChat(z, { inline });
+  const defaultPage = clampPage(Number(params.get("page") || 1) - 1, z);
+  let page = -1;
 
-  // If the server was asleep this can take a while — say so instead of looking frozen.
-  const slowTimer = setTimeout(() => {
-    setPlaque({ eyebrow: `Rod ${card.numeral}`, text: "He has slept four hundred years. Waking him can take up to a minute…" });
-  }, 6000);
+  // --- pages ---
+  const dots = $("dots");
+  if (z.pages.length > 1) {
+    $("pager").hidden = false;
+    z.pages.forEach((p, n) => {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "pager__dot";
+      dot.setAttribute("aria-label", `Page ${n + 1}: ${p.title}`);
+      dot.addEventListener("click", () => goTo(n));
+      dots.append(dot);
+    });
+    $("prev").addEventListener("click", () => goTo((page - 1 + z.pages.length) % z.pages.length));
+    $("next").addEventListener("click", () => goTo((page + 1) % z.pages.length));
+  }
 
-  try {
-    const answer = await presentRod(card.id);
-    clearTimeout(slowTimer);
-    el.portrait.classList.remove("is-thinking");
-
-    // Update memory first, so the box is right even if the animation is skipped.
-    state.rods = state.rods.filter((rod) => rod.card !== answer.card)
-      .concat({ card: answer.card, inscription: answer.inscription, motto: answer.motto });
-    if (answer.count) state.counts[answer.card] = answer.count;
-    if (answer.saved !== false) el.boxNote.hidden = true;  // the box works after all
-    state.selected = null;
-
-    await writeInscription(el.inscription, el.ghosts, answer.inscription);
-
-    // The rod flies from the tray into its place in the box. Wide screens first
-    // bring the box into view; then measure where the rod lies in the tray,
-    // redraw (the rod moves to the box), and fly a stand-in between the two.
-    if (window.matchMedia("(min-width: 900px)").matches) el.box.scrollIntoView({ block: "nearest" });
-    const from = el.tray.querySelector(`[data-card="${card.id}"]`)?.getBoundingClientRect();
-    drawRods();
-    flyRod(from, el.box.querySelector(`.rod--box[data-card="${answer.card}"]`), card.numeral);
-
-    let text = answer.repeat
-      ? "That rod was already in your box. Napier repeats himself, as old men do."
-      : `Rod ${card.numeral} now rests in your box.${answeredIds().size < CARDS.length - 1 ? " Choose another." : ""}`;
-    if (isComplete() && !answer.repeat) text = "Your box is full — all sixteen rods. Press “Pack the set” below the box.";
-    else if (answeredIds().size === CARDS.length - 1 && !answeredIds().has(MEMORY_CARD)) {
-      text += " One rod remains: the last, and Napier's memory of you.";
+  // A page can carry a live widget over its artwork (page 7: the 3D model of the set).
+  let widget = null, widgetToken = 0;
+  async function mountWidget(p) {
+    widget?.dispose();
+    widget = null;
+    const token = ++widgetToken;
+    const box = $("widget");
+    box.replaceChildren();
+    box.hidden = !p.widget;
+    $("widget-hint").hidden = !p.widget;
+    if (!p.widget) return;
+    const hint = $("widget-hint");
+    hint.textContent = "Opening the box…";
+    try {
+      const { mountRodBox } = await import("./rodbox.js");
+      const w = await mountRodBox(box, {
+        onStateChange: (s) => { hint.textContent = HINTS[s]; },
+      });
+      if (token !== widgetToken) { w.dispose(); return; }
+      widget = w;
+      hint.textContent = HINTS.packed;
+    } catch (err) {
+      console.error(err);
+      if (token === widgetToken) hint.textContent = "The model of the set could not be loaded.";
     }
-    if (answer.saved === false) text += " (Napier answered, but the box could not be saved this time.)";
-    setPlaque({ eyebrow: `“${answer.motto}”`, text });
-  } catch (err) {
-    clearTimeout(slowTimer);
-    el.portrait.classList.remove("is-thinking");
-    drawRods(); // put the rod back down in the tray
-    setPlaque({ eyebrow: `Rod ${card.numeral}`, text: err.message, retry: true });
-  } finally {
-    state.busy = false;
   }
-}
 
-// ---------------------------------------------------------------------------
-// 4. Reading a rod from the box
-// ---------------------------------------------------------------------------
-function openReading(card, saved) {
-  $("reading-numeral").textContent = `Rod ${card.numeral} · ${card.group}`;
-  $("reading-title").textContent = card.question;
-  $("reading-inscription").textContent = saved.inscription;
-  $("reading-motto").textContent = saved.motto ? `“${saved.motto}”` : "";
-  const count = state.counts[card.id];
-  $("reading-count").textContent = count > 1
-    ? `${count} visitors have presented this rod.`
-    : count === 1 ? "You are the first to present this rod." : "";
-  el.reading.showModal();
-}
-
-// Clicking the dark backdrop around the dialog closes it too.
-el.reading.addEventListener("click", (event) => {
-  if (event.target === el.reading) el.reading.close();
-});
-
-// ---------------------------------------------------------------------------
-// 5. Opening the box when the page loads (and for a new visitor)
-// ---------------------------------------------------------------------------
-async function openBox() {
-  el.boxNote.hidden = true;
-  try {
-    const data = await loadBox();
-    state.rods = data.rods;
-    state.counts = data.counts;
-    if (state.skipped) fillSkipped();   // the box arrived after a skip: keep the box full
-    drawRods();
-    if (state.rods.length && !state.busy) {
-      writeInscription(el.inscription, el.ghosts, GREETING_BACK);
-    }
-  } catch (err) {
-    el.boxNote.textContent = `Your box could not be opened just now (${err.message}) Rods you present may not be remembered.`;
-    el.boxNote.hidden = false;
+  function goTo(n, { force = false } = {}) {
+    if (n === page && !force) return;
+    page = n;
+    const p = z.pages[n];
+    $("art").replaceChildren(drawPage(SHAPES[z.shape], z.kicker, p, { section: z.section }));
+    mountWidget(p);
+    [...dots.children].forEach((d, i) => d.setAttribute("aria-current", String(i === n)));
+    // A page with a conversation in its design starts with it open — unless a
+    // visitor is already talking to Napier, in which case the talk carries on.
+    if (!inline && !chat.live) chat.start(p.seed || [], { openNow: Boolean(p.seed) });
   }
-}
 
-let confirmTimer = null;
-el.newVisitor.addEventListener("click", () => {
-  if (state.busy) return;
-  // Two clicks needed, so nobody empties their box by accident.
-  if (!confirmTimer) {
-    el.newVisitor.textContent = "Click again to empty your box";
-    el.newVisitor.classList.add("is-confirming");
-    confirmTimer = setTimeout(() => {
-      el.newVisitor.textContent = "Begin as a new visitor";
-      el.newVisitor.classList.remove("is-confirming");
-      confirmTimer = null;
-    }, 3000);
-    return;
+  function startOver() {
+    if (inline) chat.start(z.seed);
+    goTo(defaultPage, { force: true });
+    if (!inline) chat.start(z.pages[defaultPage].seed || [], { openNow: Boolean(z.pages[defaultPage].seed) });
   }
-  clearTimeout(confirmTimer);
-  confirmTimer = null;
-  el.newVisitor.textContent = "Begin as a new visitor";
-  el.newVisitor.classList.remove("is-confirming");
-  resetVisitor();
-  getVisitorId(); // make the new id now
-  state.rods = [];
-  state.counts = {};
-  state.selected = null;
-  state.skipped = false;
-  clearInscriptions(el.inscription, el.ghosts);
-  drawRods();
-  setPlaque({ text: "A new visitor. Choose a rod and present it to Napier." });
-  writeInscription(el.inscription, el.ghosts, GREETING_FIRST);
-  openBox();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
 
-// ---------------------------------------------------------------------------
-// 5b. Skip experience (for reviewers and demos): fill every empty place in the
-//     box with an unanswered rod and go straight to the packing. Nothing is
-//     sent to the server, so reloading the page shows the real box again.
-// ---------------------------------------------------------------------------
-const SKIPPED_TEXT = "You skipped ahead, so Napier has not answered this rod yet. Begin as a new visitor to present it properly.";
+  startOver();
 
-function fillSkipped() {
-  const have = answeredIds();
-  const blanks = CARDS
-    .filter((card) => !have.has(card.id))
-    .map((card) => ({ card: card.id, inscription: SKIPPED_TEXT, motto: "", skipped: true }));
-  state.rods = state.rods.concat(blanks);
+  // --- is the AI awake? ---
+  const status = $("chat-status");
+  const setOnline = (on) => {
+    screen.classList.toggle("is-online", on);
+    status.textContent = on ? "AI  ·  online" : "AI  ·  waking…";
+  };
+  const ping = () => wake().then(() => setOnline(true), () => setOnline(false));
+  ping();
+  setInterval(ping, kiosk ? KEEP_AWAKE_MS : 5 * KEEP_AWAKE_MS);
+
+  // --- idle: a shared screen must not show one visitor's conversation to the next ---
+  const isDirty = () => chat.live || page !== defaultPage || Boolean(widget?.dirty)
+    || chat.open !== (inline || Boolean(z.pages[page].seed));
+  watchIdle({ isDirty, isBusy: () => chat.busy, startOver });
 }
 
-el.skip.addEventListener("click", () => {
-  if (state.busy) return;
-  state.skipped = true;
-  state.selected = null;
-  fillSkipped();
-  drawRods();
-  setPlaque({ eyebrow: "Skipped ahead", text: "All sixteen rods are in your box. The ones you didn't present stay unanswered." });
-  openPacking();
-});
+function clampPage(n, z) {
+  return Number.isInteger(n) && n >= 0 && n < z.pages.length ? n : 0;
+}
 
 // ---------------------------------------------------------------------------
-// 6. Start
-// ---------------------------------------------------------------------------
-el.presentBtn.addEventListener("click", present);
-el.bindBtn.addEventListener("click", openPacking);
-el.packReplay.addEventListener("click", () => { packing?.replay(); el.packReplay.hidden = true; el.packSave.hidden = true; });
-el.packSave.addEventListener("click", savePicture);
-el.retryBtn.addEventListener("click", present);
-el.portraitImg.addEventListener("error", () => el.portrait.classList.add("no-image"));
-if (el.portraitImg.complete && el.portraitImg.naturalWidth === 0) el.portrait.classList.add("no-image");
+function watchIdle({ isDirty, isBusy, startOver }) {
+  const overlay = $("idle"), count = $("idle-count");
+  let idleTimer = null, countdown = null;
 
-drawRods();
-writeInscription(el.inscription, el.ghosts, GREETING_FIRST);
-startDust(el.portrait.querySelector(".portrait"));
+  function stopCountdown() { clearInterval(countdown); countdown = null; overlay.hidden = true; }
 
-wake()
-  .then(() => { el.status.textContent = "The portrait is awake"; el.status.classList.add("is-awake"); })
-  .catch(() => { el.status.textContent = "The portrait is asleep — answers may be slow"; });
+  function arm() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      if (!isDirty()) return;
+      if (isBusy()) { arm(); return; }        // still waiting for Napier: don't interrupt
+      let left = IDLE_COUNTDOWN_S;
+      count.textContent = left;
+      overlay.hidden = false;
+      countdown = setInterval(() => {
+        left -= 1;
+        count.textContent = left;
+        if (left <= 0) { stopCountdown(); document.activeElement?.blur(); startOver(); }
+      }, 1000);
+    }, IDLE_MS);
+  }
 
-openBox();
+  function activity() { if (countdown) stopCountdown(); arm(); }
+  for (const type of ["pointerdown", "keydown", "input", "wheel"]) document.addEventListener(type, activity, { passive: true });
+  $("idle-stay").addEventListener("click", activity);
+  arm();
+}
