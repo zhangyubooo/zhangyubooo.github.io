@@ -1,7 +1,7 @@
 /* Ask Napier — exhibit screens for "Making Calculation Visible"
    Follows the screen UI package (2026-11-11): the dark UI is the standard.
    ① tokens  ② landing  ③ stage + screen  ④ pager  ⑤ avatar  ⑥ chat (shared)
-   ⑦ chat on the square screen  ⑧ chat on the tall screens  ⑨ idle  ⑩ phones  ⑪ motion
+   ⑦ chat on the square screen  ⑧ tall screens: hint bubble, pager, chat popup  ⑨ idle  ⑩ phones  ⑪ motion
 
    Every size on a screen is written in design units: 1 unit = var(--u), and the
    screen is 1500 units wide (1500 × 1500 square, 1500 × 3176 tall). The screen is
@@ -225,30 +225,108 @@ button, input { font: inherit; color: inherit; }
 .screen[data-shape="square"] .chat__input { padding: 0 calc(100 * var(--u)) 0 calc(34 * var(--u)); font-size: calc(34 * var(--u)); }
 .screen[data-shape="square"] .chat__send { right: calc(7 * var(--u)); width: calc(64 * var(--u)); height: calc(64 * var(--u)); font-size: calc(40 * var(--u)); }
 
-/* ⑧ Chat on the tall screens: always on screen (110, 1250, 1280 × 1600), font 48 ---- */
-.screen[data-shape="tall"] .chat {
-  left: calc(110 * var(--u)); top: calc(1250 * var(--u));
-  width: calc(1280 * var(--u)); height: calc(1600 * var(--u));
-  border-radius: calc(40 * var(--u));
-  background: var(--panel-solid);
-  font-size: calc(48 * var(--u));
+/* ⑧ Tall screens (handoff v2): hint bubble, pager, chat popup ------------------------ */
+.screen__art svg { font-variant-numeric: normal; }
+
+/* pager: arrows dim at the ends, dots 46 apart, "n / N · tap the arrows" under them (y 3026) */
+.screen[data-shape="tall"] .pager { --y: 3026; }
+.screen[data-shape="tall"] .pager__dot { width: calc(46 * var(--u)); height: calc(46 * var(--u)); }
+.screen[data-shape="tall"] .pager__dot::before { width: calc(18 * var(--u)); height: calc(18 * var(--u)); border-width: calc(2 * var(--u)); }
+.screen[data-shape="tall"] .pager__dot[aria-current="true"]::before { width: calc(22 * var(--u)); height: calc(22 * var(--u)); }
+.screen[data-shape="tall"] .pager__btn { border: 0; }
+.pager__btn.is-off { background: #242936; cursor: default; }
+.pager__btn.is-off path { stroke: #626874; }
+.pager__footer {
+  position: absolute; left: 0; right: 0; top: calc(78 * var(--u)); margin: 0;
+  transform: translateY(-50%); text-align: center; white-space: pre;
+  color: var(--grey); font-size: calc(32 * var(--u)); line-height: 1;
 }
-.screen[data-shape="tall"] .chat__head { height: calc(185 * var(--u)); --ring: calc(4.1 * var(--u)); }
-.screen[data-shape="tall"] .chat__face { left: calc(34 * var(--u)); top: calc(34 * var(--u)); width: calc(116 * var(--u)); height: calc(116 * var(--u)); }
-.screen[data-shape="tall"] .chat__name { left: calc(177 * var(--u)); top: calc(36 * var(--u)); font-size: calc(54 * var(--u)); }
-.screen[data-shape="tall"] .chat__status { left: calc(179 * var(--u)); top: calc(101 * var(--u)); font-size: calc(36 * var(--u)); }
-.screen[data-shape="tall"] .chat__head::after { left: calc(37 * var(--u)); right: calc(37 * var(--u)); }
-.screen[data-shape="tall"] .chat__close { display: none; }
-.screen[data-shape="tall"] .chat__log { padding: calc(55 * var(--u)) calc(47 * var(--u)) calc(30 * var(--u)); gap: calc(44 * var(--u)); }
-.screen[data-shape="tall"] .msg { border-radius: calc(28 * var(--u)); }
-.screen[data-shape="tall"] .msg--visitor { max-width: calc(810 * var(--u)); padding: calc(20 * var(--u)) calc(25 * var(--u)); }
-.screen[data-shape="tall"] .msg--napier { max-width: calc(956 * var(--u)); padding: calc(22 * var(--u)) calc(28 * var(--u)); margin-bottom: calc(26 * var(--u)); }
-.screen[data-shape="tall"] .suggest { gap: calc(18 * var(--u)); }
-.screen[data-shape="tall"] .suggest__btn { font-size: calc(40 * var(--u)); padding: calc(14 * var(--u)) calc(25 * var(--u)); border-radius: calc(28 * var(--u)); max-width: calc(810 * var(--u)); }
-.screen[data-shape="tall"] .retry { font-size: calc(38 * var(--u)); padding: calc(10 * var(--u)) calc(30 * var(--u)); }
-.screen[data-shape="tall"] .chat__form { height: calc(96 * var(--u)); margin: 0 calc(37 * var(--u)) calc(41 * var(--u)); }
-.screen[data-shape="tall"] .chat__input { padding: 0 calc(120 * var(--u)) 0 calc(44 * var(--u)); font-size: calc(42 * var(--u)); }
-.screen[data-shape="tall"] .chat__send { right: calc(8 * var(--u)); width: calc(80 * var(--u)); height: calc(80 * var(--u)); font-size: calc(50 * var(--u)); }
+
+/* hint bubble: right edge x 1444, y 2776–2908, tail down to the avatar */
+.hint {
+  position: absolute; right: calc(56 * var(--u)); top: calc(2776 * var(--u));
+  height: calc(132 * var(--u)); padding: 0 calc(32 * var(--u));
+  display: flex; flex-direction: column; align-items: flex-start;
+  background: var(--cell); border: calc(2 * var(--u)) solid var(--accent); border-radius: calc(26 * var(--u));
+  cursor: pointer; text-align: left;
+}
+.hint__label {
+  margin-top: calc(22 * var(--u)); font-size: calc(27 * var(--u)); letter-spacing: calc(3 * var(--u));
+  color: var(--accent); line-height: 1.1; white-space: pre;
+}
+.hint__q { margin-top: calc(10 * var(--u)); font-size: calc(38 * var(--u)); font-style: italic; color: var(--cream); line-height: 1.15; white-space: nowrap; }
+.hint__tail {
+  position: absolute; right: calc(50 * var(--u)); bottom: calc(-31 * var(--u));
+  width: calc(44 * var(--u)); height: calc(32 * var(--u)); overflow: visible;
+}
+.hint__tail polygon { fill: var(--cell); }
+.hint__tail polyline { fill: none; stroke: var(--accent); stroke-width: 2; }
+.hint:active { background: #343C4E; }
+.screen[data-shape="tall"] .avatar__img { outline-width: calc(4 * var(--u)); outline-offset: calc(-4 * var(--u)); box-shadow: none; }
+
+/* the popup: dimmed page, panel x 90–1410, y 560–3070 */
+.chat-backdrop { position: absolute; inset: 0; z-index: 25; background: rgba(5, 6, 9, .78); }
+.chat-backdrop__hint {
+  position: absolute; left: 0; right: 0; top: calc(3120 * var(--u)); margin: 0; transform: translateY(-50%);
+  text-align: center; font-style: italic; color: var(--grey); font-size: calc(32 * var(--u)); white-space: pre;
+}
+.screen[data-shape="tall"] .chat {
+  z-index: 30;
+  left: calc(90 * var(--u)); top: calc(560 * var(--u));
+  width: calc(1320 * var(--u)); height: calc(2510 * var(--u));
+  border-radius: calc(40 * var(--u));
+  background: rgba(18, 22, 30, .965);
+  font-size: calc(46 * var(--u));
+  transition: opacity .2s ease, transform .2s ease;
+}
+.screen[data-shape="tall"] .chat:not(.is-open) { opacity: 0; transform: scale(.97); pointer-events: none; visibility: hidden; }
+.screen[data-shape="tall"] .chat__head { height: calc(210 * var(--u)); --ring: calc(4 * var(--u)); }
+.screen[data-shape="tall"] .chat__face { left: calc(52 * var(--u)); top: calc(52 * var(--u)); width: calc(116 * var(--u)); height: calc(116 * var(--u)); }
+.screen[data-shape="tall"] .chat__face .avatar__dot { left: 76%; top: 76%; width: 19%; height: 19%; outline: calc(4 * var(--u)) solid var(--bg2); }
+.screen[data-shape="tall"] .chat__name { left: calc(194 * var(--u)); top: calc(52 * var(--u)); font-size: calc(56 * var(--u)); line-height: 1.2; }
+.screen[data-shape="tall"] .chat__status { left: calc(224 * var(--u)); top: calc(124 * var(--u)); font-size: calc(36 * var(--u)); line-height: 1.2; }
+.screen[data-shape="tall"] .chat__status::before {
+  content: ""; position: absolute; left: calc(-30 * var(--u)); top: 50%; transform: translateY(-50%);
+  width: calc(18 * var(--u)); height: calc(18 * var(--u)); border-radius: 50%; background: var(--grey);
+}
+.screen[data-shape="tall"].is-online .chat__status::before { background: var(--online); }
+.screen[data-shape="tall"] .chat__head::after { left: calc(40 * var(--u)); right: calc(40 * var(--u)); background: #343A48; }
+.screen[data-shape="tall"] .chat__close {
+  display: grid; place-items: center; right: calc(48 * var(--u)); top: calc(64 * var(--u));
+  width: calc(92 * var(--u)); height: calc(92 * var(--u)); border-radius: 50%;
+  background: var(--button); color: var(--cream); font-size: calc(84 * var(--u));
+}
+.chat__context {
+  flex: none; align-self: flex-start; margin: calc(30 * var(--u)) 0 0 calc(60 * var(--u));
+  height: calc(60 * var(--u)); padding: 0 calc(30 * var(--u)); border-radius: calc(30 * var(--u));
+  display: flex; align-items: center; background: var(--cell); color: var(--grey);
+  font-size: calc(32 * var(--u)); white-space: pre;
+}
+.screen[data-shape="tall"] .chat__log { padding: calc(50 * var(--u)) calc(60 * var(--u)) calc(24 * var(--u)) calc(70 * var(--u)); gap: calc(36 * var(--u)); }
+.screen[data-shape="tall"] .msg { border-radius: calc(30 * var(--u)); line-height: 1.42; padding: calc(24 * var(--u)) calc(35 * var(--u)); }
+.screen[data-shape="tall"] .msg--visitor { max-width: calc(970 * var(--u)); }
+.screen[data-shape="tall"] .msg--napier { max-width: calc(970 * var(--u)); }
+.msgrow { display: flex; align-items: flex-start; gap: calc(22 * var(--u)); align-self: flex-start; }
+.msgrow__face {
+  flex: none; width: calc(80 * var(--u)); height: calc(80 * var(--u)); border-radius: 50%; object-fit: cover;
+  outline: calc(4 * var(--u)) solid var(--accent); outline-offset: calc(-4 * var(--u));
+}
+.screen[data-shape="tall"] .retry { font-size: calc(38 * var(--u)); padding: calc(10 * var(--u)) calc(30 * var(--u)); margin-left: calc(102 * var(--u)); }
+.chat__try { flex: none; padding: calc(20 * var(--u)) calc(60 * var(--u)) calc(30 * var(--u)); }
+.chat__try-label { margin: 0 0 calc(24 * var(--u)); color: var(--accent); font-size: calc(28 * var(--u)); letter-spacing: calc(5 * var(--u)); }
+.chat__chips { display: flex; flex-direction: column; align-items: flex-start; gap: calc(16 * var(--u)); }
+.chip {
+  height: calc(84 * var(--u)); padding: 0 calc(35 * var(--u)); border-radius: calc(42 * var(--u));
+  border: calc(2 * var(--u)) solid var(--grey); background: transparent; color: var(--cream);
+  font-size: calc(40 * var(--u)); font-style: italic; cursor: pointer; white-space: nowrap;
+}
+.chip:active { background: var(--visitor); }
+.chip:disabled { opacity: .45; }
+.screen[data-shape="tall"] .chat__form { height: calc(100 * var(--u)); margin: 0 calc(140 * var(--u)) calc(50 * var(--u)) calc(50 * var(--u)); }
+.screen[data-shape="tall"] .chat__input { padding: 0 calc(40 * var(--u)) 0 calc(50 * var(--u)); font-size: calc(42 * var(--u)); }
+.screen[data-shape="tall"] .chat__send {
+  right: calc(-100 * var(--u)); width: calc(100 * var(--u)); height: calc(100 * var(--u)); font-size: calc(68 * var(--u));
+}
 
 /* ⑨ Idle ---------------------------------------------------------------------------- */
 .idle { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; background: rgba(7, 8, 11, .6); }

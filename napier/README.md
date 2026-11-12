@@ -16,8 +16,8 @@ Each screen shows how to use the interaction beside it, and an AI Napier answers
 | Set | URL | Screen | Chat |
 |---|---|---|---|
 | 1 · Rods 2–7 Touch & Learn | `?zone=rods&page=1…7` | six square 15″ × 15″ screens; each shows its own page by default, visitors can page through all seven. Pages 1–6 are the design's; page 7 is my 3D model of the set (below) | closed until the avatar is tapped, then opens over the page; on pages 2 and 5 it already holds the design's example conversation |
-| 2 · Rod 15 Promptuarium | `?zone=promptuary` | tall 17″ × 36″ screen: Pick a plate → Lay it across → Add the diagonals | always on screen under "STUCK? ASK NAPIER" |
-| 3 · Rod 16 Location Arithmetic | `?zone=location` | tall 17″ × 36″ screen: Stand on squares → Now the other arm → Stand on START | always on screen |
+| 2 · Rod 15 Promptuarium | `?zone=promptuary&page=1…7` | tall 17″ × 36″ screen, 7 pages: what the promptuarium is, meet the wall, pick a plate, hang it across, add the slants, two plates, your turn | a popup over the dimmed page, opened by the avatar or the page's hint bubble (which asks its question at once) |
+| 3 · Rod 16 Location Arithmetic | `?zone=location&page=1…8` | tall 17″ × 36″ screen, 8 pages: intro, how the squares count, meet the floor, first number, second number, START, watching the wall, your turn | the same popup |
 
 Without `?zone=` the page shows links to every screen. Add `&kiosk=1` in the exhibit: the "All
 screens" link is hidden and the backend is pinged every 10 minutes so it never falls asleep.
@@ -45,11 +45,27 @@ the tray's left lip carries the index column I, 2 … 9.
 The animation reuses the Rod Box finale's timeline (`pose(t)`), played backwards to unpack. three.js
 loads only when this page opens.
 
+## The tall screens (v2, 12 Nov 2026)
+
+Pages follow the tall-screen handoff from the Rhino session (`tall_screens_v2_handoff.zip`): page 1
+introduces the object and points to the wall graphics for its history; every other page teaches how
+to use the wall or floor beside the screen.
+
+- **The pages are SVG files in `art/`**, exported from the design's own PIL generator with
+  `art/svgexport.py` (it records the generator's drawing calls as SVG), so they match the PNGs exactly.
+- **Hint bubble** above the avatar: "ASK NAPIER · TAP MY PORTRAIT" and the page's question. Tapping it
+  opens the chat and asks that question; tapping the avatar opens the chat empty.
+- **Chat popup**: the page is dimmed; a pill says "You're on: <page title>"; "TRY ASKING" offers three
+  questions; tap × or anywhere outside to close. Every question is sent with the page number.
+- **Pager**: arrows dim on the first and last page, "n / N · tap the arrows" under the dots; swipe
+  left or right to turn the page.
+- After 60 s without a touch: the popup closes and the screen goes back to page 1.
+
 ## How a visitor uses it
 
 1. Read the steps on the screen, then try the interaction.
-2. Tap the Napier portrait in the corner (on the tall screens the chat is already there). The
-   chat starts with the screen's example conversation.
+2. Tap the Napier portrait in the corner (on the tall screens, or the hint bubble above it). On
+   the square screen's pages 2 and 5 the chat starts with the design's example conversation.
 3. Tap a suggested question (outlined bubbles) or type your own in "Ask Napier…" (up to 200
    characters, any language).
 4. His reply appears word by word. He remembers the last few messages.
@@ -77,7 +93,8 @@ loads only when this page opens.
 | `index.html` | Landing, the screen (artwork, pager, avatar, chat panel, idle prompt) |
 | `style.css` | The design's colours and sizes, all in design units (`--u`), so the layout matches the PNGs |
 | `js/zones.js` | The three sets: pages, titles, footers, example conversations, suggested questions + offline answers. Question ids must match the backend's `zones.json` |
-| `js/art.js` | Draws each page as SVG with the design's coordinates (rods, plates, floor grid, arrows) |
+| `js/art.js` | Draws the square screen's pages as SVG with the design's coordinates |
+| `art/*.svg`, `art/svgexport.py` | The tall screens' 7 + 8 pages, exported from the design's generator |
 | `js/chat.js` | AI Napier's panel: example conversation, suggested questions, typed questions, word-by-word replies, errors |
 | `js/api.js` | Backend URL (local or Render), fetch with a 75 s timeout and friendly errors |
 | `js/main.js` | Picks the set and page from the URL, paging, mounting page 7's 3D viewer, online status, kiosk mode, the idle reset |
@@ -92,8 +109,8 @@ loads only when this page opens.
 - **Drawings:** `js/art.js` (coordinates are the design's, 1500 units wide).
 - **What a suggested question should draw on, and what the visitor is looking at:** the backend's `zones.json`.
 - **New facts:** the backend's `facts.md`, with a source. Napier can't say what isn't there.
-- **Pages 2–3 of the tall screens:** add them to `pages` in `js/zones.js` and a drawing in `js/art.js`;
-  the page dots and arrows appear by themselves once a set has more than one page.
+- **Tall-screen pages:** change the design's generator (`rod15.py` / `rod16.py`), re-run
+  `art/svgexport.py`, and keep titles and hint questions in `js/zones.js` and the backend's `zones.json` in step.
 
 ## How to run it locally
 
@@ -135,11 +152,12 @@ the fact sheet.
 ```
 exhibit screen (GitHub Pages, this folder, ?zone=…)
    │  GET  /health     wake Render's free server as the page opens (and every 10 min in kiosk mode)
-   │  POST /chat       {zone, preset}  or  {zone, question, history}
+   │  POST /chat       {zone, page, preset}  or  {zone, page, question, history}
    ▼
 Flask backend on Render (napier-backend)
    ├─ validates zone + preset id, or cleans the typed question (≤ 200 chars); 30 requests/min per IP
-   ├─ prompt: persona_chat.md + facts.md + this zone's "where the visitor is standing" (system)
+   ├─ prompt: persona_chat.md + facts.md + this zone's "where the visitor is standing"
+   │          + what is on the page the visitor is looking at (system)
    │          + the last 6 messages + the question (and, for presets, what to draw on)
    ├─ Groq API → JSON {"reply"} → validated and trimmed (≤ 90 words)
    └─ database (Postgres on Neon): the question and reply are logged anonymously

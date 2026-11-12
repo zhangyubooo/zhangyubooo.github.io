@@ -47,14 +47,27 @@
         <button class="pager__btn pager__btn--next" id="next" type="button" aria-label="Next page">
           <svg viewBox="0 0 104 104" aria-hidden="true"><path d="M46 34 L64 52 L46 70"/></svg>
         </button>
+        <p class="pager__footer" id="pager-footer" hidden></p>
       </nav>
+
+      <!-- Tall screens: a hint bubble above the avatar with this page's question. -->
+      <button class="hint" id="hint" type="button" hidden>
+        <span class="hint__label">ASK NAPIER&nbsp;&nbsp;·&nbsp;&nbsp;TAP MY PORTRAIT</span>
+        <span class="hint__q" id="hint-q"></span>
+        <svg class="hint__tail" viewBox="0 0 44 32" aria-hidden="true">
+          <polygon points="0,0 44,0 26,30"/><polyline points="0,2 26,30 44,2"/>
+        </svg>
+      </button>
 
       <button class="avatar" id="avatar" type="button" aria-label="Ask Napier" aria-controls="chat">
         <img class="avatar__img" src="images/napier-avatar.jpg" alt="">
         <span class="avatar__dot" aria-hidden="true"></span>
       </button>
 
-      <!-- AI Napier. Square screen: opens over the page. Tall screens: always shown. -->
+      <!-- AI Napier. Square screen: opens over the page. Tall screens: a popup over a dimmed page. -->
+      <div class="chat-backdrop" id="chat-backdrop" hidden>
+        <p class="chat-backdrop__hint">tap&nbsp;&nbsp;×&nbsp;&nbsp;or anywhere outside to close</p>
+      </div>
       <section class="chat" id="chat" aria-label="Ask John Napier">
         <header class="chat__head">
           <span class="chat__face">
@@ -65,7 +78,12 @@
           <p class="chat__status" id="chat-status">AI&nbsp;&nbsp;·&nbsp;&nbsp;waking…</p>
           <button class="chat__close" id="chat-close" type="button" aria-label="Close">×</button>
         </header>
+        <p class="chat__context" id="chat-context" hidden></p>
         <div class="chat__log" id="chat-log" aria-live="polite"></div>
+        <div class="chat__try" id="chat-try" hidden>
+          <p class="chat__try-label">TRY ASKING</p>
+          <div class="chat__chips" id="chat-chips"></div>
+        </div>
         <form class="chat__form" id="chat-form" autocomplete="off">
           <label class="visually-hidden" for="chat-input">Ask Napier a question</label>
           <input class="chat__input" id="chat-input" type="text" maxlength="200" enterkeyhint="send" placeholder="Ask Napier…">

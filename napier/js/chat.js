@@ -1,10 +1,11 @@
 // AI Napier's chat panel.
-//   square screen — closed until the avatar is tapped, then opens over the page
-//   tall screens  — always on screen; the avatar puts the cursor in the input
-//
-// A conversation starts from a `seed` written for the screen. Visitors can tap a
-// suggested question (outlined bubbles) or type their own; Napier's replies come
-// from the backend and appear word by word.
+//   square screen (overlay) — closed until the avatar is tapped, then opens over the page;
+//                             suggested questions sit at the end of the conversation
+//   tall screens (modal)    — a popup over the dimmed page, opened by the avatar or the
+//                             page's hint bubble; "TRY ASKING" chips stay under the talk,
+//                             Napier's bubbles carry his small portrait, and a pill says
+//                             which page the visitor is on
+// Every request carries the page the visitor is looking at.
 
 import { askNapier } from "./api.js";
 
@@ -16,9 +17,10 @@ const WORD_DELAY_MS = 45;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const $ = (id) => document.getElementById(id);
 
-export function createChat(zone, { inline }) {
+export function createChat(zone, { modal, getPage }) {
   const panel = $("chat"), log = $("chat-log"), form = $("chat-form");
   const input = $("chat-input"), send = $("chat-send"), avatar = $("avatar");
+  const backdrop = $("chat-backdrop"), chipsBox = $("chat-chips");
 
   let history = [];               // [{ role: "visitor" | "napier", text }] incl. the seed
   let live = 0;                   // messages added by a visitor in this session
@@ -34,25 +36,42 @@ export function createChat(zone, { inline }) {
     const p = document.createElement("p");
     p.className = `msg msg--${role}`;
     p.textContent = text;
-    log.append(p);
+    if (modal && role === "napier") {               // his small portrait beside each reply
+      const row = document.createElement("div");
+      row.className = "msgrow";
+      const face = document.createElement("img");
+      face.className = "msgrow__face";
+      face.src = "images/napier-avatar.jpg";
+      face.alt = "";
+      row.append(face, p);
+      log.append(row);
+    } else {
+      log.append(p);
+    }
     return p;
   }
 
+  function suggestionButton(preset) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = modal ? "chip" : "suggest__btn";
+    b.textContent = preset.question;
+    b.addEventListener("click", () => ask({ preset }));
+    return b;
+  }
+
   function renderSuggestions() {
+    if (modal) {                                      // fixed chips under the conversation
+      chipsBox.querySelectorAll(".chip").forEach((c) => { c.disabled = busy; });
+      return;
+    }
     log.querySelector(".suggest")?.remove();
     if (busy) return;
     const left = zone.presets.filter((p) => !asked.has(p.id)).slice(0, MAX_SUGGESTIONS);
     if (!left.length) return;
     const box = document.createElement("div");
     box.className = "suggest";
-    for (const preset of left) {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "suggest__btn";
-      b.textContent = preset.question;
-      b.addEventListener("click", () => ask({ preset }));
-      box.append(b);
-    }
+    left.forEach((preset) => box.append(suggestionButton(preset)));
     log.append(box);
   }
 
@@ -61,6 +80,12 @@ export function createChat(zone, { inline }) {
     for (const [q, a] of seed) { bubble("visitor", q); bubble("napier", a); }
     renderSuggestions();
     log.scrollTop = 0;
+  }
+
+  if (modal) {
+    $("chat-try").hidden = false;
+    $("chat-context").hidden = false;
+    chipsBox.replaceChildren(...(zone.chips || []).map(suggestionButton));
   }
 
   /** Napier's reply appears word by word, like ink drying. */
@@ -90,6 +115,7 @@ export function createChat(zone, { inline }) {
     busy = value;
     send.disabled = value;
     panel.classList.toggle("is-busy", value);
+    if (modal) renderSuggestions();
   }
 
   function ask({ preset, question }) {
@@ -115,13 +141,14 @@ export function createChat(zone, { inline }) {
     }, WAKING_HINT_MS);
 
     const recent = history.slice(-HISTORY_TURNS);
-    const body = preset ? { zone: zone.id, preset: preset.id, history: recent }
-                        : { zone: zone.id, question, history: recent };
+    const page = getPage?.();
+    const body = preset ? { zone: zone.id, page, preset: preset.id, history: recent }
+                        : { zone: zone.id, page, question, history: recent };
     let reply = null, note = null, error = null;
     try {
       ({ reply } = await askNapier(body));
     } catch (err) {
-      if (preset && err.offline) {          // the live portrait can't be reached: Napier's notes
+      if (preset && err.offline && preset.fallback) {   // the live portrait can't be reached: his notes
         reply = preset.fallback;
         note = "From Napier’s notes. The live portrait is resting.";
       } else {
@@ -144,7 +171,11 @@ export function createChat(zone, { inline }) {
       again.type = "button";
       again.className = "retry";
       again.textContent = "Try again";
-      again.addEventListener("click", () => { thinking.remove(); again.remove(); fetchReply({ preset, question }); });
+      again.addEventListener("click", () => {
+        (thinking.closest(".msgrow") || thinking).remove();
+        again.remove();
+        fetchReply({ preset, question });
+      });
       log.append(again);
     }
     renderSuggestions();
@@ -161,21 +192,27 @@ export function createChat(zone, { inline }) {
     ask({ question });
   });
 
-  // ---- open / close (square screen) ---------------------------------------------
-  const isOpen = () => inline || panel.classList.contains("is-open");
-  function open() { panel.classList.add("is-open"); avatar.setAttribute("aria-expanded", "true"); }
-  function close() { if (!inline) { panel.classList.remove("is-open"); avatar.setAttribute("aria-expanded", "false"); } }
+  // ---- open / close -------------------------------------------------------------
+  const isOpen = () => panel.classList.contains("is-open");
+  function open() {
+    panel.classList.add("is-open");
+    if (modal) backdrop.hidden = false;
+    avatar.setAttribute("aria-expanded", "true");
+  }
+  function close() {
+    panel.classList.remove("is-open");
+    backdrop.hidden = true;
+    avatar.setAttribute("aria-expanded", "false");
+  }
 
-  avatar.addEventListener("click", () => {
-    if (inline) { input.focus(); return; }
-    isOpen() ? close() : open();
-  });
+  avatar.addEventListener("click", () => (isOpen() && !modal ? close() : open()));
   $("chat-close").addEventListener("click", close);
+  backdrop.addEventListener("click", close);          // tap anywhere outside the popup
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
 
   /**
    * Start a fresh conversation from a seed: [[question, answer, presetId?], …].
-   * On the square screen the panel closes unless `openNow` is set.
+   * The panel closes unless `openNow` is set.
    */
   function start(newSeed = [], { openNow = false } = {}) {
     generation++;
@@ -186,11 +223,14 @@ export function createChat(zone, { inline }) {
     live = 0;
     input.value = "";
     render();
-    if (!inline) (openNow ? open : close)();
+    (openNow ? open : close)();
   }
 
   return {
-    start,
+    start, open, close,
+    /** Open the chat and ask a preset at once (the tall screens' hint bubble). */
+    askPreset(preset) { open(); if (preset) ask({ preset }); },
+    setContext(title) { $("chat-context").textContent = `You’re on:  ${title}`; },
     get busy() { return busy; },
     get live() { return live > 0 || input.value.trim() !== ""; },
     get open() { return isOpen(); },

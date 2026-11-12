@@ -1,6 +1,6 @@
-// The static artwork of each screen page, drawn as SVG in design units.
-// Coordinates follow the screen UI package (source_scripts/screens_ai.py and
-// screens_tall.py) and the exported PNGs.
+// The static artwork of the square screen's pages, drawn as SVG in design units.
+// Coordinates follow the screen UI package (source_scripts/screens_ai.py) and its PNGs.
+// (The tall screens' pages are SVG files in art/, exported from their own generator.)
 
 const NS = "http://www.w3.org/2000/svg";
 
@@ -130,118 +130,14 @@ const PAGES = {
     ["try the", "rods", "below"].forEach((t, i) => text(g, 1208, 705 + i * 79, t, 72, C.grey, { "font-style": "italic" }));
   },
 
-  // -------------------------------------------------------------------------
-  // Set 2 · Promptuarium (screens_tall.py → prompt_steps)
-  // -------------------------------------------------------------------------
-  promptSteps(g) {
-    const xs = [275, 750, 1225], top = 300;
-    ["Pick a plate", "Lay it across", "Add the diagonals"].forEach((t, i) => { badge(g, xs[i], top + 20, i + 1); label(g, xs[i], top + 70, t); });
-
-    // step 1: a rack of plates, plate 7 pulled out
-    let cx = xs[0];
-    g.append(el("line", { x1: cx - 200, y1: 470, x2: cx + 200, y2: 470, stroke: C.grey, "stroke-width": 8 }));
-    [6, 7, 8].forEach((d, j) => {
-      const off = d === 7 ? 60 : 0, y = 500 + j * 95;
-      if (d !== 7) {
-        g.append(el("line", { x1: cx - 150, y1: 470, x2: cx - 150, y2: y, stroke: C.grey, "stroke-width": 2 }));
-        g.append(el("line", { x1: cx + 150, y1: 470, x2: cx + 150, y2: y, stroke: C.grey, "stroke-width": 2 }));
-      }
-      plate(g, cx - 170 + off, y + (d === 7 ? 70 : 0), 340, 66, d, d === 7);
-    });
-    arrow(g, cx + 20, 900, cx + 20, 952, C.accent, 6);
-    label(g, cx + 20, 965, "×7", 64, C.accent);
-
-    // step 2: the board, with the plate laid across one row
-    cx = xs[1]; const s = 76; let x0 = cx - 2.5 * s;
-    const digits = [9, 8, 7, 6, 5];
-    digits.forEach((d, i) => digitCell(g, x0 + i * s, 480, s, d));
-    for (let r = 0; r < 4; r++) {
-      const y = 480 + s + r * s;
-      digits.forEach((d, i) => (r === 1 ? lcell(g, x0 + i * s, y, s, d * 7, { fill: C.cellH }) : dimCell(g, x0 + i * s, y, s)));
-    }
-    g.append(el("rect", { x: x0 - 46, y: 480 + 2 * s - 6, width: 5 * s + 52, height: s + 12, fill: "none", stroke: C.accent, "stroke-width": 6 }));
-    g.append(el("rect", { x: x0 - 46, y: 480 + 2 * s - 6, width: 40, height: s + 12, fill: C.black }));
-    text(g, x0 - 26, 480 + 2.5 * s, "7", 44, C.accent);
-    label(g, cx, 900, "98765 × 7", 40, C.grey);
-
-    // step 3: read the diagonals
-    cx = xs[2]; x0 = cx - 2.5 * s; const y = 540;
-    digits.forEach((d, i) => lcell(g, x0 + i * s, y, s, d * 7, { fill: C.cellH }));
-    [6, 9, 1, 3, 5, 5].forEach((dg, i) => {
-      const bx = x0 + i * s, nudge = i < 5 ? 0 : -6;
-      arrow(g, bx + nudge, y + s + 14, bx - 12 + nudge, y + s + 62, C.accent, 4);
-      text(g, bx - 14, y + s + 112, dg, 58, C.accent);
-    });
-    label(g, cx, 850, "= 691,355", 76, C.cream, 520);
-  },
-
-  // -------------------------------------------------------------------------
-  // Set 3 · Location arithmetic (screens_tall.py → loc_steps)
-  // -------------------------------------------------------------------------
-  locSteps(g) {
-    const xs = [275, 750, 1225], top = 300;
-    ["Stand on squares", "Now the other arm", "Stand on START"].forEach((t, i) => { badge(g, xs[i], top + 20, i + 1); label(g, xs[i], top + 70, t); });
-    const s = 62, W = 5.3 * s;
-    [[[8, 1], [], false], [[8, 1], [8, 4], false], [[8, 1], [8, 4], true]].forEach(([rowSel, colSel, start], i) => {
-      floorGrid(g, xs[i] - W / 2, 900, s, rowSel, colSel, start);
-    });
-    label(g, xs[0], 1000, "8 + 1 = 9", 52, C.green);
-    label(g, xs[1], 1000, "8 + 4 = 12", 52, C.green);
-    label(g, xs[0], 440, "stay 5 seconds", 36, C.grey);
-    const cx = xs[2];
-    g.append(el("rect", { x: cx - 190, y: 450, width: 380, height: 120, fill: C.black, stroke: C.grey, "stroke-width": 3 }));
-    text(g, cx, 510, "9 × 12 = 108", 54);
-    const sx = xs[2] - W / 2 + 4 * s + 0.65 * s;
-    arrow(g, sx, 880, sx, 612, C.accent, 6);
-    label(g, cx, 1000, "the wall multiplies", 40, C.grey);
-  },
 };
-
-// ---- tall-screen pieces ----------------------------------------------------
-function badge(g, cx, cy, n) {
-  g.append(el("circle", { cx, cy, r: 34, fill: C.accent }));
-  text(g, cx, cy, n, 44, C.bg2, { "font-weight": "bold" });
-}
-/** A label whose box starts at y (as in the design script): centred at y + 0.75·size. */
-function label(g, cx, y, str, size = 46, fill = C.cream) {
-  text(g, cx, y + size * 0.75, str, size, fill);
-}
-function plate(g, x, y, w, h, d, hl) {
-  g.append(el("rect", { x, y, width: w, height: h, fill: C.black, stroke: hl ? C.accent : C.grey, "stroke-width": hl ? 4 : 2 }));
-  text(g, x + h / 2, y + h / 2, d, h * 0.7, hl ? C.accent : C.cream);
-  const n = 5, cw = (w - h) / n;
-  for (let i = 0; i < n; i++) {
-    const x0 = x + h + i * cw + cw * 0.2, sz = cw * 0.6, y0 = y + h * 0.18, hh = h * 0.64;
-    g.append(el("path", { d: `M${x0} ${y0 + hh} L${x0 + sz} ${y0} L${x0 + sz} ${y0 + hh} Z`, fill: C.cell2 }));
-  }
-}
-function dimCell(g, x, y, s) {
-  g.append(el("rect", { x, y, width: s, height: s, fill: C.cell, stroke: C.dimLine, "stroke-width": 3 }));
-  g.append(el("line", { x1: x, y1: y + s, x2: x + s, y2: y, stroke: C.dimLine, "stroke-width": 3 }));
-}
-function digitCell(g, x, y, s, d) {
-  g.append(el("rect", { x, y, width: s, height: s, fill: C.cell2, stroke: C.cream, "stroke-width": 3 }));
-  text(g, x + s / 2, y + s / 2, d, s * 0.6);
-}
-/** The L-shaped floor: a row 8 4 2 1, START in the corner, a column 1 2 4 8 above it. */
-function floorGrid(g, x0, yb, s, rowSel, colSel, start) {
-  const cell = (x, y, w, h, v, on) => {
-    g.append(el("rect", { x, y, width: w, height: h, fill: on ? C.green : C.floor, stroke: C.cream, "stroke-width": 3 }));
-    text(g, x + w / 2, y + h / 2, v, Math.min(w, h) * 0.5);
-  };
-  [8, 4, 2, 1].forEach((v, i) => cell(x0 + i * s, yb, s, s, v, rowSel.includes(v)));
-  const S = 1.3 * s;
-  g.append(el("rect", { x: x0 + 4 * s, y: yb, width: S, height: S, fill: start ? C.accent : C.floor, stroke: C.cream, "stroke-width": 3 }));
-  text(g, x0 + 4 * s + S / 2, yb + S / 2, "START", s * 0.3, start ? C.bg2 : C.cream, { "font-weight": "bold" });
-  [1, 2, 4, 8].forEach((v, j) => cell(x0 + 4 * s, yb - (j + 1) * s, s, s, v, colSel.includes(v)));
-}
 
 // ---------------------------------------------------------------------------
 /**
  * The whole static page: background, frame, header, the page's drawing,
  * the footer line under the page dots and the "Ask Napier" label.
  */
-export function drawPage({ w, h }, kicker, page, { section } = {}) {
+export function drawPage({ w, h }, kicker, page) {
   const svg = el("svg", { viewBox: `0 0 ${w} ${h}`, class: "art", "aria-hidden": "true" });
   defs(svg);
   svg.append(el("rect", { x: 0, y: 0, width: w, height: h, fill: "url(#bg)" }));
@@ -250,10 +146,6 @@ export function drawPage({ w, h }, kicker, page, { section } = {}) {
   text(g, w / 2, 95, kicker, 36, C.accent);
   text(g, w / 2, 185, page.title, 104);
   PAGES[page.art](g);
-  if (section) {
-    g.append(el("line", { x1: 140, y1: 1135, x2: 1360, y2: 1135, stroke: C.grey, "stroke-width": 2 }));
-    text(g, w / 2, 1191, section, 38, C.accent);
-  }
   const yNav = h === 1500 ? 1350 : h - 150;
   text(g, 750, yNav + 40, page.footer, 36, C.grey);
   text(g, 1370, yNav - 113, "Ask Napier", 30, C.accent, { "font-style": "italic" });
