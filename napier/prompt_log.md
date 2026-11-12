@@ -220,3 +220,8 @@ Result: rod 15 now has 7 pages and rod 16 has 8. Instead of retyping the pages, 
 
 Result: the rods, the tray and its printed index are now the case's wood colour, printed in dark ink. Unpacked, the camera centres on the tray; the rods lie in one row centred under it, and the lid now comes to rest in front of the case so everything stays in view.
 
+**Prompt 33** (Thu 11/12)
+> [photo of the station's writing board: three squares with diagonals, the slants running on into four answer boxes, "COPY THE LIT ROW → ADD ALONG THE DIAGONALS"] Make the squares and arrows on page 5 of the rods screens look like this.
+
+Result: page 5 now draws the row 24 · 12 · 30 like the writing board: each slant runs on down-left out of the row into its own answer box (2, 5, 5, 0), replacing the grey arrows.
+

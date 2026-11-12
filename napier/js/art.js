@@ -113,14 +113,18 @@ const PAGES = {
     // left, under the chat panel: the rods with row 6
     const x0 = 300, y0 = 330, s0 = 74;
     [4, 2, 5].forEach((d, i) => rod(g, x0 + i * s0, y0, s0, d, { hl: 6, dimRows: true }));
-    // right: the row, the slants, the answer
-    const x = 830, y = 430, s = 150;
+    // right: the row, then each slant runs on down-left into a box for its digit
+    // (drawn like the station's writing board)
+    const x = 830, y = 430, s = 150, run = 64, box = 96;
     [24, 12, 30].forEach((v, i) => lcell(g, x + i * s, y, s, v, { fill: C.cellH, size: 54 }));
     [2, 5, 5, 0].forEach((digit, i) => {
-      arrow(g, x + 43 + i * s, 595, x + 6 + i * s, 682, C.grey, 4);
-      text(g, x + i * s, 765, digit, 84, C.accent);
+      const x1 = x + i * s, y1 = y + s;                // where the slant leaves the row
+      const x2 = x1 - run, y2 = y1 + run;              // the box's top-right corner
+      g.append(el("line", { x1, y1, x2, y2, stroke: C.cream, "stroke-width": 3 }));
+      g.append(el("rect", { x: x2 - box, y: y2, width: box, height: box, fill: "none", stroke: C.cream, "stroke-width": 3 }));
+      text(g, x2 - box / 2, y2 + box / 2, digit, 64, C.accent);
     });
-    text(g, 1055, 930, "= 2550", 104);
+    text(g, 1055, 900, "= 2550", 104);
   },
 
   yourTurn(g) {
