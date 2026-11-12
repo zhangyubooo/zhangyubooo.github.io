@@ -39,7 +39,7 @@ const TRAY_PACKED = CASE_AT.clone().add(new Vector3(0.3, 0.27, -0.78));
 const TRAY_ABOVE = TRAY_PACKED.clone().add(new Vector3(0, 0, 62));
 const LID_CLOSED = CASE_AT.clone().add(new Vector3(2.24, 0.17, 29.9));
 const LID_OPEN = LID_CLOSED.clone().add(new Vector3(105, 0, 0));
-const LID_ON_TABLE = new Vector3(250, 5, 1.65);
+const LID_ON_TABLE = new Vector3(150, 12, 1.65);   // lies flat in front of the case
 
 // Packing timeline (s). Rods lie in the tray from RODS_IN on; the case is shut at END.
 const T = { standUp: [4.1, 5.3], carry: [5.3, 6.7], slideIn: [6.7, 8.0], lidLift: [8.1, 9.2], lid: [9.3, 10.6] };
@@ -48,7 +48,7 @@ const END = T.lid[1];
 const SPEED = 1.7;                // unpacking/packing plays faster than the Rod Box finale
 const SPREAD_S = 1.6;             // rods lifting off the tray onto the table
 const GATHER_S = 1.0;             // pieces returning before packing
-const TABLE = { x: [-110, 320], y: [-140, 120] };   // where pieces may be dragged
+const TABLE = { x: [-200, 240], y: [-150, 110] };   // where pieces may be dragged
 
 const ease = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 const progress = (t, [a, b]) => ease(MathUtils.clamp((t - a) / (b - a), 0, 1));
@@ -71,7 +71,8 @@ function meshFromPart(part, material) {
 // ×1; the next eight hold ×2 … ×9 (tens above the diagonal, units below; no tens
 // when it is 0). Canvas 100 × 1000 = the rod's 1 : 10 face.
 const FACE = { band: 58, cell: (1000 - 58) / 9 };
-const INK = "#2b2118", PAPER = "#f2ede2";
+// Rods, tray and index are all the box's wood, printed in dark ink.
+const WOOD = 0x9a6a3e, PAPER = "#9a6a3e", INK = "#1c120a";
 const FONT = (px) => `${px}px Georgia, Gelasio, serif`;
 
 function faceCanvas(width) {
@@ -151,12 +152,12 @@ function buildScene(model) {
   scene.add(shadow);
 
   const wood = (color) => new MeshStandardMaterial({ color, roughness: 0.7, flatShading: true });
-  const bone = new MeshStandardMaterial({ color: 0xefe4c9, roughness: 0.55 });
+  const plain = new MeshStandardMaterial({ color: WOOD, roughness: 0.7 });
 
-  const caseMesh = meshFromPart(model.parts.case, wood(0x9a6a3e));
+  const caseMesh = meshFromPart(model.parts.case, wood(WOOD));
   const lid = meshFromPart(model.parts.lid, wood(0xa8763f));
   const tray = new Group();
-  tray.add(meshFromPart(model.parts.tray, wood(0xb08050)));
+  tray.add(meshFromPart(model.parts.tray, wood(WOOD)));
   // Printed on the tray's lips (they stand 3.75 mm above the tray's centre): the index
   // column on the left lip, beside the rods, and three rules along the front lip.
   const printed = (map) => new MeshStandardMaterial({ map, roughness: 0.8, polygonOffset: true, polygonOffsetFactor: -2 });
@@ -171,9 +172,9 @@ function buildScene(model) {
 
   const rodGeometry = new BoxGeometry(ROD.w, ROD.len, ROD.w);
   const rods = ROD_DIGITS.map((d) => {
-    const up = new MeshStandardMaterial({ map: rodFace(d), roughness: 0.55 });
-    const down = new MeshStandardMaterial({ map: rodFace(9 - d), roughness: 0.55 });
-    const rod = new Mesh(rodGeometry, [bone, bone, bone, bone, up, down]);
+    const up = new MeshStandardMaterial({ map: rodFace(d), roughness: 0.7 });
+    const down = new MeshStandardMaterial({ map: rodFace(9 - d), roughness: 0.7 });
+    const rod = new Mesh(rodGeometry, [plain, plain, plain, plain, up, down]);
     rod.castShadow = rod.receiveShadow = true;
     tray.add(rod);
     return rod;
@@ -207,9 +208,9 @@ function pose({ caseMesh, tray, rods, lid }, t) {
   lid.quaternion.identity();
 }
 
-/** Where rod i lies on the table once unpacked: one row in front of the tray and case. */
+/** Where rod i lies on the table once unpacked: one row in front of the tray, centred on it. */
 function rodOnTable(i) {
-  return new Vector3(-42 + i * 11.5, -88, ROD.w / 2);
+  return new Vector3((i - 7.5) * 11.5, -86, ROD.w / 2);
 }
 
 const snap = (obj) => ({ p: obj.position.clone(), q: obj.quaternion.clone() });
@@ -243,7 +244,8 @@ export async function mountRodBox(container, { onStateChange = () => {} } = {}) 
   camera.up.set(0, 0, 1);
   const VIEW = {
     packed: { target: new Vector3(130, 60, 30), offset: new Vector3(-150, -330, 170) },
-    open: { target: new Vector3(100, -32, 0), offset: new Vector3(-60, -390, 440) },
+    // unpacked: the tray lies at the centre of the screen
+    open: { target: new Vector3(TRAY_START.x, -22, 0), offset: new Vector3(0, -380, 450) },
   };
   camera.position.copy(VIEW.packed.target).add(VIEW.packed.offset);
   const controls = new OrbitControls(camera, canvas);

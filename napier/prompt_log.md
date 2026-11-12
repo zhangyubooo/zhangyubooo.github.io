@@ -215,3 +215,8 @@ Result: the landing now has one "Open the screen →" for every set (the rods sc
 
 Result: rod 15 now has 7 pages and rod 16 has 8. Instead of retyping the pages, Claude exported them from the design's own PIL generator: a small adapter (`art/svgexport.py`) runs `rod15.py` / `rod16.py` but records every drawing call as SVG, so the web pages match the PNGs exactly (checked side by side). The always-on chat is gone: a hint bubble with each page's question sits above the avatar, and either one opens the chat as a popup over the dimmed page, with a "You're on" pill, three "TRY ASKING" chips and "tap × or anywhere outside to close"; the bubble asks its question straight away. The pager dims at the first and last page, shows "n / N · tap the arrows", and swiping turns the page. Every question now carries its page number; the backend's `zones.json` lists what is on each page, and `facts.md` gained the wall and floor rules (one plate per row from the top; 3 s on a square, START 3 s, 1–15 per strip, 15 × 15 = 225) and the answers to the "Your turn" challenges, so Napier can check them.
 
+**Prompt 32** (Thu 11/12)
+> On the rods screens' last page, make the model's rods and the tray's index the same colour as the box, and when the tray comes out, put it in the middle of the screen.
+
+Result: the rods, the tray and its printed index are now the case's wood colour, printed in dark ink. Unpacked, the camera centres on the tray; the rods lie in one row centred under it, and the lid now comes to rest in front of the case so everything stays in view.
+

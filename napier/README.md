@@ -34,11 +34,11 @@ still in this repository's git history, and its two backend endpoints still work
 My CAD model of the real set (tray, case and lid, from Napier's Rod Box) with sixteen rods at real
 size, printed like my set: a double rule at the top end, the big digit (which is also ×1), then
 ×2 … ×9. The rods lie in the same order as in my printed set (8 2 9 0 3 1 1 7 3 4 3 1 0 4 7 0), and
-the tray's left lip carries the index column I, 2 … 9.
+the tray's left lip carries the index column I, 2 … 9. Rods, tray and index are the box's wood colour.
 
 - The case stands closed and slowly turns. Drag empty space to turn the view, pinch or scroll to zoom.
-- **Double-tap** the box: the lid slides out and lies down, the tray is lifted out and laid flat,
-  and the rods are spread out on the table.
+- **Double-tap** the box: the lid slides out and lies down, the tray is lifted out and laid flat in
+  the middle of the screen, and the rods are spread out in a row below it.
 - **Drag** any piece across the table: the case, the lid, the tray, or any single rod.
 - **Double-tap** again: every piece goes back and the set is packed up.
 
