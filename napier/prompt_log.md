@@ -205,3 +205,8 @@ Result: the package (exported from my Rhino model) sets the dark screen UI as th
 
 Result: they did not (the Rod Box files had been removed), so Claude restored my model of the set (`models/rod-box.json`) from git and added page 7 to the rods screens. The case stands closed and turns; a double-tap plays the Rod Box packing timeline backwards (lid out, tray lifted out and laid flat) and spreads the sixteen rods on the table; then the case, lid, tray and every rod can be dragged on their own, and another double-tap packs everything back up. The rods now carry real rod faces instead of the Rod Box's numerals. three.js was rebundled (r186) with the extra classes needed for picking and dragging. Tested in a headless browser with mouse and touch: unpack, drag a rod, the lid and the case, pack again.
 
+**Prompt 30**
+> [photo of my printed rod set] Make the rods screens' start the same as the other two: "Open the screen" goes straight to page 1. Napier AI pops up by itself on some pages; it should stay closed until the avatar is tapped. And the numbers on the model's rods are wrong: the big digit is ×1, so right under it comes ×2. The tray needs a column of big index digits on its left, like the set I made.
+
+Result: the landing now has one "Open the screen →" for every set (the rods screen opens on page 1); the chat stays closed on every page until the avatar is tapped (pages 2 and 5 still hold their example conversation inside). The 3D rods are redrawn like my printed set — a double rule at the top end, the big digit as ×1, then ×2 … ×9 — with the sixteen digits in the photo's order (8 2 9 0 3 1 1 7 3 4 3 1 0 4 7 0). The tray's left lip now carries the index column I, 2 … 9, and its front lip the three printed rules.
+

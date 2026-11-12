@@ -1,6 +1,5 @@
 // AI Napier's chat panel.
-//   square screen — opens over the page from the avatar (and starts open on the
-//                   pages whose design shows a conversation)
+//   square screen — closed until the avatar is tapped, then opens over the page
 //   tall screens  — always on screen; the avatar puts the cursor in the input
 //
 // A conversation starts from a `seed` written for the screen. Visitors can tap a
@@ -176,7 +175,7 @@ export function createChat(zone, { inline }) {
 
   /**
    * Start a fresh conversation from a seed: [[question, answer, presetId?], …].
-   * `openNow` opens the square screen's panel (pages whose design shows the chat).
+   * On the square screen the panel closes unless `openNow` is set.
    */
   function start(newSeed = [], { openNow = false } = {}) {
     generation++;

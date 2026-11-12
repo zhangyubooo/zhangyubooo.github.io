@@ -9,7 +9,7 @@
 //   promptuary  Set 2 · Rod 15 Promptuarium — tall screen, chat always on screen
 //   location    Set 3 · Rod 16 Location Arithmetic — tall screen, chat always on screen
 //
-// `seed` is a starting conversation shown in the chat (written for the screen, not by
+// `seed` is a starting conversation, already in the chat when it is opened (written for the screen, not by
 // the AI): [question, answer, preset id it already answers (optional)]. Preset ids and questions must match the backend's zones.json; `fallback`
 // is shown only if the backend can't be reached.
 

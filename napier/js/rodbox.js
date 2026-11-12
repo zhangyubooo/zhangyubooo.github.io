@@ -29,8 +29,9 @@ const ROD_PITCH = 5.57;
 const ROD_FIRST_X = -38.76;
 const ROD_Y = 1.88;
 const ROD_Z = 0.8;
-// A set of sixteen rods: digits 0–9, then a second 1–6 (opposite faces add to 9).
-const ROD_DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6];
+// The sixteen rods as they lie in Yubo's printed set, left to right (the face up;
+// the face down is 9 − d, as on real rods).
+const ROD_DIGITS = [8, 2, 9, 0, 3, 1, 1, 7, 3, 4, 3, 1, 0, 4, 7, 0];
 
 const CASE_AT = new Vector3(130, 60, 32.55);
 const TRAY_START = new Vector3(0, 0, 3.75);
@@ -65,29 +66,71 @@ function meshFromPart(part, material) {
   return mesh;
 }
 
-/** One face of a rod, drawn 1:10 like the rod: the digit, then its nine multiples. */
-function rodFace(d) {
+// Faces are drawn like Yubo's printed set: a band with two rules at the top end,
+// then nine squares. The first square holds the big digit, which also serves as
+// ×1; the next eight hold ×2 … ×9 (tens above the diagonal, units below; no tens
+// when it is 0). Canvas 100 × 1000 = the rod's 1 : 10 face.
+const FACE = { band: 58, cell: (1000 - 58) / 9 };
+const INK = "#2b2118", PAPER = "#f2ede2";
+const FONT = (px) => `${px}px Georgia, Gelasio, serif`;
+
+function faceCanvas(width) {
   const c = document.createElement("canvas");
-  c.width = 100; c.height = 1000;
+  c.width = width; c.height = 1000;
   const ctx = c.getContext("2d");
-  ctx.fillStyle = "#efe4c9"; ctx.fillRect(0, 0, 100, 1000);
-  ctx.strokeStyle = "#3a2a18"; ctx.fillStyle = "#3a2a18"; ctx.lineWidth = 3;
+  ctx.fillStyle = PAPER; ctx.fillRect(0, 0, width, 1000);
+  ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineWidth = 2.5;
   ctx.textAlign = "center"; ctx.textBaseline = "middle";
-  ctx.font = '62px Georgia, Gelasio, serif';
-  ctx.fillText(String(d), 50, 52);
-  for (let r = 1; r <= 9; r++) {
-    const y = r * 100;
-    ctx.beginPath(); ctx.moveTo(4, y); ctx.lineTo(96, y); ctx.stroke();          // square
-    ctx.beginPath(); ctx.moveTo(6, y + 96); ctx.lineTo(94, y + 4); ctx.stroke();  // diagonal
-    const p = d * r, tens = Math.floor(p / 10), units = p % 10;
-    ctx.font = '36px Georgia, Gelasio, serif';
-    if (tens) ctx.fillText(String(tens), 28, y + 30);
-    ctx.fillText(String(units), 72, y + 70);
-  }
+  const rule = (y) => { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); };
+  rule(14); rule(40);                                 // the double rule at the top end
+  return { c, ctx, rule };
+}
+function texture(c) {
   const t = new CanvasTexture(c);
   t.colorSpace = SRGBColorSpace;
-  t.anisotropy = 4;
+  t.anisotropy = 8;
   return t;
+}
+
+function rodFace(d) {
+  const { c, ctx, rule } = faceCanvas(100);
+  ctx.font = FONT(66);
+  ctx.fillText(String(d), 50, FACE.band + FACE.cell / 2 + 4);
+  for (let r = 2; r <= 9; r++) {
+    const y = FACE.band + (r - 1) * FACE.cell;
+    rule(y);
+    ctx.beginPath(); ctx.moveTo(4, y + FACE.cell - 4); ctx.lineTo(96, y + 4); ctx.stroke();   // diagonal
+    const p = d * r, tens = Math.floor(p / 10), units = p % 10;
+    ctx.font = FONT(38);
+    if (tens) ctx.fillText(String(tens), 27, y + FACE.cell * 0.3);
+    ctx.fillText(String(units), 73, y + FACE.cell * 0.72);
+  }
+  ctx.strokeRect(1, 1, 98, 998);
+  return texture(c);
+}
+
+/** The index column printed on the tray's left lip: 1 (I) … 9, one per row. */
+function indexFace() {
+  const { c, ctx, rule } = faceCanvas(110);
+  for (let r = 1; r <= 9; r++) {
+    const y = FACE.band + (r - 1) * FACE.cell;
+    if (r > 1) rule(y);
+    ctx.font = FONT(84);
+    ctx.fillText(r === 1 ? "I" : String(r), 55, y + FACE.cell / 2 + 4);
+  }
+  rule(999);
+  return texture(c);
+}
+
+/** The strip along the tray's front lip: three rules, as on the printed set. */
+function frontStrip() {
+  const c = document.createElement("canvas");
+  c.width = 1000; c.height = 40;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = PAPER; ctx.fillRect(0, 0, 1000, 40);
+  ctx.fillStyle = INK;
+  for (const y of [8, 19, 30]) ctx.fillRect(0, y, 1000, 2);
+  return texture(c);
 }
 
 function buildScene(model) {
@@ -114,6 +157,17 @@ function buildScene(model) {
   const lid = meshFromPart(model.parts.lid, wood(0xa8763f));
   const tray = new Group();
   tray.add(meshFromPart(model.parts.tray, wood(0xb08050)));
+  // Printed on the tray's lips (they stand 3.75 mm above the tray's centre): the index
+  // column on the left lip, beside the rods, and three rules along the front lip.
+  const printed = (map) => new MeshStandardMaterial({ map, roughness: 0.8, polygonOffset: true, polygonOffsetFactor: -2 });
+  const rodSpanY = [ROD_Y - ROD.len / 2, ROD_Y + ROD.len / 2];
+  const lipLeft = -47.54 + 0.4, lipRight = ROD_FIRST_X - ROD.w / 2 - 0.3;
+  const index = new Mesh(new PlaneGeometry(lipRight - lipLeft, ROD.len), printed(indexFace()));
+  index.position.set((lipLeft + lipRight) / 2, ROD_Y, 3.77);
+  const front = new Mesh(new PlaneGeometry(94.3, rodSpanY[0] + 28.77 - 0.8), printed(frontStrip()));
+  front.position.set(0, (-28.77 + 0.4 + rodSpanY[0] - 0.4) / 2, 3.77);
+  index.receiveShadow = front.receiveShadow = true;
+  tray.add(index, front);
 
   const rodGeometry = new BoxGeometry(ROD.w, ROD.len, ROD.w);
   const rods = ROD_DIGITS.map((d) => {

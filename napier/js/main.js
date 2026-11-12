@@ -34,7 +34,7 @@ else showScreen(zone);
 // ---------------------------------------------------------------------------
 function showLanding() {
   const sets = [
-    ["Set 1 · Rods 2–7", "Touch & Learn", "six 15″ × 15″ screens, one page each"],
+    ["Set 1 · Rods 2–7", "Touch & Learn", "15″ × 15″ screens"],
     ["Set 2 · Rod 15", "Promptuarium", "17″ × 36″ screen"],
     ["Set 3 · Rod 16", "Location Arithmetic", "17″ × 36″ screen"],
   ];
@@ -47,20 +47,10 @@ function showLanding() {
     card.querySelector(".set__title").textContent = sets[i][1];
     card.querySelector(".set__size").textContent = sets[i][2];
     const links = card.querySelector(".set__pages");
-    if (z.pages.length > 1) {
-      z.pages.forEach((p, n) => {
-        const a = document.createElement("a");
-        a.href = `?zone=${id}&page=${n + 1}`;
-        a.textContent = `p${n + 1}`;
-        a.title = p.title;
-        links.append(a);
-      });
-    } else {
-      const a = document.createElement("a");
-      a.href = `?zone=${id}`;
-      a.textContent = "Open the screen →";
-      links.append(a);
-    }
+    const a = document.createElement("a");
+    a.href = `?zone=${id}`;                  // the rods screen opens on page 1
+    a.textContent = "Open the screen →";
+    links.append(a);
     $("landing-sets").append(card);
   });
   $("landing").hidden = false;
@@ -130,15 +120,15 @@ function showScreen(z) {
     $("art").replaceChildren(drawPage(SHAPES[z.shape], z.kicker, p, { section: z.section }));
     mountWidget(p);
     [...dots.children].forEach((d, i) => d.setAttribute("aria-current", String(i === n)));
-    // A page with a conversation in its design starts with it open — unless a
-    // visitor is already talking to Napier, in which case the talk carries on.
-    if (!inline && !chat.live) chat.start(p.seed || [], { openNow: Boolean(p.seed) });
+    // The chat stays closed until the avatar is tapped. A page's example conversation
+    // is ready inside it — unless a visitor is already talking, then the talk carries on.
+    if (!inline && !chat.live) chat.start(p.seed || []);
   }
 
   function startOver() {
     if (inline) chat.start(z.seed);
     goTo(defaultPage, { force: true });
-    if (!inline) chat.start(z.pages[defaultPage].seed || [], { openNow: Boolean(z.pages[defaultPage].seed) });
+    if (!inline) chat.start(z.pages[defaultPage].seed || []);
   }
 
   startOver();
@@ -154,8 +144,7 @@ function showScreen(z) {
   setInterval(ping, kiosk ? KEEP_AWAKE_MS : 5 * KEEP_AWAKE_MS);
 
   // --- idle: a shared screen must not show one visitor's conversation to the next ---
-  const isDirty = () => chat.live || page !== defaultPage || Boolean(widget?.dirty)
-    || chat.open !== (inline || Boolean(z.pages[page].seed));
+  const isDirty = () => chat.live || page !== defaultPage || Boolean(widget?.dirty) || (!inline && chat.open);
   watchIdle({ isDirty, isBusy: () => chat.busy, startOver });
 }
 

@@ -15,7 +15,7 @@ Each screen shows how to use the interaction beside it, and an AI Napier answers
 
 | Set | URL | Screen | Chat |
 |---|---|---|---|
-| 1 · Rods 2–7 Touch & Learn | `?zone=rods&page=1…7` | six square 15″ × 15″ screens; each shows its own page by default, visitors can page through all seven. Pages 1–6 are the design's; page 7 is my 3D model of the set (below) | opens over the page from the avatar; pages 2 and 5 start with it open, as designed |
+| 1 · Rods 2–7 Touch & Learn | `?zone=rods&page=1…7` | six square 15″ × 15″ screens; each shows its own page by default, visitors can page through all seven. Pages 1–6 are the design's; page 7 is my 3D model of the set (below) | closed until the avatar is tapped, then opens over the page; on pages 2 and 5 it already holds the design's example conversation |
 | 2 · Rod 15 Promptuarium | `?zone=promptuary` | tall 17″ × 36″ screen: Pick a plate → Lay it across → Add the diagonals | always on screen under "STUCK? ASK NAPIER" |
 | 3 · Rod 16 Location Arithmetic | `?zone=location` | tall 17″ × 36″ screen: Stand on squares → Now the other arm → Stand on START | always on screen |
 
@@ -32,7 +32,9 @@ still in this repository's git history, and its two backend endpoints still work
 ## Page 7: the set in its box
 
 My CAD model of the real set (tray, case and lid, from Napier's Rod Box) with sixteen rods at real
-size, each carrying a real rod face (digits 0–9, then 1–6).
+size, printed like my set: a double rule at the top end, the big digit (which is also ×1), then
+×2 … ×9. The rods lie in the same order as in my printed set (8 2 9 0 3 1 1 7 3 4 3 1 0 4 7 0), and
+the tray's left lip carries the index column I, 2 … 9.
 
 - The case stands closed and slowly turns. Drag empty space to turn the view, pinch or scroll to zoom.
 - **Double-tap** the box: the lid slides out and lies down, the tray is lifted out and laid flat,
