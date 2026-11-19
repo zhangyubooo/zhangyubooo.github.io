@@ -242,3 +242,25 @@ Result: we agreed the station screens go (the relayout of 11/18 removes them), a
 
 Result: the station became portrait | conversation | rods, driven only by a keyboard. Keys 1–6 ask a rod's question when nothing has been typed (after that digits are just digits), Enter sends a typed question, Esc clears or starts over, every key goes to the writing line, input methods for Chinese work. Napier's replies surface letter by letter and the exchange builds up like letters; asked rods stay marked until the next visitor. Offline, a typed question gets the nearest rod's answer by keyword. Idle: any key dismisses "Still there?" without typing. The backend's `portrait` zone now describes the screen and keyboard. Tested with the mock AI: rods by number, typed questions with digits, pressing a rod while Napier is writing, offline answers, Esc, idle reset, refocus after a stray click.
 
+**Prompt 37**
+> Change the layout: the portrait in the middle, the conversation on the right, the rods on the left.
+
+Result: rods | portrait | conversation; the chosen rod now slides out towards the portrait.
+
+## Phase 9 — Pointing and speaking: no keyboard (Thu 11/19)
+
+**Prompt 38**
+> I talked with our professor again. In the exhibit, what form should the AI interaction finally take, and what form should the prototype take? I already have a spatial projection prototype and a physical interaction prototype; this one I plan to make only on the computer. Could I use TouchDesigner for gestures? But could it still be a web app that everyone can use on their computer?
+
+Result (discussion): the three prototypes each test one thing: physical interaction (the Arduino rods), spatial projection (location arithmetic), and here the conversation. TouchDesigner can't become a web page (others would need it or TouchPlayer installed), but hand tracking runs in the browser with MediaPipe, so the prototype stays one web app.
+
+**Prompt 39**
+> The professor feels a keyboard doesn't really make sense. What about only gestures? Or voice? In the exhibit it could simply be a projection with a camera that recognises gestures, and a microphone for free questions. Could a gesture trigger the recording?
+
+Result (discussion): yes: point at a rod to ask it; raise your hand to ask your own question aloud, lower it to send (push-to-talk with the hand, so the hallway is never recorded). Show what was heard before the answer. Answers stay written; voice optional.
+
+**Prompt 40**
+> Start building.
+
+Result: the station is driven by hands and voice. `js/gestures.js` (point / palm from 21 MediaPipe landmarks, pointer smoothing, hold and release timing), `js/hands.js` (camera + microphone, Hand Landmarker in the browser, a camera view with the hand drawn), `js/voice.js` (recording while the hand is up, a voice wave, optional reading aloud). A ring follows the pointing finger and a bar fills on the rod; a raised hand turns the bar orange and the portrait warms; what was heard appears as "You asked". A Begin card asks for the camera and microphone on a computer; `?kiosk=1` skips it. Hidden testing keys: 1–6, hold Space, /, Esc, V. The backend gained `POST /transcribe` (Whisper on Groq, recordings not stored, phantom phrases ignored), and Napier's prompt now knows questions are spoken and sometimes misheard. Tested with made-up hand landmarks and Chromium's fake camera and microphone, with the mock AI: pointing and holding on a rod, a quick palm flick (ignored), raising, speaking and lowering, an empty transcript, the transcriber offline, Space to talk, typing, Esc, kiosk start. Real hand tracking and real Whisper are not tested here (the model and Groq can't be reached from the test machine).
+

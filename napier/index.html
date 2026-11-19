@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ask Napier · the last portrait · Making Calculation Visible</title>
-  <meta name="description" content="A prototype of the last station of Making Calculation Visible, an exhibit on John Napier's Rabdologia at CMU's Posner Center: press the number of a question rod, or type your own question, on the keyboard in front of his 1616 portrait, and Napier writes back.">
+  <meta name="description" content="A prototype of the last station of Making Calculation Visible, an exhibit on John Napier's Rabdologia at CMU's Posner Center: point at a question rod, or raise your hand and ask aloud, and Napier writes back beside his 1616 portrait.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Gelasio:ital@0;1&display=swap" rel="stylesheet">
@@ -12,15 +12,23 @@
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
-  <!-- The station, drawn at 1920 × 1080 design units and scaled to fit the screen.
-       In the gallery a keyboard sits on a writing desk in front of the screen. -->
+  <!-- The station, drawn at 1920 × 1080 design units and scaled to fit.
+       In the gallery this is projected on a wall, with a camera and a microphone above it.
+       On a computer, the webcam and microphone stand in for them. -->
   <main class="stage" id="stage">
 
-    <!-- ① The question rods (left): press a number key to ask one -->
+    <!-- ① The question rods (left): point at one and hold to ask it -->
     <section class="rods" aria-labelledby="rods-label">
       <p class="kicker" id="rods-label">QUESTION RODS</p>
       <ol class="tray" id="tray"></ol>
-      <p class="rods__hint">Press a number on the keyboard</p>
+      <p class="rods__hint"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="11.5" width="11.5" height="10" rx="4.2"/><rect x="7.6" y="2.2" width="2.7" height="11" rx="1.35"/><rect x="3.4" y="12.6" width="2.4" height="6" rx="1.2" transform="rotate(-38 4.6 15.6)"/></svg> Point at a rod and hold</p>
+
+      <!-- What the camera sees: so visitors know their hands are being read -->
+      <figure class="eye" id="eye">
+        <video class="eye__video" id="eye-video" playsinline muted></video>
+        <canvas class="eye__bones" id="eye-bones" width="320" height="180"></canvas>
+        <figcaption class="eye__caption" id="eye-caption">The camera only looks for hands. Nothing is kept but the question you ask.</figcaption>
+      </figure>
     </section>
 
     <!-- ② The portrait (centre) -->
@@ -45,28 +53,46 @@
 
       <div class="log" id="log" aria-live="polite" aria-relevant="additions"></div>
 
-      <form class="pen" id="pen" autocomplete="off">
+      <!-- Raise a hand to speak: what Napier is doing with your voice -->
+      <div class="ear" id="ear" data-state="ready" aria-live="polite">
+        <span class="ear__icon"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.2" y="11" width="11.6" height="10.5" rx="4.2"/><rect x="6.3" y="4.6" width="2.5" height="9" rx="1.25"/><rect x="9.4" y="2.6" width="2.5" height="10" rx="1.25"/><rect x="12.5" y="3.2" width="2.5" height="10" rx="1.25"/><rect x="15.5" y="5.6" width="2.3" height="8" rx="1.15"/><rect x="2.6" y="11.6" width="2.4" height="7" rx="1.2" transform="rotate(-38 3.8 15.1)"/></svg></span>
+        <p class="ear__text" id="ear-text">Raise your hand and ask your own question aloud</p>
+        <canvas class="ear__wave" id="ear-wave" width="300" height="60" aria-hidden="true"></canvas>
+      </div>
+
+      <!-- Prototype only, for testing without a camera: "/" opens a typing line -->
+      <form class="pen" id="pen" autocomplete="off" hidden>
         <label class="visually-hidden" for="pen-input">Your question for Napier</label>
         <span class="pen__you" aria-hidden="true">You</span>
-        <textarea id="pen-input" rows="1" maxlength="200" spellcheck="false"
-                  autocapitalize="sentences" enterkeyhint="send" autofocus></textarea>
-        <span class="pen__placeholder" id="pen-placeholder" aria-hidden="true"></span>
+        <textarea id="pen-input" rows="1" maxlength="200" spellcheck="false" enterkeyhint="send"></textarea>
+        <span class="pen__placeholder" id="pen-placeholder" aria-hidden="true">Type a question, Enter to send, Esc to close</span>
         <span class="pen__count" id="pen-count" aria-hidden="true"></span>
       </form>
 
-      <p class="keys" aria-label="Keys: 1 to 6 ask a rod's question, Enter sends your own, Esc starts over">
-        <span><kbd>1</kbd>–<kbd>6</kbd> ask a rod</span>
-        <span><kbd>Enter</kbd> send your own</span>
-        <span><kbd>Esc</kbd> start over</span>
-      </p>
     </section>
 
-    <!-- After a while without a key pressed, the station starts over for the next visitor. -->
+    <!-- Where a pointing finger is aiming -->
+    <div class="pointer" id="pointer" hidden aria-hidden="true"><span></span></div>
+
+    <!-- On a computer the browser has to ask for the camera and microphone first. -->
+    <div class="begin" id="begin" hidden>
+      <div class="begin__card">
+        <p class="kicker">THE LAST PORTRAIT</p>
+        <h2 class="begin__title">Ask Napier</h2>
+        <p class="begin__text">Point at a question rod, or raise your hand and ask him aloud. Your browser will ask
+          to use the <b>camera</b>, to see your hands, and the <b>microphone</b>, to hear your question.
+          The video never leaves this computer; only what you ask is sent, to be written down.</p>
+        <button class="begin__go" id="begin-go" type="button">Begin</button>
+        <p class="begin__note" id="begin-note"></p>
+      </div>
+    </div>
+
+    <!-- After a while with nobody there, the station starts over for the next visitor. -->
     <div class="idle" id="idle" hidden role="alertdialog" aria-labelledby="idle-text">
       <div class="idle__card">
         <p class="idle__text" id="idle-text">Still there?</p>
         <p class="idle__count">Starting over in <span id="idle-count">10</span>…</p>
-        <p class="idle__stay">Press any key to keep talking</p>
+        <p class="idle__stay">Raise a hand to keep talking</p>
       </div>
     </div>
   </main>

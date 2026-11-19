@@ -60,3 +60,15 @@ export const askNapier = (body) =>
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
+
+/**
+ * A spoken question: the recording goes to the backend, Whisper writes it down.
+ * Resolves to { text } ("" when nothing was heard). The recording is not kept.
+ */
+export function transcribe(blob) {
+  const type = (blob.type || "audio/webm").split(";")[0];
+  const ext = { "audio/webm": "webm", "audio/ogg": "ogg", "audio/mp4": "m4a", "audio/wav": "wav" }[type] || "webm";
+  const form = new FormData();
+  form.append("audio", blob, `question.${ext}`);
+  return request("/transcribe", { method: "POST", body: form });
+}

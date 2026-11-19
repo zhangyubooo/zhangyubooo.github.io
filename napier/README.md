@@ -12,42 +12,68 @@ A prototype of the last station of *Making Calculation Visible*, my exhibit desi
 Napier's *Rabdologia* (1617) for CMU's Posner Center (51-265 Environments Studio, fall 2026).
 
 After visitors have seen the real rods, used the rod stations, the promptuary wall and the
-location-arithmetic floor, they reach Napier's 1616 portrait on a screen, with a keyboard on a
-writing desk in front of it. Six numbered question rods stand to the left of the portrait, the conversation to the right: press a number
-to ask that rod's question, or type a question of your own. Napier writes back, letter by letter,
-and the conversation builds up beside the painting like an exchange of letters.
+location-arithmetic floor, they reach Napier's 1616 portrait, projected on the wall of the south
+waiting area. Six question rods are projected to its left, the conversation to its right. A camera
+watches for hands and a microphone listens. Nothing to touch:
 
-**Why at the end, and why one screen.** The professor's feedback was that screens compete with the
-objects for attention, so the screens beside the stations were dropped. AI Napier moved to the end,
-where visitors have questions to ask and the objects are behind them. It stays a conversation you
-type, because talking to him is the point; there is no touch screen and no mouse, only the keyboard.
+- **Point at a rod and hold** for a second: Napier answers that rod's question.
+- **Raise your hand and ask aloud**, then lower it: what you said is written down, shown, and
+  Napier answers it.
+
+Napier writes back, letter by letter, and the conversation builds up beside the painting like an
+exchange of letters.
+
+**Why this form.** The professor's feedback was that screens compete with the objects for
+attention, so the screens beside the stations were dropped and AI Napier became one station at the
+end, where visitors have questions and the objects are behind them. A keyboard didn't make sense
+in a gallery either, so the station uses what everyone already does: point at what you mean, and
+raise your hand to ask a question. Projection keeps it in the same language as the promptuary wall
+and the location-arithmetic floor.
+
+**What this prototype tests.** The exhibit has a physical-interaction prototype (the Arduino rods)
+and a spatial-projection prototype (location arithmetic). This one tests the conversation: what
+visitors ask, how Napier answers, and whether pointing and raising a hand are understood without
+instructions. It runs on any computer, with the webcam and microphone standing in for the
+gallery's camera and microphone, and full screen standing in for the projection.
 
 ## How to use it
 
-1. Press **1–6** to ask one of the question rods (the rod lights up and Napier answers).
-2. Or just start typing and press **Enter**. Once you have started typing, digits are just digits.
-3. **Esc** clears the line; on an empty line it starts the conversation over.
-4. Every key goes to the writing line; nothing needs clicking. Chinese and other input methods work,
-   and Napier answers in the language he is written to.
-5. After 75 seconds without a key the station asks "Still there?" and starts over, so one visitor's
-   conversation is never left for the next. Any key keeps it.
+1. Open the page and press **Begin**; allow the camera and the microphone.
+2. **Point** (index finger out, other fingers curled) at a rod. A ring follows your finger; hold it on
+   a rod until the bar fills.
+3. **Raise an open hand** and keep it up while you speak. The bar turns orange and shows your voice.
+   **Lower your hand** to send. Napier shows what he heard ("You asked"), then answers. Any language
+   works; he answers in the language he is asked in.
+4. After a minute with no hands in view the station asks "Still there?" and starts over, so one
+   visitor's conversation is never left for the next. Raising a hand keeps it.
 
-For the gallery: open `?kiosk=1` in a full-screen browser (Chrome `--kiosk`). The link back to the
-portfolio and the mouse pointer are hidden, and the backend is pinged every 10 minutes so it doesn't
-fall asleep. The page is drawn at 1920 × 1080 and scales to any screen.
+The little camera view under the rods shows the hands being read (orange when a gesture is
+recognised). Video is read in the browser and never leaves the computer; only the spoken question
+is sent, to be written down, and the recording is not kept.
 
-## The keyboard station
+**Testing without a camera** (not shown to visitors): **1–6** ask a rod, **hold Space** to speak,
+**/** to type a question, **Esc** starts over, **V** makes Napier read his answers aloud
+(`?voice=1` turns that on from the start; off by default so the station doesn't fill the hall
+with sound).
 
-- Any USB keyboard works. A compact one without a number pad or function row is best; fix it to the
-  desk. The number row is what the rods use.
-- On a Mac, set the keyboard's Command key to "No Action" (System Settings → Keyboard → Keyboard
-  Shortcuts → Modifier Keys) so visitors can't quit the browser; on Windows use assigned access.
-- Optional: label keys 1–6 with the rods' numerals, or make a brass "Ask" button that is really an
-  Enter key (an Arduino Leonardo can act as a keyboard).
+**In the gallery:** open `?kiosk=1` full screen (Chrome `--kiosk --autoplay-policy=no-user-gesture-required`,
+with camera and microphone allowed for the site). It starts without the Begin card, hides the
+mouse pointer and the link back, and pings the backend every 10 minutes. The page is drawn at
+1920 × 1080 and scales to any projector.
+
+## In the gallery (the station as designed)
+
+- Projector on the wall of the south-waiting-area corner, beside the location-arithmetic projection.
+- A webcam (wide angle, 1080p) above or below the projection, aimed at where a visitor stands,
+  about 1.5–2.5 m away; the hands should be lit from the front.
+- A directional microphone above the standing spot, so the hallway is quieter than the visitor.
+  Listening only happens while a hand is raised, so the station never records conversations
+  around it.
+- A floor mark showing where to stand.
 
 ## The six question rods
 
-| Key | Question |
+| Rod (key for testing) | Question |
 |---|---|
 | 1 | Why did you make the rods? |
 | 2 | Why didn't the promptuary catch on? |
@@ -59,7 +85,8 @@ fall asleep. The page is drawn at 1920 × 1080 and scales to any screen.
 Each rod has an offline answer written from the fact sheet (`fallback` in `js/questions.js`), so the
 station still answers without a connection, marked "From Napier's notes". A typed question is
 matched by keywords to the nearest rod's answer; if nothing matches, Napier asks to be asked about
-his devices.
+his devices. Spoken questions need the connection (to be written down); offline, the station asks
+visitors to point at a rod instead.
 
 ## How Napier answers
 
@@ -69,20 +96,36 @@ his devices.
   its answer should draw on.
 - He may only state facts from the fact sheet; his life ends in 1617, so later events are things he
   "has been told". Legends are told as legends.
-- He remembers the last few questions of the visit. Typed questions are cleaned, length-capped and
-  always reach the model as a visitor's question, never as instructions.
+- He remembers the last few questions of the visit. Spoken (and typed) questions are cleaned,
+  length-capped and always reach the model as a visitor's question, never as instructions. He knows
+  the machine that writes them down sometimes mishears.
+
+## How hands and voice are read
+
+- **Hands:** MediaPipe Hand Landmarker (Google), loaded from a CDN and run in the browser on the
+  webcam image: 21 points per hand, up to two hands. `js/gestures.js` turns them into two gestures:
+  *point* (index finger out, the other three curled: its tip becomes the pointer) and *palm* (all four
+  fingers out and the hand upright). A palm must be held ½ second before listening starts, and gone
+  for ⅔ second before it stops, so a flicker doesn't cut a question off.
+- **Voice:** the browser records while the palm is up (`MediaRecorder`, at most 15 s), sends the
+  recording to the backend's `/transcribe`, and Whisper (`whisper-large-v3-turbo` on Groq) writes it
+  down. Very short takes, silence and Whisper's usual phantom phrases ("Thank you.") count as
+  nothing said. The recording is not stored; the written question is logged like any other.
 
 ## Files in this folder
 
 | File | Role |
 |---|---|
-| `index.html` | The station: framed portrait, the conversation and writing line, the rods, idle prompt |
+| `index.html` | The station: rods + camera view, framed portrait, conversation + listening bar, Begin card, idle prompt |
 | `style.css` | Exhibit colours around a gilded frame; everything in design units (`--u`) |
 | `js/questions.js` | The six rods (ids match the backend's `portrait` presets), offline answers, greeting |
-| `js/main.js` | The keyboard (1–6, typing, Enter, Esc), the conversation, asking Napier, idle reset |
+| `js/main.js` | Pointing at rods, raising a hand to speak, the conversation, asking Napier, testing keys, idle reset |
+| `js/gestures.js` | Hand landmarks → point / palm, the pointer position, raise and lower events |
+| `js/hands.js` | Camera + microphone permission, MediaPipe Hand Landmarker, the camera view with the hand drawn on it |
+| `js/voice.js` | Recording a spoken question, the voice wave, Napier reading aloud (optional) |
 | `js/inscription.js` | Napier's reply appears letter by letter |
 | `js/dust.js` | Dust drifting through the light in the painting |
-| `js/api.js` | Backend URL (local or Render), fetch with a 75 s timeout and friendly errors |
+| `js/api.js` | Backend URL (local or Render), `/chat`, `/transcribe`, a 75 s timeout and friendly errors |
 | `images/napier-portrait.jpg` | The 1616 portrait (public domain) |
 
 ## How to run it locally
@@ -91,6 +134,7 @@ his devices.
    (`MOCK_AI=1` in its `.env` gives canned replies without a Groq key).
 2. In the portfolio folder: `python3 -m http.server 8000`
 3. Open http://localhost:8000/napier/. The page talks to the local backend automatically.
+   Browsers allow the camera and microphone on `localhost` and on https (GitHub Pages) only.
 
 ## Secrets
 
@@ -105,11 +149,15 @@ variables on Render and in the backend's local `.env`, which git ignores.
   how-to pages and a Napier chat. Dropped after the 17 Nov feedback; see commit "upgrade 2.0 v3".
 - **Rod-and-slot station** (17 Nov 2026): drag a rod into a slot under the portrait, answer on a tablet
   in the frame. Replaced the same day by the keyboard conversation.
+- **Keyboard station** (17 Nov 2026): a screen and a keyboard; press 1–6 for a rod or type. Replaced on
+  19 Nov by pointing and speaking, after the professor felt a keyboard didn't belong in the gallery.
 
 ## How I used AI
 
 - **Claude** (Anthropic) wrote the code under my direction. My prompts are in [prompt_log.md](prompt_log.md).
-- **Groq** (`openai/gpt-oss-20b`) writes Napier's answers live, from the fact sheet.
+- **Groq** (`openai/gpt-oss-20b`) writes Napier's answers live, from the fact sheet; Whisper on Groq
+  writes down spoken questions.
+- **MediaPipe** Hand Landmarker (Google, Apache 2.0) reads hands in the browser.
 - AI use in the 51-265 studio project is with the instructor's permission and is disclosed here.
 
 ## Credits

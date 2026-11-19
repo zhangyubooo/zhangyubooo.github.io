@@ -1,4 +1,5 @@
-// The six question rods beside the portrait: a visitor presses 1–6 to ask one.
+// The six question rods beside the portrait: a visitor points at one to ask it.
+// (`key` 1–6 is for testing on a computer without a camera.)
 // Ids must match the "portrait" zone in the backend's zones.json. `fallback` is
 // Napier's answer when the live portrait can't be reached (written from the
 // backend's facts.md); `keywords` match a typed question to the nearest fallback.
@@ -25,7 +26,7 @@ export const QUESTIONS = [
 ];
 
 export const GREETING =
-  "Good visitor, you have seen my rods, my storehouse and my chessboard. Press the number of a rod beside me, or write your own question, and I shall answer.";
+  "Good visitor, you have seen my rods, my storehouse and my chessboard. Point to one of my rods, or raise your hand and ask me aloud, and I shall answer.";
 
 export const RESTING =
-  "Forgive me, good visitor: the paint is still drying and I cannot answer that just now. Ask me of my rods, my storehouse or my chessboard.";
+  "Forgive me, good visitor: the paint is still drying and I cannot answer that just now. Point to one of my rods, or ask me again.";
