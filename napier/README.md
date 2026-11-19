@@ -1,4 +1,4 @@
-# Ask Napier: exhibit screens
+# Ask Napier: the last portrait
 
 **Live:** https://zhangyubooo.github.io/napier/
 **Backend code:** https://github.com/zhangyubooo/napier-backend
@@ -8,157 +8,113 @@
 
 ## What it is
 
-The screens for *Making Calculation Visible*, my exhibit design on John Napier's *Rabdologia* (1617)
-for CMU's Posner Center (51-265 Environments Studio, fall 2026). The look follows the exhibit's
-screen UI package (dark UI, Georgia, accent `#F0A046`), exported from the Rhino model on 2026-11-11.
-Each screen shows how to use the interaction beside it, and an AI Napier answers questions about it.
+A prototype of the last station of *Making Calculation Visible*, my exhibit design on John
+Napier's *Rabdologia* (1617) for CMU's Posner Center (51-265 Environments Studio, fall 2026).
 
-| Set | URL | Screen | Chat |
-|---|---|---|---|
-| 1 · Rods 2–7 Touch & Learn | `?zone=rods&page=1…7` | six square 15″ × 15″ screens; each shows its own page by default, visitors can page through all seven. Pages 1–6 are the design's; page 7 is my 3D model of the set (below) | closed until the avatar is tapped, then opens over the page; on pages 2 and 5 it already holds the design's example conversation |
-| 2 · Rod 15 Promptuarium | `?zone=promptuary&page=1…7` | tall 17″ × 36″ screen, 7 pages: what the promptuarium is, meet the wall, pick a plate, hang it across, add the slants, two plates, your turn | a popup over the dimmed page, opened by the avatar or the page's hint bubble (which asks its question at once) |
-| 3 · Rod 16 Location Arithmetic | `?zone=location&page=1…8` | tall 17″ × 36″ screen, 8 pages: intro, how the squares count, meet the floor, first number, second number, START, watching the wall, your turn | the same popup |
+After visitors have seen the real rods, used the rod stations, the promptuary wall and the
+location-arithmetic floor, they reach Napier's 1616 portrait on a screen, with a keyboard on a
+writing desk in front of it. Six numbered question rods stand to the left of the portrait, the conversation to the right: press a number
+to ask that rod's question, or type a question of your own. Napier writes back, letter by letter,
+and the conversation builds up beside the painting like an exchange of letters.
 
-Without `?zone=` the page shows links to every screen. Add `&kiosk=1` in the exhibit: the "All
-screens" link is hidden and the backend is pinged every 10 minutes so it never falls asleep.
+**Why at the end, and why one screen.** The professor's feedback was that screens compete with the
+objects for attention, so the screens beside the stations were dropped. AI Napier moved to the end,
+where visitors have questions to ask and the objects are behind them. It stays a conversation you
+type, because talking to him is the point; there is no touch screen and no mouse, only the keyboard.
 
-The screen is drawn at design size (1500 units wide; 1500 × 1500 or 1500 × 3176) and scaled to fit
-the display, with black bars if the display's shape differs (for example a 40″ 16:9 screen turned
-upright for the tall sets).
+## How to use it
 
-This folder used to hold **Napier's Rod Box** (15-113 Project 2, submitted 10/2026). Its code is
-still in this repository's git history, and its two backend endpoints still work.
+1. Press **1–6** to ask one of the question rods (the rod lights up and Napier answers).
+2. Or just start typing and press **Enter**. Once you have started typing, digits are just digits.
+3. **Esc** clears the line; on an empty line it starts the conversation over.
+4. Every key goes to the writing line; nothing needs clicking. Chinese and other input methods work,
+   and Napier answers in the language he is written to.
+5. After 75 seconds without a key the station asks "Still there?" and starts over, so one visitor's
+   conversation is never left for the next. Any key keeps it.
 
-## Page 7: the set in its box
+For the gallery: open `?kiosk=1` in a full-screen browser (Chrome `--kiosk`). The link back to the
+portfolio and the mouse pointer are hidden, and the backend is pinged every 10 minutes so it doesn't
+fall asleep. The page is drawn at 1920 × 1080 and scales to any screen.
 
-My CAD model of the real set (tray, case and lid, from Napier's Rod Box) with sixteen rods at real
-size, printed like my set: a double rule at the top end, the big digit (which is also ×1), then
-×2 … ×9. The rods lie in the same order as in my printed set (8 2 9 0 3 1 1 7 3 4 3 1 0 4 7 0), and
-the tray's left lip carries the index column I, 2 … 9. Rods, tray and index are the box's wood colour.
+## The keyboard station
 
-- The case stands closed and slowly turns. Drag empty space to turn the view, pinch or scroll to zoom.
-- **Double-tap** the box: the lid slides out and lies down, the tray is lifted out and laid flat in
-  the middle of the screen, and the rods are spread out in a row below it.
-- **Drag** any piece across the table: the case, the lid, the tray, or any single rod.
-- **Double-tap** again: every piece goes back and the set is packed up.
+- Any USB keyboard works. A compact one without a number pad or function row is best; fix it to the
+  desk. The number row is what the rods use.
+- On a Mac, set the keyboard's Command key to "No Action" (System Settings → Keyboard → Keyboard
+  Shortcuts → Modifier Keys) so visitors can't quit the browser; on Windows use assigned access.
+- Optional: label keys 1–6 with the rods' numerals, or make a brass "Ask" button that is really an
+  Enter key (an Arduino Leonardo can act as a keyboard).
 
-The animation reuses the Rod Box finale's timeline (`pose(t)`), played backwards to unpack. three.js
-loads only when this page opens.
+## The six question rods
 
-## The tall screens (v2, 12 Nov 2026)
+| Key | Question |
+|---|---|
+| 1 | Why did you make the rods? |
+| 2 | Why didn't the promptuary catch on? |
+| 3 | Is your chessboard really binary? |
+| 4 | What are you proudest of? |
+| 5 | Are you really a warlock? |
+| 6 | What would you make of my century? |
 
-Pages follow the tall-screen handoff from the Rhino session (`tall_screens_v2_handoff.zip`): page 1
-introduces the object and points to the wall graphics for its history; every other page teaches how
-to use the wall or floor beside the screen.
-
-- **The pages are SVG files in `art/`**, exported from the design's own PIL generator with
-  `art/svgexport.py` (it records the generator's drawing calls as SVG), so they match the PNGs exactly.
-- **Hint bubble** above the avatar: "ASK NAPIER · TAP MY PORTRAIT" and the page's question. Tapping it
-  opens the chat and asks that question; tapping the avatar opens the chat empty.
-- **Chat popup**: the page is dimmed; a pill says "You're on: <page title>"; "TRY ASKING" offers three
-  questions; tap × or anywhere outside to close. Every question is sent with the page number.
-- **Pager**: arrows dim on the first and last page, "n / N · tap the arrows" under the dots; swipe
-  left or right to turn the page.
-- After 60 s without a touch: the popup closes and the screen goes back to page 1.
-
-## How a visitor uses it
-
-1. Read the steps on the screen, then try the interaction.
-2. Tap the Napier portrait in the corner (on the tall screens, or the hint bubble above it). On
-   the square screen's pages 2 and 5 the chat starts with the design's example conversation.
-3. Tap a suggested question (outlined bubbles) or type your own in "Ask Napier…" (up to 200
-   characters, any language).
-4. His reply appears word by word. He remembers the last few messages.
-5. After 60 seconds without a touch, the screen asks "Still there?" and then returns to its own
-   page and example conversation for the next visitor.
+Each rod has an offline answer written from the fact sheet (`fallback` in `js/questions.js`), so the
+station still answers without a connection, marked "From Napier's notes". A typed question is
+matched by keywords to the nearest rod's answer; if nothing matches, Napier asks to be asked about
+his devices.
 
 ## How Napier answers
 
-- The backend sends the question to an LLM (Groq, `openai/gpt-oss-20b`) with three things: who Napier
-  is and how he speaks (`persona_chat.md`), the fact sheet he may draw on (`facts.md`), and what the
-  visitor is looking at in this zone (`zones.json`).
-- He may only state facts from the fact sheet. His life ends in 1617, so later events (the rods in
-  China in 1628, the cabinet in Madrid, Leibniz's binary in 1703) are things he "has been told".
-- Suggested questions also carry a short note on what to draw on, so their answers stay precise.
-- Typed questions are cleaned and length-capped, and always reach the model as a visitor's question,
-  never as instructions. Off-topic or unkind questions are steered back to the exhibit.
-- If the backend can't be reached, a suggested question is still answered from Napier's notes
-  (`fallback` in `js/zones.js`), marked "From Napier's notes". The status under his name reads
-  "AI · online" (green dot) once the backend answers, "AI · waking…" before.
+- The backend sends the question to an LLM (Groq, `openai/gpt-oss-20b`) with who Napier is and how he
+  speaks (`persona_chat.md`), the fact sheet he may draw on (`facts.md`), and where the visitor is
+  (`zones.json`, zone `portrait`: the end of the exhibit). Each rod also carries a short note on what
+  its answer should draw on.
+- He may only state facts from the fact sheet; his life ends in 1617, so later events are things he
+  "has been told". Legends are told as legends.
+- He remembers the last few questions of the visit. Typed questions are cleaned, length-capped and
+  always reach the model as a visitor's question, never as instructions.
 
 ## Files in this folder
 
 | File | Role |
 |---|---|
-| `index.html` | Landing, the screen (artwork, pager, avatar, chat panel, idle prompt) |
-| `style.css` | The design's colours and sizes, all in design units (`--u`), so the layout matches the PNGs |
-| `js/zones.js` | The three sets: pages, titles, footers, example conversations, suggested questions + offline answers. Question ids must match the backend's `zones.json` |
-| `js/art.js` | Draws the square screen's pages as SVG with the design's coordinates |
-| `art/*.svg`, `art/svgexport.py` | The tall screens' 7 + 8 pages, exported from the design's generator |
-| `js/chat.js` | AI Napier's panel: example conversation, suggested questions, typed questions, word-by-word replies, errors |
+| `index.html` | The station: framed portrait, the conversation and writing line, the rods, idle prompt |
+| `style.css` | Exhibit colours around a gilded frame; everything in design units (`--u`) |
+| `js/questions.js` | The six rods (ids match the backend's `portrait` presets), offline answers, greeting |
+| `js/main.js` | The keyboard (1–6, typing, Enter, Esc), the conversation, asking Napier, idle reset |
+| `js/inscription.js` | Napier's reply appears letter by letter |
+| `js/dust.js` | Dust drifting through the light in the painting |
 | `js/api.js` | Backend URL (local or Render), fetch with a 75 s timeout and friendly errors |
-| `js/main.js` | Picks the set and page from the URL, paging, mounting page 7's 3D viewer, online status, kiosk mode, the idle reset |
-| `js/rodbox.js` | Page 7: the 3D set — unpack/pack on double-tap, drag any piece |
-| `models/rod-box.json` | Tray, case and lid meshes exported from my Fusion model (`napiers rods.3mf`), in millimetres |
-| `vendor/three-napier.min.js` | three.js r186 (MIT), only the classes used, bundled with esbuild |
-| `images/napier-avatar.jpg` | The avatar, cropped from the 1616 portrait (public domain) as in the UI package |
-
-## Editing the content
-
-- **Page titles, footers, example conversations, suggested questions:** `js/zones.js`.
-- **Drawings:** `js/art.js` (coordinates are the design's, 1500 units wide).
-- **What a suggested question should draw on, and what the visitor is looking at:** the backend's `zones.json`.
-- **New facts:** the backend's `facts.md`, with a source. Napier can't say what isn't there.
-- **Tall-screen pages:** change the design's generator (`rod15.py` / `rod16.py`), re-run
-  `art/svgexport.py`, and keep titles and hint questions in `js/zones.js` and the backend's `zones.json` in step.
+| `images/napier-portrait.jpg` | The 1616 portrait (public domain) |
 
 ## How to run it locally
 
 1. Start the backend (see its README): `python app.py` → http://127.0.0.1:5002
    (`MOCK_AI=1` in its `.env` gives canned replies without a Groq key).
 2. In the portfolio folder: `python3 -m http.server 8000`
-3. Open http://localhost:8000/napier/?zone=rods&page=2. The page talks to the local backend automatically.
-   Port 8000 matters: it is on the backend's CORS list.
+3. Open http://localhost:8000/napier/. The page talks to the local backend automatically.
 
 ## Secrets
 
 The frontend holds no secrets. The Groq API key and the database URL exist only as environment
 variables on Render and in the backend's local `.env`, which git ignores.
 
+## History of this folder (all in git)
+
+- **Napier's Rod Box** (15-113 Project 2, Oct 2026): sixteen question rods presented to the portrait,
+  with a three.js packing animation. This station grew out of it.
+- **Exhibit screens** (11–12 Nov 2026): a screen beside every station (rods 2–7, rod 15, rod 16) with
+  how-to pages and a Napier chat. Dropped after the 17 Nov feedback; see commit "upgrade 2.0 v3".
+- **Rod-and-slot station** (17 Nov 2026): drag a rod into a slot under the portrait, answer on a tablet
+  in the frame. Replaced the same day by the keyboard conversation.
+
 ## How I used AI
 
-- **Claude** (Anthropic) wrote the code under my direction, for the Rod Box and for this exhibit
-  version. My prompts are in [prompt_log.md](prompt_log.md).
-- **Groq** (`openai/gpt-oss-20b`) writes Napier's replies live, from the fact sheet.
+- **Claude** (Anthropic) wrote the code under my direction. My prompts are in [prompt_log.md](prompt_log.md).
+- **Groq** (`openai/gpt-oss-20b`) writes Napier's answers live, from the fact sheet.
 - AI use in the 51-265 studio project is with the instructor's permission and is disclosed here.
-
-Facts were checked against the sources listed at the end of `facts.md`. Claude once invented a
-fact (that Henry Briggs "rode four days" to meet Napier), which is why Napier may only answer from
-the fact sheet.
 
 ## Credits
 
 - Portrait of John Napier (1616), public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:John_Napier_(mathematician))
-- Typeface: Georgia; Gelasio by Eben Sorkin (Google Fonts, SIL Open Font License) where Georgia isn't installed
-- 3D: [three.js](https://threejs.org) (MIT); the tray, case and lid are my own CAD model
-- Screen design: the exhibit's screen UI package (Rhino model `posner center latest.3dm`, 2026-11-11)
+- Typefaces: IM Fell English by Igino Marini; Gelasio by Eben Sorkin (Google Fonts, SIL Open Font License); Georgia
 - Facts: MacTutor History of Mathematics; Wikipedia (Napier's bones, Promptuary, Location arithmetic);
   Museo Arqueológico Nacional via Google Arts & Culture; Kolpas & Tomash, MAA Convergence (2018)
-
----
-
-### Architecture
-
-```
-exhibit screen (GitHub Pages, this folder, ?zone=…)
-   │  GET  /health     wake Render's free server as the page opens (and every 10 min in kiosk mode)
-   │  POST /chat       {zone, page, preset}  or  {zone, page, question, history}
-   ▼
-Flask backend on Render (napier-backend)
-   ├─ validates zone + preset id, or cleans the typed question (≤ 200 chars); 30 requests/min per IP
-   ├─ prompt: persona_chat.md + facts.md + this zone's "where the visitor is standing"
-   │          + what is on the page the visitor is looking at (system)
-   │          + the last 6 messages + the question (and, for presets, what to draw on)
-   ├─ Groq API → JSON {"reply"} → validated and trimmed (≤ 90 words)
-   └─ database (Postgres on Neon): the question and reply are logged anonymously
-```

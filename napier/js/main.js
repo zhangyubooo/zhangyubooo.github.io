@@ -1,238 +1,256 @@
-// Ask Napier — the exhibit screens for "Making Calculation Visible".
+// Ask Napier — the last portrait. The exhibit's final station: a screen showing
+// Napier's 1616 portrait and six numbered question rods, and a keyboard on a writing
+// desk in front of it. The visitor presses a rod's number or types a question of their
+// own; Napier writes back, letter by letter, and the conversation builds up beside the
+// painting like an exchange of letters. No touch screen, no mouse.
 //
-//   ./                               landing: links to every screen
-//   ./?zone=rods&page=3              a rods screen showing page 3 (each of rods 2–7
-//                                    shows its own page by default; visitors can page)
-//   ./?zone=promptuary               the rod 15 screen
-//   ./?zone=location                 the rod 16 screen
-//   …&kiosk=1                        as it runs in the exhibit: no "All screens" link,
-//                                    and the backend is pinged every 10 minutes
+//   1–6    ask that rod's question (when nothing has been typed yet)
+//   Enter  send what you typed          Esc  clear the line / start over
+//
+//   ./            the station
+//   ./?kiosk=1    in the gallery: no link back to the portfolio, no mouse pointer,
+//                 backend pinged every 10 minutes
 
-import { ZONES, ZONE_ORDER, SHAPES } from "./zones.js";
-import { drawPage } from "./art.js";
-import { createChat } from "./chat.js";
-import { wake } from "./api.js";
+import { QUESTIONS, GREETING, RESTING } from "./questions.js";
+import { askNapier, wake } from "./api.js";
+import { writeInscription } from "./inscription.js";
+import { startDust } from "./dust.js";
 
-const IDLE_MS = 60_000;           // no touch for this long → "Still there?" (if in use)
-const IDLE_COUNTDOWN_S = 10;      // …then back to this screen's default state
+const MAX_CHARS = 200;            // same cap as the backend
+const HISTORY_TURNS = 6;          // earlier questions and answers sent back for context
+const LOG_KEEP = 12;              // messages kept on screen; older ones have scrolled away
+const IDLE_MS = 75_000;           // no key for this long → "Still there?"
+const IDLE_COUNTDOWN_S = 10;
 const KEEP_AWAKE_MS = 10 * 60_000;
-const HINTS = {
-  packed: "Double-tap the box to unpack it",
-  unpacking: "Unpacking…",
-  open: "Drag any piece  ·  double-tap to pack it up",
-  packing: "Packing…",
-};
+const WAKING_HINT_MS = 6000;
+const PLACEHOLDER_MS = 4500;
 
 const $ = (id) => document.getElementById(id);
-const svgCache = new Map();       // tall-screen page SVGs, fetched once
-let svgToken = 0;
-const params = new URLSearchParams(location.search);
-const zone = ZONES[params.get("zone")];
-const kiosk = params.get("kiosk") === "1";
+const el = {
+  frame: $("frame"), log: $("log"), status: $("status"), tray: $("tray"),
+  pen: $("pen"), input: $("pen-input"), placeholder: $("pen-placeholder"), count: $("pen-count"),
+};
+const kiosk = new URLSearchParams(location.search).get("kiosk") === "1";
+if (kiosk) document.body.classList.add("is-kiosk");
 
-if (!zone) showLanding();
-else showScreen(zone);
+const state = {
+  busy: false,
+  history: [],          // [{ role: "visitor" | "napier", text }]
+  generation: 0,        // bumps on start over, so a late answer is dropped
+};
 
 // ---------------------------------------------------------------------------
-function showLanding() {
-  const sets = [
-    ["Set 1 · Rods 2–7", "Touch & Learn", "15″ × 15″ screens"],
-    ["Set 2 · Rod 15", "Promptuarium", "17″ × 36″ screen"],
-    ["Set 3 · Rod 16", "Location Arithmetic", "17″ × 36″ screen"],
-  ];
-  ZONE_ORDER.forEach((id, i) => {
-    const z = ZONES[id];
-    const card = document.createElement("section");
-    card.className = "set";
-    card.innerHTML = `<p class="set__kicker"></p><h2 class="set__title"></h2><p class="set__size"></p><div class="set__pages"></div>`;
-    card.querySelector(".set__kicker").textContent = sets[i][0];
-    card.querySelector(".set__title").textContent = sets[i][1];
-    card.querySelector(".set__size").textContent = sets[i][2];
-    const links = card.querySelector(".set__pages");
-    const a = document.createElement("a");
-    a.href = `?zone=${id}`;                  // the rods screen opens on page 1
-    a.textContent = "Open the screen →";
-    links.append(a);
-    $("landing-sets").append(card);
-  });
-  $("landing").hidden = false;
+// 1. The question rods
+// ---------------------------------------------------------------------------
+const rods = new Map();           // key "1"–"6" → { q, node }
+for (const q of QUESTIONS) {
+  const li = document.createElement("li");
+  li.className = "rod";
+  li.innerHTML = `<span class="rod__key" aria-hidden="true"></span><span class="rod__q"></span>`;
+  li.querySelector(".rod__key").textContent = q.key;
+  li.querySelector(".rod__q").textContent = q.question;
+  li.setAttribute("aria-label", `Press ${q.key}: ${q.question}`);
+  el.tray.append(li);
+  rods.set(q.key, { q, node: li });
+}
+
+function pressRod(key) {
+  const rod = rods.get(key);
+  if (!rod || state.busy) return;
+  for (const { node } of rods.values()) node.classList.remove("is-chosen");
+  rod.node.classList.add("is-chosen", "is-asked");
+  send(rod.q);
 }
 
 // ---------------------------------------------------------------------------
-function showScreen(z) {
-  document.title = `${z.pages[0].title} · Ask Napier`;
-  const screen = $("screen");
-  screen.dataset.shape = z.shape;
-  screen.dataset.zone = z.id;
-  if (kiosk) $("back").hidden = true;
-  $("stage").hidden = false;
-
-  const tall = z.shape === "tall";
-  const defaultPage = clampPage(Number(params.get("page") || 1) - 1, z);
-  let page = -1;
-  const chat = createChat(z, { modal: tall, getPage: () => page + 1 });
-
-  // --- pages ---
-  const dots = $("dots");
-  if (z.pages.length > 1) {
-    $("pager").hidden = false;
-    z.pages.forEach((p, n) => {
-      const dot = document.createElement("button");
-      dot.type = "button";
-      dot.className = "pager__dot";
-      dot.setAttribute("aria-label", `Page ${n + 1}: ${p.title}`);
-      dot.addEventListener("click", () => goTo(n));
-      dots.append(dot);
-    });
-    // the square screen loops round; the tall screens stop at the first and last page
-    const step = (d) => {
-      const n = z.pages.length, to = page + d;
-      if (tall) { if (to >= 0 && to < n) goTo(to); } else goTo((to + n) % n);
-    };
-    $("prev").addEventListener("click", () => step(-1));
-    $("next").addEventListener("click", () => step(1));
-    watchSwipe(screen, step);
-  }
-
-  // --- tall screens: the hint bubble asks this page's question ---
-  const presetFor = (p) => z.presets.find((q) => q.id === p.ask);
-  if (tall) {
-    $("hint").hidden = false;
-    $("pager-footer").hidden = false;
-    $("hint").addEventListener("click", () => chat.askPreset(presetFor(z.pages[page])));
-  }
-
-  // A page can carry a live widget over its artwork (page 7: the 3D model of the set).
-  let widget = null, widgetToken = 0;
-  async function mountWidget(p) {
-    widget?.dispose();
-    widget = null;
-    const token = ++widgetToken;
-    const box = $("widget");
-    box.replaceChildren();
-    box.hidden = !p.widget;
-    $("widget-hint").hidden = !p.widget;
-    if (!p.widget) return;
-    const hint = $("widget-hint");
-    hint.textContent = "Opening the box…";
-    try {
-      const { mountRodBox } = await import("./rodbox.js");
-      const w = await mountRodBox(box, {
-        onStateChange: (s) => { hint.textContent = HINTS[s]; },
-      });
-      if (token !== widgetToken) { w.dispose(); return; }
-      widget = w;
-      hint.textContent = HINTS.packed;
-    } catch (err) {
-      console.error(err);
-      if (token === widgetToken) hint.textContent = "The model of the set could not be loaded.";
-    }
-  }
-
-  function goTo(n, { force = false } = {}) {
-    if (n === page && !force) return;
-    page = n;
-    const p = z.pages[n];
-    if (p.svg) showSvg(p.svg);
-    else $("art").replaceChildren(drawPage(SHAPES[z.shape], z.kicker, p));
-    mountWidget(p);
-    [...dots.children].forEach((d, i) => d.setAttribute("aria-current", String(i === n)));
-    $("prev").classList.toggle("is-off", tall && n === 0);
-    $("next").classList.toggle("is-off", tall && n === z.pages.length - 1);
-    if (tall) {
-      $("pager-footer").textContent = `${n + 1} / ${z.pages.length}   ·   tap the arrows`;
-      $("hint-q").textContent = `“${presetFor(p)?.question || ""}”`;
-      chat.setContext(p.title);
-    }
-    // The chat stays closed until the avatar is tapped. On the square screen a page's
-    // example conversation is ready inside it — unless a visitor is already talking.
-    if (!tall && !chat.live) chat.start(p.seed || []);
-  }
-
-  function startOver() {
-    chat.start(tall ? [] : z.pages[defaultPage].seed || []);
-    goTo(defaultPage, { force: true });
-  }
-
-  startOver();
-
-  // --- is the AI awake? ---
-  const status = $("chat-status");
-  const setOnline = (on) => {
-    screen.classList.toggle("is-online", on);
-    status.textContent = on ? "AI  ·  online" : "AI  ·  waking…";
-  };
-  const ping = () => wake().then(() => setOnline(true), () => setOnline(false));
-  ping();
-  setInterval(ping, kiosk ? KEEP_AWAKE_MS : 5 * KEEP_AWAKE_MS);
-
-  // --- idle: a shared screen must not show one visitor's conversation to the next ---
-  const isDirty = () => chat.live || chat.open || page !== defaultPage || Boolean(widget?.dirty);
-  watchIdle({ isDirty, isBusy: () => chat.busy, startOver });
+// 2. The conversation on screen
+// ---------------------------------------------------------------------------
+function addLine(role, text = "") {
+  const line = document.createElement("div");
+  line.className = `line line--${role}`;
+  line.innerHTML = `<span class="line__who"></span><p class="line__text"></p>`;
+  line.querySelector(".line__who").textContent = role === "napier" ? "Napier" : "You";
+  line.querySelector(".line__text").textContent = text;
+  el.log.append(line);
+  while (el.log.children.length > LOG_KEEP) el.log.firstElementChild.remove();
+  el.log.scrollTop = el.log.scrollHeight;
+  return line;
 }
 
-// Tall-screen pages are SVG files exported from the design's own generator.
-async function showSvg(url) {
-  const token = ++svgToken;
-  if (!svgCache.has(url)) svgCache.set(url, fetch(url).then((r) => (r.ok ? r.text() : Promise.reject(new Error(url)))));
+/** Napier's reply surfaces letter by letter (inscription.js), keeping the log scrolled down. */
+async function napierWrites(line, text, note = "") {
+  line.classList.remove("is-writing");
+  const p = line.querySelector(".line__text");
+  const follow = setInterval(() => { el.log.scrollTop = el.log.scrollHeight; }, 120);
+  await writeInscription(p, null, text);
+  clearInterval(follow);
+  if (note) {
+    const small = document.createElement("span");
+    small.className = "line__note";
+    small.textContent = note;
+    line.append(small);
+  }
+  el.log.scrollTop = el.log.scrollHeight;
+}
+
+// ---------------------------------------------------------------------------
+// 3. Asking
+// ---------------------------------------------------------------------------
+/** Offline: answer from Napier's notes, choosing the suggested question nearest to the typed one. */
+function fromNotes(text, preset) {
+  if (preset) return preset.fallback;
+  const lower = text.toLowerCase();
+  const match = QUESTIONS.find((q) => q.keywords.some((k) => new RegExp(`\\b${k}`).test(lower)));
+  return match ? match.fallback : RESTING;
+}
+
+/** Ask a rod's question (preset) or what was typed in the writing line. */
+async function send(preset = null) {
+  const question = preset ? preset.question : el.input.value.replace(/\s+/g, " ").trim().slice(0, MAX_CHARS);
+  if (!question || state.busy) return;
+  if (!preset) {
+    setLine("");
+    for (const { node } of rods.values()) node.classList.remove("is-chosen");
+  }
+
+  const mine = ++state.generation;
+  state.busy = true;
+  el.pen.classList.add("is-waiting");
+  el.frame.classList.add("is-thinking");
+  const asked = addLine("visitor", question);
+  if (preset) asked.querySelector(".line__who").textContent = `Rod ${preset.key}`;
+  const answer = addLine("napier");
+  answer.classList.add("is-writing");
+  const hint = setTimeout(() => { el.status.textContent = "Napier is waking. The first answer can take up to a minute."; }, WAKING_HINT_MS);
+
+  let reply, note = "";
   try {
-    const text = await svgCache.get(url);
-    if (token !== svgToken) return;
-    const art = $("art");
-    art.innerHTML = text;
-    art.firstElementChild?.setAttribute("aria-hidden", "true");
+    const history = state.history.slice(-HISTORY_TURNS);
+    ({ reply } = await askNapier(preset
+      ? { zone: "portrait", preset: preset.id, history }
+      : { zone: "portrait", question, history }));
+    setAwake(true);
   } catch (err) {
-    svgCache.delete(url);
-    console.error("Could not load", url, err);
+    if (err.offline) { reply = fromNotes(question, preset); note = "From Napier’s notes: the live portrait is resting."; setAwake(false); }
+    else reply = err.message;
+  } finally {
+    clearTimeout(hint);
   }
-}
+  if (mine !== state.generation) return;
 
-/** Swipe left/right on the page to turn it (not on the chat, the buttons or the 3D model). */
-function watchSwipe(screen, step) {
-  let start = null;
-  screen.addEventListener("pointerdown", (e) => {
-    start = e.target.closest(".chat, .chat-backdrop, button, input, .screen__widget") ? null
-      : { x: e.clientX, y: e.clientY, t: performance.now() };
-  });
-  screen.addEventListener("pointerup", (e) => {
-    if (!start) return;
-    const unit = screen.getBoundingClientRect().width / 1500;
-    const dx = (e.clientX - start.x) / unit, dy = (e.clientY - start.y) / unit;
-    if (Math.abs(dx) > 150 && Math.abs(dx) > 1.5 * Math.abs(dy) && performance.now() - start.t < 900) step(dx < 0 ? 1 : -1);
-    start = null;
-  });
-  screen.addEventListener("pointercancel", () => { start = null; });
-}
-
-function clampPage(n, z) {
-  return Number.isInteger(n) && n >= 0 && n < z.pages.length ? n : 0;
+  el.frame.classList.remove("is-thinking");
+  state.history.push({ role: "visitor", text: question }, { role: "napier", text: reply });
+  await napierWrites(answer, reply, note);
+  if (mine !== state.generation) return;
+  state.busy = false;
+  el.pen.classList.remove("is-waiting");
 }
 
 // ---------------------------------------------------------------------------
-function watchIdle({ isDirty, isBusy, startOver }) {
+// 4. The keyboard: number keys pick a rod, everything else goes to the writing line
+// ---------------------------------------------------------------------------
+function setLine(text) {
+  el.input.value = text;
+  onInput();
+}
+
+function onInput() {
+  const text = el.input.value;
+  el.placeholder.hidden = text.length > 0;
+  const left = MAX_CHARS - text.length;
+  el.count.textContent = left <= 40 ? `${left}` : "";
+  el.input.style.height = "auto";                     // grow to a second line if needed
+  el.input.style.height = `${el.input.scrollHeight}px`;
+}
+el.input.addEventListener("input", onInput);
+
+el.input.addEventListener("keydown", (e) => {
+  if (e.isComposing || e.keyCode === 229) return;    // Chinese / Japanese input method at work
+  if (rods.has(e.key) && !el.input.value.trim() && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    e.preventDefault();                                // a digit on an empty line chooses a rod;
+    pressRod(e.key);                                   // once typing has begun, digits are just digits
+  } else if (e.key === "Enter") {
+    e.preventDefault();
+    if (!e.shiftKey) send();
+  } else if (e.key === "Tab") {
+    e.preventDefault();                                // keep focus on the writing line
+  } else if (e.key === "Escape") {
+    e.preventDefault();
+    if (el.input.value) setLine(""); else if (state.history.length || state.busy) startOver();
+  }
+});
+el.pen.addEventListener("submit", (e) => { e.preventDefault(); send(); });
+// (A rod can't be clicked: in the gallery there is only the keyboard.)
+
+// Keep the writing line focused: a visitor never has to click anything.
+const focusLine = () => { if (document.activeElement !== el.input) el.input.focus({ preventScroll: true }); };
+el.input.addEventListener("blur", () => setTimeout(focusLine, 0));
+document.addEventListener("pointerdown", (e) => { e.preventDefault(); focusLine(); });
+window.addEventListener("focus", focusLine);
+
+// The placeholder alternates between the two ways to ask.
+const PROMPTS = ["Type your own question…", "…or press 1 to 6 to ask a rod"];
+let promptIndex = 0;
+function nextPrompt() {
+  el.placeholder.textContent = PROMPTS[promptIndex++ % PROMPTS.length];
+  el.placeholder.classList.remove("is-new"); void el.placeholder.offsetWidth; el.placeholder.classList.add("is-new");
+}
+setInterval(nextPrompt, PLACEHOLDER_MS);
+
+// ---------------------------------------------------------------------------
+// 5. Start, stay awake, start over
+// ---------------------------------------------------------------------------
+function setAwake(on) {
+  el.status.classList.toggle("is-awake", on);
+  el.status.textContent = on ? "Napier is awake" : "Waking the portrait…";
+}
+const ping = () => wake().then(() => setAwake(true), () => setAwake(false));
+ping();
+setInterval(ping, kiosk ? KEEP_AWAKE_MS : 5 * KEEP_AWAKE_MS);
+
+function startOver() {
+  state.generation++;
+  state.busy = false;
+  state.history = [];
+  for (const { node } of rods.values()) node.classList.remove("is-chosen", "is-asked");
+  el.frame.classList.remove("is-thinking");
+  el.pen.classList.remove("is-waiting");
+  el.log.replaceChildren();
+  setLine("");
+  promptIndex = 0;
+  nextPrompt();
+  napierWrites(addLine("napier"), GREETING);
+}
+
+startDust(el.frame);
+startOver();
+focusLine();
+
+// Idle: a shared station must not show one visitor's conversation to the next.
+(function watchIdle() {
   const overlay = $("idle"), count = $("idle-count");
-  let idleTimer = null, countdown = null;
-
-  function stopCountdown() { clearInterval(countdown); countdown = null; overlay.hidden = true; }
-
+  let timer = null, countdown = null;
+  const dirty = () => state.history.length || el.input.value;
+  const stop = () => { clearInterval(countdown); countdown = null; overlay.hidden = true; };
   function arm() {
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      if (!isDirty()) return;
-      if (isBusy()) { arm(); return; }        // still waiting for Napier: don't interrupt
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (!dirty()) return;
+      if (state.busy) { arm(); return; }
       let left = IDLE_COUNTDOWN_S;
       count.textContent = left;
       overlay.hidden = false;
       countdown = setInterval(() => {
-        left -= 1;
-        count.textContent = left;
-        if (left <= 0) { stopCountdown(); document.activeElement?.blur(); startOver(); }
+        left -= 1; count.textContent = left;
+        if (left <= 0) { stop(); startOver(); }
       }, 1000);
     }, IDLE_MS);
   }
-
-  function activity() { if (countdown) stopCountdown(); arm(); }
-  for (const type of ["pointerdown", "keydown", "input", "wheel"]) document.addEventListener(type, activity, { passive: true });
-  $("idle-stay").addEventListener("click", activity);
+  // The key that wakes the overlay only dismisses it; it doesn't type or send.
+  document.addEventListener("keydown", (e) => {
+    if (countdown) { e.preventDefault(); e.stopImmediatePropagation(); stop(); }
+    arm();
+  }, { capture: true });
+  for (const type of ["pointerdown", "input"]) document.addEventListener(type, () => { if (countdown) stop(); arm(); }, { passive: true });
   arm();
-}
+})();

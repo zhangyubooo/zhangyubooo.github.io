@@ -225,3 +225,20 @@ Result: the rods, the tray and its printed index are now the case's wood colour,
 
 Result: page 5 now draws the row 24 · 12 · 30 like the writing board: each slant runs on down-left out of the row into its own answer box (2, 5, 5, 0), replacing the grey arrows.
 
+## Phase 7 — AI Napier moves to the end of the exhibit (Tue 11/17)
+
+**Prompt 34**
+> A professor thinks these digital screens don't belong in the exhibit; he feels they compete with the objects for attention. Should Napier AI go at the end or at the start? If it's at the end, should it be a screen? I want to show the prototype only on a computer. — Start building.
+
+Result: we agreed the station screens go (the relayout of 11/18 removes them), and AI Napier becomes one station at the end, where visitors have questions and the objects are behind them. In the gallery: carved question rods and an answer projected into the portrait. On the computer: this page. Claude rewrote `napier/` as that station, building on the Rod Box (the gilded portrait, the letter-by-letter inscription, the dust in the light): six question rods in a tray, drag or tap one into the slot under the frame, Napier answers on the tablet, a prototype-only typed question, and an idle reset. The backend gained a `portrait` zone with the six rods. Tested with a mock AI: drag, tap, swapping rods, taking a rod back, typed question, offline answers, idle reset.
+
+## Phase 8 — A screen and a keyboard: talking to Napier (Tue 11/17, evening)
+
+**Prompt 35**
+> Let's leave the portfolio for later and finish Napier AI first. I think the end of the exhibit will be a screen after all. I still want to keep typing to him, like a conversation; maybe a separate keyboard?
+
+**Prompt 36**
+> Make it so people can interact without a touch screen. The rods beside him can be the suggested questions from the earlier Napier AI window; people press a number on the keyboard to choose a rod, or just type.
+
+Result: the station became portrait | conversation | rods, driven only by a keyboard. Keys 1–6 ask a rod's question when nothing has been typed (after that digits are just digits), Enter sends a typed question, Esc clears or starts over, every key goes to the writing line, input methods for Chinese work. Napier's replies surface letter by letter and the exchange builds up like letters; asked rods stay marked until the next visitor. Offline, a typed question gets the nearest rod's answer by keyword. Idle: any key dismisses "Still there?" without typing. The backend's `portrait` zone now describes the screen and keyboard. Tested with the mock AI: rods by number, typed questions with digits, pressing a rod while Napier is writing, offline answers, Esc, idle reset, refocus after a stray click.
+
